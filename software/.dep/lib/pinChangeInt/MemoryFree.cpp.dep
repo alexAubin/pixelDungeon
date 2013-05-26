@@ -1,0 +1,4 @@
+lib/pinChangeInt/MemoryFree.o: lib/pinChangeInt/MemoryFree.cpp \
+ lib/pinChangeInt/MemoryFree.h
+
+lib/pinChangeInt/MemoryFree.h:
