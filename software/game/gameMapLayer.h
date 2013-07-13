@@ -29,14 +29,15 @@ class gameMapLayer
 	public:
 
 		// Constructor
-		gameMapLayer();
+		gameMapLayer() { };
 
-		// Destructor
-		~gameMapLayer();
+		ObjectColor getColor(int x, int y);
 
-		gameObject::Color getColor(int x, int y);
+		ObjectType getType(int x, int y);
+    
+        void setTile(int tile,gameObject* object);
 
-		gameObject::Type getType(int x, int y);
+        bool isWalkable(int tile) const;
 };
 
 #endif

@@ -1,101 +1,52 @@
-/********************************
-
-          Pixel Dungeon
-           by Djidane
-
-      Map methods for the game
-
-********************************/
+/*
+ ##############################################################################
+ #                                                                            #
+ #    This file is part of PixelDungeon.                                      #
+ #                                                                            #
+ #    PixelDungeon is free software: you can redistribute it and/or modify    #
+ #    it under the terms of the GNU General Public License as published by    #
+ #    the Free Software Foundation, either version 3 of the License, or       #
+ #     (at your option) any later version.                                    #
+ #                                                                            #
+ #    PixelDungeon is distributed in the hope that it will be useful,         #
+ #    but WITHOUT ANY WARRANTY; without even the implied warranty of          #
+ #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           #
+ #    GNU General Public License for more details.                            #
+ #                                                                            #
+ #    You should have received a copy of the GNU General Public License       #
+ #    along with PixelDungeon.  If not, see <http://www.gnu.org/licenses/>.   #
+ #                                                                            #
+ ##############################################################################
+*/
 
 /**
- *	@author Djidane
- * 	@file gameMap.cpp
+ *	@author Alexandre Aubin
  *  @brief Map methods for the game
- */
+*/
 
 #include "gameMap.h"
 
-bool gameMap::isTileVisibleByHero(int x,int y)
+void gameMap::updateCurrentDisplay(gameObject_Hero* theHero)
 {
-	int Dx = x - gameHero_i;
-	int Dy = y - gameHero_j;
+	if (theHero->getX() < DISPLAY_WIDTH/2) 
+         positionCurrentDisplay_x = 0;
+	else if (theHero->getX() > GAME_MAP_WIDTH - DISPLAY_WIDTH/2) 
+         positionCurrentDisplay_x = GAME_MAP_WIDTH - DISPLAY_WIDTH;
+	else 
+         positionCurrentDisplay_x = theHero->getX() - DISPLAY_WIDTH/2;
 
-	int absDx = abs(Dx);
-	int absDy = abs(Dy);
+	if (theHero->getY() < DISPLAY_WIDTH/2) 
+         positionCurrentDisplay_y = 0;
+	else if (theHero->getY() > GAME_MAP_HEIGHT  - DISPLAY_WIDTH/2) 
+         positionCurrentDisplay_y = GAME_MAP_HEIGHT  - DISPLAY_WIDTH;
+	else 
+         positionCurrentDisplay_y = theHero->getY() - DISPLAY_WIDTH/2;
 
-	int sgnDx = 1; if (Dx < 0) sgnDx = -1;
-	int sgnDy = 1; if (Dy < 0) sgnDy = -1;
-
-	int xDominated = 1;
-	if (absDy > absDx)
-		xDominated = 0;
-
-	// TODO ! fix this
-	if ((Dx == 0) || (Dy == 0)) return true;
-
-	int currentStep_x = gameHero_i;
-	int currentStep_y = gameHero_j;
-
-	float deviation = 0;
-
-	if (xDominated)
+    for (int k = 0 ; k < DISPLAY_WIDTH ; k++)
+	for (int l = 0 ; l < DISPLAY_WIDTH ; l++)
 	{
-		float yDeviationByStep = abs((float) Dy / (float) Dx);
-
-		for (int dx = 1 ; dx < absDx  ; dx++)
-		{
-			currentStep_x += sgnDx;
-
-			// Check if object on tile is solid (= block vision)
-			if (isSolid(currentStep_x,currentStep_y)) return false;
-
-			// Increment y-deviation
-			deviation +=yDeviationByStep;
-
-			if (deviation >= 0.5)
-			{
-				currentStep_y += sgnDy;
-			    deviation -= 1.0;
-			}
-		}
+		currentDisplay[k + l*DISPLAY_WIDTH] = getColor(positionCurrentDisplay_x+k,positionCurrentDisplay_y+l);
 	}
-	// yDominated
-	else
-	{
-		float xDeviationByStep = abs((float) Dx / (float) Dy);
-
-		for (int dy = 1 ; dy < absDy  ; dy++)
-		{
-			currentStep_y += sgnDy;
-
-			// Check if object on tile is solid (= block vision)
-			if (isSolid(currentStep_x,currentStep_y)) return false;
-
-			// Increment x-deviation
-			deviation += xDeviationByStep;
-
-			if (deviation >= 0.5)
-			{
-				currentStep_x += sgnDx;
-			    deviation -= 1.0;
-			}
-		}
-	}
-
-	// If we get here, it means nothing blocked vision
-	return true;
-}
-
-void gameMap::updateCornerCurrentDisplay()
-{
-	if (gameHero_i < DISPLAY_WIDTH/2) cornerCurrentDisplay_i = 0;
-	else if (gameHero_i > GAME_MAP_WIDTH - DISPLAY_WIDTH/2) cornerCurrentDisplay_i = GAME_MAP_WIDTH - DISPLAY_WIDTH;
-	else cornerCurrentDisplay_i = gameHero_i - DISPLAY_WIDTH/2;
-
-	if (gameHero_j < DISPLAY_WIDTH/2) cornerCurrentDisplay_j = 0;
-	else if (gameHero_j > GAME_MAP_HEIGHT  - DISPLAY_WIDTH/2) cornerCurrentDisplay_j = GAME_MAP_HEIGHT  - DISPLAY_WIDTH;
-	else cornerCurrentDisplay_j = gameHero_j - DISPLAY_WIDTH/2;
-
 }
 
 void gameMap::setGameCurrentDisplay(int x, int y)
@@ -105,30 +56,37 @@ void gameMap::setGameCurrentDisplay(int x, int y)
 	positionCurrentDisplay_x = x;
 	positionCurrentDisplay_y = y;
 
-	// Update each pixel according to objects on the portion of the map
-	int currentTileColor;
-
 	for (int k = 0 ; k < DISPLAY_WIDTH ; k++)
 	for (int l = 0 ; l < DISPLAY_WIDTH ; l++)
 	{
-		currentTileColor = getColor(k+x,l+y);
-
-		// If the object is not visible by the hero,
-		// we set the tile to OBJECT_EMPTY_COLOR
-
-		//if (currentTileColor != GAME_OBJECT_EMPTY_COLOR) && (!isVisibleByHero(k+x,l+y))
-		//	currentTileColor == GAME_OBJECT_EMPTY_COLOR;
-
-		currentDisplay[k + l*DISPLAY_WIDTH] = currentTileColor;
+		currentDisplay[k + l*DISPLAY_WIDTH] = getColor(k+x,l+y);
 	}
 }
 
-gameObject::Color gameMap::getColor(int x, int y)
+ObjectColor gameMap::getColor(int x, int y)
 {
-	if (layer1.getType(x,y) == gameObject::Type::EMPTY)
-		return layer1.getColor(x,y);
-	else
+	if (layer1.getType(x,y) == OBJECTTYPE_EMPTY)
 		return layer0.getColor(x,y);
+	else
+		return layer1.getColor(x,y);
 }
 
-void gameMap::triggerAction(int x, int y);
+void gameMap::triggerAction(int x, int y)
+{
+}
+
+void gameMap::setTileLayer0(int tile,gameObject* object)
+{
+    layer0.setTile(tile,object);
+}
+
+void gameMap::setTileLayer1(int tile,gameObject* object)
+{
+    layer1.setTile(tile,object);
+}
+
+bool gameMap::isWalkable(int x, int y) const
+{
+   int tile = x + GAME_MAP_WIDTH*y;
+   return (layer0.isWalkable(tile) && layer1.isWalkable(tile));
+}

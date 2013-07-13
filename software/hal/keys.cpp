@@ -21,30 +21,72 @@
 
 /**
  *	@author Alexandre Aubin
- *  @brief General definitions
+ *  @brief  Keys management functions
 */
 
-#ifndef COMMON_H_
-#define COMMON_H_
-
-#include <Arduino.h>
-#include "lib/TimerOne/TimerOne.h"
+#include "hal/keys.h"
 
 // *********************************************************************
-//                         Prototypes
+//  		Include / defines for pinChangeInterrupt utilization
 // *********************************************************************
 
-void initDisplay();
-void initKeys();
-void initGame();
+#define NO_PORTB_PINCHANGES
+#define NO_PORTC_PINCHANGES
 
-void displayRefreshNextPixel();
+#define PINMODE
+#define FLASH
 
-void updateCornerCurrentDisplay();
+#include "lib/pinChangeInt/ByteBuffer.h"
+#include "lib/pinChangeInt/PinChangeInt.h"
 
-void initTimer();
-void timerInterrupt();
 
-// *********************************************************************
+void upInterruptHandler()
+{
+	if (digitalRead(UP_KEY)) return;
+    //delay(200);
+    //if (digitalRead(UP_KEY)) return;
 
-#endif
+    theGame.upKey();
+}
+
+void downInterruptHandler()
+{
+	if (digitalRead(DOWN_KEY)) return;
+    //delay(200);
+    //if (digitalRead(DOWN_KEY)) return;
+
+    theGame.downKey();
+}
+
+void leftInterruptHandler()
+{
+	if (digitalRead(LEFT_KEY)) return;
+    //delay(200);
+    //if (digitalRead(LEFT_KEY)) return;
+
+    theGame.leftKey();
+}
+
+void rightInterruptHandler()
+{
+	if (digitalRead(RIGHT_KEY)) return;
+    //delay(200);
+    //if (digitalRead(RIGHT_KEY)) return;
+
+    theGame.rightKey();
+}
+
+
+
+void initKeys()
+{
+	pinMode(UP_KEY, INPUT); digitalWrite(UP_KEY, HIGH);
+	pinMode(DOWN_KEY, INPUT); digitalWrite(DOWN_KEY, HIGH);
+	pinMode(LEFT_KEY, INPUT); digitalWrite(LEFT_KEY, HIGH);
+	pinMode(RIGHT_KEY, INPUT); digitalWrite(RIGHT_KEY, HIGH);
+
+	PCintPort::attachInterrupt(UP_KEY, &upInterruptHandler, FALLING);
+	PCintPort::attachInterrupt(DOWN_KEY, &downInterruptHandler, FALLING);
+	PCintPort::attachInterrupt(LEFT_KEY, &leftInterruptHandler, FALLING);
+	PCintPort::attachInterrupt(RIGHT_KEY, &rightInterruptHandler, FALLING);
+}

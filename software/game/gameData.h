@@ -21,27 +21,13 @@
 
 /**
  *	@author Alexandre Aubin
- *  @brief Game map layer methods
-*/
+ *  @brief  Game data
+ */
 
-#include "gameMapLayer.h"
+#ifndef GAME_DATA_H_
+#define GAME_DATA_H_
 
-ObjectColor gameMapLayer::getColor(int x, int y)
-{
-	return layer[x*GAME_MAP_WIDTH + y]->getColor();
-}
+	#include "game/gameCommon.h"
 
-ObjectType  gameMapLayer::getType(int x, int y)
-{
-	return layer[x*GAME_MAP_WIDTH + y]->getType();
-}
 
-void gameMapLayer::setTile(int tile,gameObject* object)
-{
-	layer[tile] = object;
-}
-
-bool gameMapLayer::isWalkable(int tile) const
-{
-    return layer[tile]->isWalkable();
-}
+#endif

@@ -1,63 +1,137 @@
-/********************************
-
-          Pixel Dungeon
-           by Djidane
-
-     Game-management methods
-
-********************************/
+/*
+ ##############################################################################
+ #                                                                            #
+ #    This file is part of PixelDungeon.                                      #
+ #                                                                            #
+ #    PixelDungeon is free software: you can redistribute it and/or modify    #
+ #    it under the terms of the GNU General Public License as published by    #
+ #    the Free Software Foundation, either version 3 of the License, or       #
+ #     (at your option) any later version.                                    #
+ #                                                                            #
+ #    PixelDungeon is distributed in the hope that it will be useful,         #
+ #    but WITHOUT ANY WARRANTY; without even the implied warranty of          #
+ #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           #
+ #    GNU General Public License for more details.                            #
+ #                                                                            #
+ #    You should have received a copy of the GNU General Public License       #
+ #    along with PixelDungeon.  If not, see <http://www.gnu.org/licenses/>.   #
+ #                                                                            #
+ ##############################################################################
+*/
 
 /**
- *	@author Djidane
- * 	@file gameManager.cpp
- *  @brief Game-management methods
+ *    @author Alexandre Aubin
+ *  @brief  Game-management methods
  */
 
-#include "gameManager.h"
+#include "game/gameManager.h"
+
+gameManager theGame;
+
+int initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
+{
+//      0 1 2 3 4 5 6 7 8 9 101112131415
+/*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
+/*1 */	0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
+/*2 */	0,0,1,1,0,1,0,1,0,1,1,0,0,0,0,0,
+/*3 */	0,1,1,0,0,1,0,1,0,0,1,1,1,1,1,0,
+/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,1,0,
+/*5 */	1,1,0,1,1,0,0,0,1,0,2,0,0,0,1,0,
+/*6 */	1,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,
+/*7 */	1,0,3,0,1,0,0,0,1,0,1,0,1,1,1,0,
+/*8 */	1,0,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
+/*9 */	1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,
+/*10*/	0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,
+/*11*/	0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,
+/*12*/	0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0
+};
+
+int initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
+{
+//      0 1 2 3 4 5 6 7 8 9 101112131415
+/*0 */  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*1 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*2 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*3 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*4 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*5 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*6 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*7 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*8 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*9 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*10*/	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*11*/	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*12*/	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+};
+
+void initGame() { theGame.init(); };
 
 void gameManager::init()
 {
-	setGameCurrentDisplay(2,2);
+    // Dirty temporary system for map initialization
+    // TODO : more generic/developper friendly way to implement map
+
+    gameObject_Empty*  empty  = new gameObject_Empty(0);         
+    gameObject_Wall*   wall   = new gameObject_Wall(1);          
+    gameObject_Door*   door   = new gameObject_Door(2,false);    
+    gameObject_Switch* switc  = new gameObject_Switch(3,false,2);
+  
+    theObjectCollection[0] = empty;
+    theObjectCollection[1] = wall;
+    theObjectCollection[2] = door;
+    theObjectCollection[3] = switc;
+
+    for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
+    {
+        theMap.setTileLayer0(i,theObjectCollection[initLayer0[i]]);
+        theMap.setTileLayer1(i,theObjectCollection[initLayer1[i]]);
+    }
+
+    theHero = new gameObject_Hero(4,6,6);         
+    theObjectCollection[4] = theHero;
+    theMap.setTileLayer1(6+GAME_MAP_WIDTH*6,theHero);
+     
+    theMap.setGameCurrentDisplay(2,2);
 }
 
-void gameManager::moveHero(int direction)
+void gameManager::moveHero(Direction dir)
 {
-	int prev_i = gameHero_i;
-	int prev_j = gameHero_j;
+    int prev_x = theHero->getX();
+    int prev_y = theHero->getY();
 
-	int new_i = prev_i;
-	int new_j = prev_j;
+    /*
+    int new_x = prev_x;
+    int new_y = prev_y;
 
-		 if (direction == UP)    new_j++;
-	else if (direction == DOWN)  new_j--;
-	else if (direction == LEFT)  new_i--;
-	else if (direction == RIGHT) new_i++;
+         if (dir == UP)    new_y++;
+    else if (dir == DOWN)  new_y--;
+    else if (dir == LEFT)  new_x--;
+    else if (dir == RIGHT) new_x++;
+    */
+    /*
+    if (theMap.isWalkable(new_x,new_y))
+    {
 
-	if (isWalkable(getGameMapType(new_i,new_j)))
-	{
+        // Trigger action on the case if there's one
+        //theMap.triggerAction(new_x,new_y);
 
-		// Make action on the case if there's one
+        // Move the hero
+        theMap.setTileLayer1(6+GAME_MAP_WIDTH*6,theObjectCollection[0]);
+        theMap.setTileLayer1(6+GAME_MAP_WIDTH*7,theHero);
 
-		makeAction(new_i,new_j);
+        //theHero->setX(new_x);
+        //theHero->setY(new_y);
 
-		// Save next tile and recover previous one
-		int tmpNextId = getGameMapId(new_i,new_j);
-		int tmpNextType = getGameMapType(new_i,new_j);
-
-		setGameMapId(prev_i,prev_j,prevHeroTileId);
-		setGameMapType(prev_i,prev_j,prevHeroTileType);
-
-		prevHeroTileType = tmpNextType;
-		prevHeroTileId = tmpNextId;
-
-
-		// Actually move hero
-		setGameMapType(new_i,new_j,GAME_OBJECT_HERO);
-		gameHero_i = new_i;
-		gameHero_j = new_j;
-
-		// Update display
-		updateCornerCurrentDisplay();
-		setGameCurrentDisplay(cornerCurrentDisplay_i,cornerCurrentDisplay_j);
-	}
+        // Update display
+        //theMap.updateCurrentDisplay(theHero);
+        theMap.setGameCurrentDisplay(2,2);
+        
+    }
+    */
+ 
+    theMap.setTileLayer1(6+GAME_MAP_WIDTH*6,theObjectCollection[0]);
+    theMap.setTileLayer1(6+GAME_MAP_WIDTH*7,theHero);
+   
+    theMap.setGameCurrentDisplay(2,2);
 }
+

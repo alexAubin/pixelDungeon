@@ -1,61 +1,72 @@
-/********************************
-
-          Pixel Dungeon
-           by Djidane
-
-     Game-management class
-
-********************************/
+/*
+ ##############################################################################
+ #                                                                            #
+ #    This file is part of PixelDungeon.                                      #
+ #                                                                            #
+ #    PixelDungeon is free software: you can redistribute it and/or modify    #
+ #    it under the terms of the GNU General Public License as published by    #
+ #    the Free Software Foundation, either version 3 of the License, or       #
+ #     (at your option) any later version.                                    #
+ #                                                                            #
+ #    PixelDungeon is distributed in the hope that it will be useful,         #
+ #    but WITHOUT ANY WARRANTY; without even the implied warranty of          #
+ #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           #
+ #    GNU General Public License for more details.                            #
+ #                                                                            #
+ #    You should have received a copy of the GNU General Public License       #
+ #    along with PixelDungeon.  If not, see <http://www.gnu.org/licenses/>.   #
+ #                                                                            #
+ ##############################################################################
+*/
 
 /**
- *	@author Djidane
- * 	@file gameManager.h
- *  @brief Game-management class
- */
+ *  @author Alexandre Aubin
+ *  @brief  Game-management class
+*/
 
 #ifndef GAME_MANAGER_H_
 #define GAME_MANAGER_H_
 
-#include "gameCommon.h"
+#include "game/gameCommon.h"
+#include "game/gameMap.h"
+#include "game/gameData.h"
 
 class gameManager
 {
-	private:
+    
+    public:
 
-	// Attributes
+        // Constructor
+        gameManager() { };
 
-		gameMap	theMap;
+        void init();
 
-		gameObject*	theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
+        // Interface with rest of the program
 
-		gameObject_Hero theHero;
+        void upKey()    { moveHero(UP);    }
+        void downKey()  { moveHero(DOWN);  }
+        void rightKey() { moveHero(RIGHT); }
+        void leftKey()  { moveHero(LEFT);  }
 
+    private:
 
-	// Methods
+    // Attributes
 
-		// Constructor
-		gameManager();
+        gameMap          theMap;
 
-		// Destructor
-		~gameManager();
+        gameObject*      theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
 
-		void init();
+        gameObject_Hero* theHero;
 
-		void moveHero(int direction);
+    // Methods
 
-	public:
+        void moveHero(Direction dir);
 
-		// Interface with rest of the program
-
-		void upKey() 	{ moveHero(UP); }
-		void downKey() 	{ moveHero(DOWN); }
-		void rightKey() { moveHero(RIGHT); }
-		void leftKey() 	{ moveHero(LEFT); }
 
 };
 
-gameManager theGame;
+extern gameManager theGame;
 
-void initGame() { theGame.init() };
+void initGame();
 
 #endif

@@ -21,27 +21,32 @@
 
 /**
  *	@author Alexandre Aubin
- *  @brief Game map layer methods
+ *  @brief Keys management definitions
 */
 
-#include "gameMapLayer.h"
+#ifndef HAL_KEYS_H_
+#define HAL_KEYS_H_
 
-ObjectColor gameMapLayer::getColor(int x, int y)
-{
-	return layer[x*GAME_MAP_WIDTH + y]->getColor();
-}
+#include "common.h"
+#include "game/gameManager.h"
 
-ObjectType  gameMapLayer::getType(int x, int y)
-{
-	return layer[x*GAME_MAP_WIDTH + y]->getType();
-}
+// *********************************************************************
+//                         IO config (pin numbers)
+// *********************************************************************
 
-void gameMapLayer::setTile(int tile,gameObject* object)
-{
-	layer[tile] = object;
-}
+#define UP_KEY 4
+#define DOWN_KEY 3
+#define LEFT_KEY 5
+#define RIGHT_KEY 2
 
-bool gameMapLayer::isWalkable(int tile) const
-{
-    return layer[tile]->isWalkable();
-}
+// *********************************************************************
+//                           Prototypes
+// *********************************************************************
+
+void upInterruptHandler();
+void downInterruptHandler();
+void leftInterruptHandler();
+void rightInterruptHandler();
+
+
+#endif

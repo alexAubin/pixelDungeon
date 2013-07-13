@@ -1,323 +1,358 @@
-/********************************
-
-          Pixel Dungeon
-           by Djidane
-
-   Game objects class definition
-
-********************************/
+/*
+ ##############################################################################
+ #                                                                            #
+ #    This file is part of PixelDungeon.                                      #
+ #                                                                            #
+ #    PixelDungeon is free software: you can redistribute it and/or modify    #
+ #    it under the terms of the GNU General Public License as published by    #
+ #    the Free Software Foundation, either version 3 of the License, or       #
+ #     (at your option) any later version.                                    #
+ #                                                                            #
+ #    PixelDungeon is distributed in the hope that it will be useful,         #
+ #    but WITHOUT ANY WARRANTY; without even the implied warranty of          #
+ #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           #
+ #    GNU General Public License for more details.                            #
+ #                                                                            #
+ #    You should have received a copy of the GNU General Public License       #
+ #    along with PixelDungeon.  If not, see <http://www.gnu.org/licenses/>.   #
+ #                                                                            #
+ ##############################################################################
+*/
 
 /**
- *	@author Djidane
- * 	@file gameObject.h
+ *    @author Alexandre Aubin
  *  @brief Game objects class definition
- */
+*/
 
 #ifndef GAME_OBJECT_H_
 #define GAME_OBJECT_H_
 
+#include "../hal/display.h"
 #include "gameCommon.h"
+
+enum ObjectType
+{
+    OBJECTTYPE_EMPTY,
+    OBJECTTYPE_WALL,
+    OBJECTTYPE_HERO,
+    OBJECTTYPE_SWITCH,
+    OBJECTTYPE_DOOR,
+    OBJECTTYPE_TELEPORT,
+    OBJECTTYPE_GOLDP,
+    OBJECTTYPE_MONSTER,
+    OBJECTTYPE_HPPOT,
+    OBJECTTYPE_MPPOT
+};
+
+enum ObjectColor
+{
+    OBJECTCOLOR_EMPTY       = DISPLAYCOLOR_EMPTY,
+    OBJECTCOLOR_WALL        = DISPLAYCOLOR_WHITE,
+    OBJECTCOLOR_SWITCH_OFF  = DISPLAYCOLOR_KINGBLUE,
+    OBJECTCOLOR_SWITCH_ON   = DISPLAYCOLOR_ORANGE,
+    OBJECTCOLOR_DOOR_CLOSED = DISPLAYCOLOR_CYAN,
+    OBJECTCOLOR_DOOR_OPEN   = DISPLAYCOLOR_EMPTY,
+    OBJECTCOLOR_TELEPORT    = DISPLAYCOLOR_ORANGE,
+    OBJECTCOLOR_GOLDP       = DISPLAYCOLOR_YELLOW,
+    OBJECTCOLOR_MONSTER     = DISPLAYCOLOR_RED,
+    OBJECTCOLOR_HPPOT       = DISPLAYCOLOR_GREEN,
+    OBJECTCOLOR_MPPOT       = DISPLAYCOLOR_VIOLET,
+    OBJECTCOLOR_HERO        = DISPLAYCOLOR_BLUE
+};
 
 class gameObject
 {
-	public:
+    public:
 
-		enum Type
-		{
-			EMPTY,
-			WALL,
-			HERO,
-			SWITCH,
-			DOOR,
-			TELEPORT,
-			GOLDP,
-			MONSTER,
-			HPPOT,
-			MPPOT
-		};
+        // Constructor
+        gameObject(int id_, bool walkable_, bool solid_, ObjectType type_, ObjectColor color_)
+        {
+              id     =   id_;
+            walkable = walkable_;
+             solid   =  solid_;
+             type    =  type_;
+             color   =  color_;
+        }
 
-		enum Color
-		{
-			EMPTY 		= EMPTY_ID,
-			WALL  		= WHITE_ID,
-			SWITCH_OFF 	= KINGBLUE_ID,
-			SWITCH_ON 	= ORANGE_ID,
-			DOOR_CLOSED = CYAN_ID,
-			DOOR_OPEN 	= EMPTY_ID,
-			TELEPORT 	= ORANGE_ID,
-			GOLDP 		= YELLOW_ID,
-			MONSTER 	= RED_ID,
-			HPPOT 		= GREEN_ID,
-			MPPOT 		= VIOLET_ID,
-			HERO	 	= BLUE_ID
-		};
 
-		// Constructor
-		gameObject();
+        // Accessors
+        int getId()            const { return id;       };
+        ObjectType getType()   const { return type;     };
+        bool isWalkable()      const { return walkable; };
+        bool isSolid()         const { return solid;    };
+        ObjectColor getColor() const { return color;    };
 
-		// Destructor
-		~gameObject();
+        // Trigger
+        virtual void triggerAction() = 0;
 
-		// Accessors
-		bool isWalkable() { return walkable; };
-		bool isSolid()    { return solid;    };
-		short int getColor() { return color;    };
-		short int getType()  { return type;     };
-		int id()          { return id;       };
+    protected:
 
-	private:
-
-		bool walkable;
-		bool solid;
-
-		short int color;
-		gameObjectType type;
-		int id;
+        int id;
+        bool walkable;
+        bool solid;
+        ObjectType type;
+        ObjectColor color;
 
 };
 
-// #############
-// # Empty object
-// #############
-class gameObject_Empty
-{
-	public:
+// ####################
+// #   Empty object   #
+// ####################
 
-		gameObject_Empty(int id_)
-		{
-			walkable = true;
-			solid = false;
-			color = Color::EMPTY;
-			type = Type::EMPTY;
-			id = id_;
-		}
+class gameObject_Empty : public gameObject
+{
+    public:
+
+        gameObject_Empty(int id_):
+        gameObject::gameObject(id_,true,false,OBJECTTYPE_EMPTY,OBJECTCOLOR_EMPTY) { }
+
+        void triggerAction() {}
 };
 
 // #############
-// # Walls
+// #   Walls   #
 // #############
-class gameObject_Wall
-{
-	public:
 
-		gameObject_Wall(int id_)
-		{
-			walkable = false;
-			solid = true;
-			color = Color::WALL;
-			type = Type::WALL;
-			id = id_;
-		}
+class gameObject_Wall : public gameObject
+{
+    public:
+
+        gameObject_Wall(int id_):
+        gameObject::gameObject(id_,false,true,OBJECTTYPE_WALL,OBJECTCOLOR_WALL) { } 
+
+        void triggerAction() {}
+};
+
+// ################
+// #   Switches   #
+// ################
+
+class gameObject_Switch : public gameObject
+{
+    public:
+
+        gameObject_Switch(int id_, bool state_, short int linkId_):
+        gameObject::gameObject(id_,true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_SWITCH_OFF)
+        {
+            state = state_;
+            linkId = linkId_;
+            
+            if (state_) color = OBJECTCOLOR_SWITCH_ON;
+        }
+
+        void switchOn()
+        {
+            state = true;
+            color = OBJECTCOLOR_SWITCH_ON;
+            // TODO : trigger linkId
+        }
+
+        void swichOff()
+        {
+            state = false;
+            color = OBJECTCOLOR_SWITCH_OFF;
+            // TODO : trigger linkId
+        }
+
+        void triggerAction() {}
+
+    private:
+
+        bool state;
+        short int linkId;
 };
 
 // #############
-// # Switches
+// #   Doors   #
 // #############
-class gameObject_Switch
+
+class gameObject_Door : public gameObject
 {
-	public:
+    public:
 
-		gameObject_Switch(int id_, bool state_, short int linkId_)
-		{
-			walkable = false;
-			solid = true;
-			color = Color::SWITCH_OFF;
-			type = Type::SWITCH;
-			id = id_;
+        gameObject_Door(int id_, bool state_):
+        gameObject::gameObject(id_,false,true,OBJECTTYPE_DOOR,OBJECTCOLOR_DOOR_CLOSED)
+        {
+            state = state_;
 
-			state = state_;
-			linkId = linkId_;
-		}
+            if (state) open();
+        }
 
-	private:
+        void open()
+        {
+            solid = false;
+            state = true;
+            walkable = true;
+            color = OBJECTCOLOR_DOOR_OPEN;
+        }
+    
+        void close()
+        {
+            solid = true;
+            state = false;
+            walkable = false;
+            color = OBJECTCOLOR_DOOR_CLOSED;
+        }
 
-		bool state;
-		short int linkID;
+        void triggerAction() {}
+
+    private:
+
+        bool state;
+
+
 };
 
-// #############
-// # Doors
-// #############
-class gameObject_Door
+// #################
+// #   Teleports   #
+// #################
+
+class gameObject_Teleport : public gameObject
 {
-	public:
+    public:
 
-		gameObject_Door(int id_, bool state_)
-		{
-			walkable = false;
-			solid = true;
-			color = Color::DOOR_OPEN;
-			type = Type::DOOR;
-			id = id_;
+        gameObject_Teleport(int id_, short int linkId_):
+        gameObject::gameObject(id_,true,false,OBJECTTYPE_TELEPORT,OBJECTCOLOR_TELEPORT)
+        {
+            linkId = linkId;
+        }
 
-			state = state_;
-		}
+        void triggerAction() {}
 
-	private:
+    private:
 
-		bool state;
+        short int linkId;
 };
 
-// #############
-// # Teleports
-// #############
-class gameObject_Teleport
+// ###################
+// #   Gold pieces   #
+// ###################
+
+class gameObject_Goldp : public gameObject
 {
-	public:
+    public:
 
-		gameObject_Teleport(int id_, short int linkId_)
-		{
-			walkable = true;
-			solid = false;
-			color = Color::TELEPORT;
-			type = Type::TELEPORT;
-			id = id_;
+        gameObject_Goldp(int id_, short int value_):
+        gameObject::gameObject(id_,true,false,OBJECTTYPE_GOLDP,OBJECTCOLOR_GOLDP)
+        {
+            state = true;
+            value = value_;
+        }
 
-			linkId = linkId;
-		}
+        void triggerAction() {}
 
-	private:
+    private:
 
-		short int linkId;
+        bool state;
+        short int value;
 };
 
-// #############
-// # Gold pieces
-// #############
-class gameObject_Goldp
+// ##############
+// #   HP Pot   #
+// ##############
+
+class gameObject_Hppot : public gameObject
 {
-	public:
+    public:
 
-		gameObject_Goldp(int id_, short int value_)
-		{
-			walkable = true;
-			solid = false;
-			color = Color::GOLDP;
-			type = Type::GOLDP;
-			id = id_;
+        gameObject_Hppot(int id_, short int value_):
+        gameObject::gameObject(id_,true,false,OBJECTTYPE_HPPOT,OBJECTCOLOR_HPPOT)
+        {
+            state = true;
+            value = value_;
+        }
 
-			state = true;
-			value = value_;
-		}
+        void triggerAction() {}
 
-	private:
+    private:
 
-		bool state;
-		short int value;
+        bool state;
+        short int value;
 };
 
-// #############
-// # HP Pot
-// #############
-class gameObject_Hppot
+// ##############
+// #   MP Pot   #
+// ##############
+
+class gameObject_Mppot : public gameObject
 {
-	public:
+    public:
 
-		gameObject_Hppot(int id_, short int value_)
-		{
-			walkable = true;
-			solid = false;
-			color = Color::HPPOT;
-			type = Type::HPPOT;
-			id = id_;
+        gameObject_Mppot(int id_, short int value_):
+        gameObject::gameObject(id_,true,false,OBJECTTYPE_MPPOT,OBJECTCOLOR_MPPOT)
+        {
+            state = true;
+            value = value_;
+        }
 
-			state = true;
-			value = value_;
-		}
+        void triggerAction() {}
 
-	private:
+    private:
 
-		bool state;
-		short int value;
+        bool state;
+        short int value;
 };
 
-// #############
-// # MP Pot
-// #############
-class gameObject_Hppot
+// ###############
+// #   Monster   #
+// ###############
+
+class gameObject_Monster : public gameObject
 {
-	public:
+    public:
 
-		gameObject_Hppot(int id_, short int value_)
-		{
-			walkable = true;
-			solid = false;
-			color = Color::MPPOT;
-			type = Type::MPPOT;
-			id = id_;
+        gameObject_Monster(int id_, int x_, int y_, short int hp_):
+        gameObject::gameObject(id_,false,true,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER)
+        {
+            state = true;
+            hp = hp_;
+            x = x_;
+            y = y_;
+        }
 
-			state = true;
-			value = value_;
-		}
+        void triggerAction() {}
 
-	private:
+    private:
 
-		bool state;
-		short int value;
+        int x;
+        int y;
+        bool state;
+        short int hp;
 };
 
-// #############
-// # Monster
-// #############
+// ############
+// #   Hero   #
+// ############
 
-class gameObject_Monster
+class gameObject_Hero : public gameObject
 {
-	public:
+    public:
 
-		gameObject_Monster(int id_, int x_, int y_, short int hp_)
-		{
-			walkable = true;
-			solid = false;
-			color = Color::MPPOT;
-			type = Type::MPPOT;
-			id = id_;
+        gameObject_Hero(int id_, int x_, int y_):
+        gameObject::gameObject(id_,false,true,OBJECTTYPE_HERO,OBJECTCOLOR_HERO)
+        {
+            x = x_;
+            y = y_;
 
-			state = true;
-			hp = hp_;
-			x = x_;
-			y = y_;
-		}
+            hp = 10;
+            mp = 10;
+            goldp = 0;
+        }
+        void triggerAction() { }
+        int getX() { return x; }
+        int getY() { return y; }
+    
+        void setX(int x_) { x = x_; }
+        void setY(int y_) { y = y_; }
 
-	private:
+    private:
 
-		int x;
-		int y;
-		bool state;
-		short int hp;
-};
+        int x;
+        int y;
 
-// #############
-// # Hero
-// #############
-
-class gameObject_Hero
-{
-	public:
-
-		gameObject_Hero(int id_, int x_, int y_)
-		{
-			walkable = true;
-			solid = false;
-			color = Color::MPPOT;
-			type = Type::MPPOT;
-			id = id_;
-
-			x = x_;
-			y = y_;
-
-			hp = hp_;
-			mp = mp_;
-			goldp = goldp_;
-		}
-
-	private:
-
-		int x;
-		int y;
-
-		short int hp;
-		short int mp;
-		short int goldp;
+        short int hp;
+        short int mp;
+        short int goldp;
 };
 
 #endif

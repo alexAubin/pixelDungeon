@@ -170,7 +170,7 @@ endif
 # automatically determine sources and targeet
 TARGET := $(basename $(INOFILE))
 SOURCES := $(INOFILE) \
-	$(wildcard *.c *.cc *.cpp lib/*/*.cpp lib/*/*.c) \
+	$(wildcard *.c *.cc *.cpp hal/*.cpp game/*.cpp lib/*/*.cpp lib/*/*.c) \
 	$(wildcard $(addprefix util/, *.c *.cc *.cpp)) \
 	$(wildcard $(addprefix utility/, *.c *.cc *.cpp))
 

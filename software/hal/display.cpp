@@ -1,36 +1,32 @@
-
-/********************************
-
-          Pixel Dungeon
-           by Djidane
-
-    Display-related functions
-
-********************************/
+/*
+ ##############################################################################
+ #                                                                            #
+ #    This file is part of PixelDungeon.                                      #
+ #                                                                            #
+ #    PixelDungeon is free software: you can redistribute it and/or modify    #
+ #    it under the terms of the GNU General Public License as published by    #
+ #    the Free Software Foundation, either version 3 of the License, or       #
+ #     (at your option) any later version.                                    #
+ #                                                                            #
+ #    PixelDungeon is distributed in the hope that it will be useful,         #
+ #    but WITHOUT ANY WARRANTY; without even the implied warranty of          #
+ #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           #
+ #    GNU General Public License for more details.                            #
+ #                                                                            #
+ #    You should have received a copy of the GNU General Public License       #
+ #    along with PixelDungeon.  If not, see <http://www.gnu.org/licenses/>.   #
+ #                                                                            #
+ ##############################################################################
+*/
 
 /**
- *	@author Djidane
- * 	@file halDisplay.cpp
- *  @brief Display-related functions
- */
+ *	@author Alexandre Aubin
+ *  @brief  Display-related functions
+*/
 
- #include "halDisplay.h"
+#include "hal/display.h"
 
 // *********************************************************************
-
-/*
-int currentDisplay[DISPLAY_NPIX] =
-{
-   4, 4, 0, 4, 4, 0, 4, 4,
-   4, 4, 0, 4, 4, 0, 4, 4,
-   0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 4, 4,
-   0, 0, 0, 0, 0, 0, 4, 4,
-   0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 4, 4, 0, 0, 0,
-   0, 0, 0, 4, 4, 0, 0, 0
-};*/
-
 
 int currentDisplay[DISPLAY_NPIX] =
 {
@@ -43,32 +39,6 @@ int currentDisplay[DISPLAY_NPIX] =
    4, 4, 0, 9, 9, 0, 3, 3,
    4, 4, 0, 9, 9, 0, 3, 3
 };
-
-/*
-int currentDisplay[DISPLAY_NPIX] =
-{
-   0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 2, 2, 0, 0, 0,
-   0, 0, 2, 2, 2, 2, 0, 0,
-   0, 2, 2, 2, 2, 2, 2, 0,
-   2, 2, 2, 2, 2, 2, 2, 2,
-   2, 2, 2, 2, 2, 2, 2, 2,
-   2, 2, 2, 2, 2, 2, 2, 2,
-   0, 2, 2, 0, 0, 2, 2, 0
-};*/
-
-/*
-int currentDisplay[DISPLAY_NPIX] =
-{
-   0, 0, 0, 4, 4, 0, 0, 0,
-   0, 0, 3, 3, 3, 3, 0, 0,
-   0, 3, 2, 2, 2, 2, 3, 0,
-   4, 3, 2, 1, 1, 2, 3, 4,
-   4, 3, 2, 1, 1, 2, 3, 4,
-   0, 3, 2, 2, 2, 2, 3, 0,
-   0, 0, 3, 3, 3, 3, 0, 0,
-   0, 0, 0, 4, 4, 0, 0, 0
-};*/
 
 // *********************************************************************
 
@@ -103,7 +73,7 @@ void displayRefreshNextPixel()
   if (currentPixel == DISPLAY_NPIX) currentPixel = 0;
 
   int color = currentDisplay[currentPixel];
-  if (color == EMPTY_ID) return;
+  if (color == DISPLAYCOLOR_EMPTY) return;
 
   digitalWrite(X0, bitRead(currentPixel,0));
   digitalWrite(X1, bitRead(currentPixel,1));
@@ -118,7 +88,7 @@ void displayRefreshNextPixel()
 
 void displayColor(int color)
 {
-    if (color == WHITE_ID)
+    if (color == DISPLAYCOLOR_WHITE)
     {
       digitalWrite(REDLED, HIGH);
       digitalWrite(GREENLED, HIGH);
@@ -129,28 +99,28 @@ void displayColor(int color)
 	  digitalWrite(BLUELED, LOW);
 	  digitalWrite(GREENLED, LOW);
     }
-    else if (color == RED_ID)
+    else if (color == DISPLAYCOLOR_RED)
     {
       digitalWrite(REDLED, HIGH);
       PRINTCOLOR_WAIT_UNIT;
      // PRINTCOLOR_WAIT_UNIT;
       digitalWrite(REDLED, LOW);
     }
-    else if (color == GREEN_ID)
+    else if (color == DISPLAYCOLOR_GREEN)
     {
       digitalWrite(GREENLED, HIGH);
       PRINTCOLOR_WAIT_UNIT;
       PRINTCOLOR_WAIT_UNIT;
       digitalWrite(GREENLED, LOW);
     }
-    else if (color == BLUE_ID)
+    else if (color == DISPLAYCOLOR_BLUE)
     {
       digitalWrite(BLUELED, HIGH);
       PRINTCOLOR_WAIT_UNIT;
       PRINTCOLOR_WAIT_UNIT;
       digitalWrite(BLUELED, LOW);
     }
-    else if (color == YELLOW_ID)
+    else if (color == DISPLAYCOLOR_YELLOW)
     {
       digitalWrite(REDLED, HIGH);
       digitalWrite(GREENLED, HIGH);
@@ -159,7 +129,7 @@ void displayColor(int color)
       digitalWrite(REDLED, LOW);
       digitalWrite(GREENLED, LOW);
     }
-    else if (color == MAGENTA_ID)
+    else if (color == DISPLAYCOLOR_MAGENTA)
     {
       digitalWrite(BLUELED, HIGH);
       digitalWrite(REDLED, HIGH);
@@ -168,7 +138,7 @@ void displayColor(int color)
       PRINTCOLOR_WAIT_UNIT;
       digitalWrite(REDLED, LOW);
     }
-    else if (color == CYAN_ID)
+    else if (color == DISPLAYCOLOR_CYAN)
     {
       digitalWrite(GREENLED, HIGH);
       digitalWrite(BLUELED, HIGH);
@@ -177,7 +147,7 @@ void displayColor(int color)
       digitalWrite(GREENLED, LOW);
       digitalWrite(BLUELED, LOW);
     }
-    else if (color == ORANGE_ID)
+    else if (color == DISPLAYCOLOR_ORANGE)
     {
       digitalWrite(REDLED, HIGH);
       digitalWrite(GREENLED, HIGH);
@@ -186,7 +156,7 @@ void displayColor(int color)
      PRINTCOLOR_WAIT_UNIT;
       digitalWrite(REDLED, LOW);
     }
-    else if (color == VIOLET_ID)
+    else if (color == DISPLAYCOLOR_VIOLET)
     {
 	  digitalWrite(BLUELED, HIGH);
       digitalWrite(REDLED, HIGH);
@@ -195,7 +165,7 @@ void displayColor(int color)
       PRINTCOLOR_WAIT_UNIT;
 	  digitalWrite(BLUELED, LOW);
     }
-    else if (color == KINGBLUE_ID)
+    else if (color == DISPLAYCOLOR_KINGBLUE)
     {
       digitalWrite(BLUELED, HIGH);
       digitalWrite(GREENLED, HIGH);
