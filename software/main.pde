@@ -30,10 +30,38 @@
 
 void setup()
 {
-	initDisplay();
-	initKeys();
-	initGame();
-	initTimer();
+
+    #ifdef DEBUG
+        Serial.begin(9600);
+        Serial.println(" ");
+        Serial.println(" > Pixel Dungeon starting ... ");
+        Serial.println("      Initializing display... ");
+    #endif
+    
+    initDisplay();
+
+    #ifdef DEBUG
+        Serial.println("      Initializing keys input... ");
+    #endif
+  
+    initKeys();
+
+    #ifdef DEBUG
+        Serial.println("      Initializing game... ");
+    #endif
+
+    initGame();
+
+    #ifdef DEBUG
+        Serial.println("      Initializing timers... ");
+    #endif
+
+    initTimer();
+
+    #ifdef DEBUG
+        Serial.println(" > Pixel Dungeon started succesfully. Waiting for inputs. ");
+    #endif
+
 }
 
 // *********************************************************************

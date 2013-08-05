@@ -28,7 +28,9 @@
 
 gameManager theGame;
 
-int initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
+#include <avr/pgmspace.h>
+
+PROGMEM prog_uint16_t initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 {
 //      0 1 2 3 4 5 6 7 8 9 101112131415
 /*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
@@ -46,7 +48,8 @@ int initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*12*/	0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0
 };
 
-int initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
+
+PROGMEM prog_uint16_t initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 {
 //      0 1 2 3 4 5 6 7 8 9 101112131415
 /*0 */  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -83,9 +86,10 @@ void gameManager::init()
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {
-        theMap.setTileLayer0(i,theObjectCollection[initLayer0[i]]);
-        theMap.setTileLayer1(i,theObjectCollection[initLayer1[i]]);
+        theMap.setTileLayer0(i,theObjectCollection[pgm_read_word_near(initLayer0+i)]);
+        theMap.setTileLayer1(i,theObjectCollection[pgm_read_word_near(initLayer0+i)]);
     }
+
 
     theHero = new gameObject_Hero(4,6,6);         
     theObjectCollection[4] = theHero;
@@ -96,10 +100,16 @@ void gameManager::init()
 
 void gameManager::moveHero(Direction dir)
 {
+    #ifdef DEBUG
+         if (dir == UP)    Serial.println(" > Moving hero : Up ");
+    else if (dir == DOWN)  Serial.println(" > Moving hero : Down ");
+    else if (dir == LEFT)  Serial.println(" > Moving hero : Left ");
+    else if (dir == RIGHT) Serial.println(" > Moving hero : Right ");
+    #endif
+   
     int prev_x = theHero->getX();
     int prev_y = theHero->getY();
 
-    /*
     int new_x = prev_x;
     int new_y = prev_y;
 
@@ -107,8 +117,7 @@ void gameManager::moveHero(Direction dir)
     else if (dir == DOWN)  new_y--;
     else if (dir == LEFT)  new_x--;
     else if (dir == RIGHT) new_x++;
-    */
-    /*
+   
     if (theMap.isWalkable(new_x,new_y))
     {
 
@@ -116,22 +125,16 @@ void gameManager::moveHero(Direction dir)
         //theMap.triggerAction(new_x,new_y);
 
         // Move the hero
-        theMap.setTileLayer1(6+GAME_MAP_WIDTH*6,theObjectCollection[0]);
-        theMap.setTileLayer1(6+GAME_MAP_WIDTH*7,theHero);
+        theMap.setTileLayer1(prev_y+GAME_MAP_WIDTH*prev_x,theObjectCollection[0]);
+        theMap.setTileLayer1(new_y +GAME_MAP_WIDTH*new_x, theHero);
 
-        //theHero->setX(new_x);
-        //theHero->setY(new_y);
+        theHero->setX(new_x);
+        theHero->setY(new_y);
 
         // Update display
-        //theMap.updateCurrentDisplay(theHero);
-        theMap.setGameCurrentDisplay(2,2);
+        theMap.updateCurrentDisplay(theHero);
         
     }
-    */
- 
-    theMap.setTileLayer1(6+GAME_MAP_WIDTH*6,theObjectCollection[0]);
-    theMap.setTileLayer1(6+GAME_MAP_WIDTH*7,theHero);
-   
-    theMap.setGameCurrentDisplay(2,2);
+    
 }
 
