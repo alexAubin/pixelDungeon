@@ -63,7 +63,7 @@ void gameMap::setGameCurrentDisplay(int x, int y)
 	}
 }
 
-ObjectColor gameMap::getColor(int x, int y)
+ObjectColor gameMap::getColor(int x, int y) const
 {
 	if (layer1.getType(x,y) == OBJECTTYPE_EMPTY)
 		return layer0.getColor(x,y);
@@ -71,8 +71,9 @@ ObjectColor gameMap::getColor(int x, int y)
 		return layer1.getColor(x,y);
 }
 
-void gameMap::triggerAction(int x, int y)
+void gameMap::triggerAction(int x, int y) const
 {
+    layer0.triggerAction(x,y);
 }
 
 void gameMap::setTileLayer0(int tile,gameObject* object)

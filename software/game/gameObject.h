@@ -82,8 +82,9 @@ class gameObject
         bool isSolid()         const { return solid;    };
         ObjectColor getColor() const { return color;    };
 
-        // Trigger
+        // Triggers
         virtual void triggerAction() = 0;
+        virtual void triggerActionViaLink() = 0;
 
     protected:
 
@@ -107,6 +108,7 @@ class gameObject_Empty : public gameObject
         gameObject::gameObject(id_,true,false,OBJECTTYPE_EMPTY,OBJECTCOLOR_EMPTY) { }
 
         void triggerAction() {}
+        void triggerActionViaLink() {}
 };
 
 // #############
@@ -121,6 +123,7 @@ class gameObject_Wall : public gameObject
         gameObject::gameObject(id_,false,true,OBJECTTYPE_WALL,OBJECTCOLOR_WALL) { } 
 
         void triggerAction() {}
+        void triggerActionViaLink() {}
 };
 
 // ################
@@ -131,11 +134,11 @@ class gameObject_Switch : public gameObject
 {
     public:
 
-        gameObject_Switch(int id_, bool state_, short int linkId_):
+        gameObject_Switch(int id_, bool state_, gameObject* link_):
         gameObject::gameObject(id_,true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_SWITCH_OFF)
         {
             state = state_;
-            linkId = linkId_;
+            link = link_;
             
             if (state_) color = OBJECTCOLOR_SWITCH_ON;
         }
@@ -144,22 +147,27 @@ class gameObject_Switch : public gameObject
         {
             state = true;
             color = OBJECTCOLOR_SWITCH_ON;
-            // TODO : trigger linkId
+            link->triggerActionViaLink();
         }
 
-        void swichOff()
+        void switchOff()
         {
             state = false;
             color = OBJECTCOLOR_SWITCH_OFF;
-            // TODO : trigger linkId
+            link->triggerActionViaLink();
         }
 
-        void triggerAction() {}
+        void triggerAction()
+        {
+            if (state) switchOff();
+            else       switchOn();
+        }
+        void triggerActionViaLink() {}
 
     private:
 
         bool state;
-        short int linkId;
+        gameObject* link;
 };
 
 // #############
@@ -195,6 +203,11 @@ class gameObject_Door : public gameObject
         }
 
         void triggerAction() {}
+        void triggerActionViaLink() 
+        {
+            if (state) close();
+            else       open();
+        }
 
     private:
 
@@ -211,17 +224,18 @@ class gameObject_Teleport : public gameObject
 {
     public:
 
-        gameObject_Teleport(int id_, short int linkId_):
+        gameObject_Teleport(int id_, gameObject* link_):
         gameObject::gameObject(id_,true,false,OBJECTTYPE_TELEPORT,OBJECTCOLOR_TELEPORT)
         {
-            linkId = linkId;
+            link = link_;
         }
 
         void triggerAction() {}
+        void triggerActionViaLink() {}
 
     private:
 
-        short int linkId;
+        gameObject* link;
 };
 
 // ###################
@@ -240,6 +254,7 @@ class gameObject_Goldp : public gameObject
         }
 
         void triggerAction() {}
+        void triggerActionViaLink() {}
 
     private:
 
@@ -263,6 +278,7 @@ class gameObject_Hppot : public gameObject
         }
 
         void triggerAction() {}
+        void triggerActionViaLink() {}
 
     private:
 
@@ -286,6 +302,7 @@ class gameObject_Mppot : public gameObject
         }
 
         void triggerAction() {}
+        void triggerActionViaLink() {}
 
     private:
 
@@ -311,6 +328,7 @@ class gameObject_Monster : public gameObject
         }
 
         void triggerAction() {}
+        void triggerActionViaLink() {}
 
     private:
 
@@ -339,6 +357,7 @@ class gameObject_Hero : public gameObject
             goldp = 0;
         }
         void triggerAction() { }
+        void triggerActionViaLink() {}
         int getX() { return x; }
         int getY() { return y; }
     

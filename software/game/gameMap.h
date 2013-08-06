@@ -45,9 +45,9 @@ class gameMap
 		// Constructor
 		gameMap() { };
 
-		ObjectColor getColor(int x, int y);
+		ObjectColor getColor(int x, int y) const;
         bool isWalkable(int x, int y) const;
-		void triggerAction(int x, int y);
+		void triggerAction(int x, int y) const;
 
         void updateCurrentDisplay(gameObject_Hero* theHero);
 

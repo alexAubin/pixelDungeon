@@ -77,7 +77,7 @@ void gameManager::init()
     gameObject_Empty*  empty  = new gameObject_Empty(0);         
     gameObject_Wall*   wall   = new gameObject_Wall(1);          
     gameObject_Door*   door   = new gameObject_Door(2,false);    
-    gameObject_Switch* switc  = new gameObject_Switch(3,false,2);
+    gameObject_Switch* switc  = new gameObject_Switch(3,false,door);
   
     theObjectCollection[0] = empty;
     theObjectCollection[1] = wall;
@@ -122,7 +122,7 @@ void gameManager::moveHero(Direction dir)
     {
 
         // Trigger action on the case if there's one
-        //theMap.triggerAction(new_x,new_y);
+        theMap.triggerAction(new_x,new_y);
 
         // Move the hero
         theMap.setTileLayer1(prev_y+GAME_MAP_WIDTH*prev_x,theObjectCollection[0]);

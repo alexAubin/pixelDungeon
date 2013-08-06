@@ -31,13 +31,15 @@ class gameMapLayer
 		// Constructor
 		gameMapLayer() { };
 
-		ObjectColor getColor(int x, int y);
+		ObjectColor getColor(int x, int y) const;
 
-		ObjectType getType(int x, int y);
+		ObjectType getType(int x, int y) const;
     
         void setTile(int tile,gameObject* object);
 
         bool isWalkable(int tile) const;
+
+        void triggerAction(int x, int y) const;
 };
 
 #endif

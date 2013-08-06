@@ -30,7 +30,7 @@
 #include <Arduino.h>
 #include "lib/TimerOne/TimerOne.h"
 
-#define DEBUG
+//#define DEBUG
 
 // *********************************************************************
 //                         Prototypes
