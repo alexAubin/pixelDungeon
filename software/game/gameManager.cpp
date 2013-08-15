@@ -68,15 +68,11 @@ PROGMEM prog_uint16_t initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 };
 
 void initGame() { theGame.init(); };
-
-
-void testPath() 
-{
-    //delay(1000);
-    //Serial.println(" > test");
+void gameTimerHandler() 
+{  
     gameMonsterAI::findBestWay(6,6,6,2);
-    //Serial.println(" > test2");
 };
+
 
 void gameManager::init()
 {

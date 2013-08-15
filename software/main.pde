@@ -59,21 +59,18 @@ void setup()
     initDisplay();
 
     #ifdef DEBUG
-        delay(100);
         Serial.println(" Init keys ");
     #endif
   
     initKeys();
 
     #ifdef DEBUG
-        delay(100);
         Serial.println(" Init game ");
     #endif
 
     initGame();
 
     #ifdef DEBUG
-        delay(100);
         Serial.println(" Init timers ");
         delay(1000);
     #endif
@@ -81,7 +78,6 @@ void setup()
     initTimer();
 
     #ifdef DEBUG
-        delay(100);
         Serial.println(" > Success. Waitin for inputs. ");
     #endif
 
@@ -100,10 +96,6 @@ void loop()
 void initTimer()
 {
 	Timer1.initialize(2000000);
-	Timer1.attachInterrupt(timerInterrupt);
+	Timer1.attachInterrupt(gameTimerHandler);
 }
 
-void timerInterrupt()
-{
-    testPath();
-}

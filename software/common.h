@@ -39,16 +39,12 @@
 void initDisplay();
 void initKeys();
 void initGame();
+void initTimer();
+void gameTimerHandler();
+
 
 void displayRefreshNextPixel();
-
 void updateCornerCurrentDisplay();
-
-void initTimer();
-void timerInterrupt();
-
-// Temporary
-void testPath();
 
 // *********************************************************************
 
