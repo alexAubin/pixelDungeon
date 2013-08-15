@@ -53,6 +53,8 @@ class gameMap
         void setTileLayer0(int tile,gameObject* object);
         void setTileLayer1(int tile,gameObject* object);
 		void triggerAction(int tile);
+        
+        bool moveCreature(gameObject_Creature* theCreature, Direction dir, gameObject* emptyObject);
 };
 
 #endif

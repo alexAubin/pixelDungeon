@@ -134,39 +134,39 @@ class gameObject_Switch : public gameObject
 {
     public:
 
-        gameObject_Switch(int id_, bool state_, gameObject* link_):
+        gameObject_Switch(int id_, bool activated_, gameObject* link_):
         gameObject::gameObject(id_,true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_SWITCH_OFF)
         {
-            state = state_;
+            activated = activated_;
             link = link_;
             
-            if (state_) color = OBJECTCOLOR_SWITCH_ON;
+            if (activated_) color = OBJECTCOLOR_SWITCH_ON;
         }
 
         void switchOn()
         {
-            state = true;
+            activated = true;
             color = OBJECTCOLOR_SWITCH_ON;
             link->triggerActionViaLink();
         }
 
         void switchOff()
         {
-            state = false;
+            activated = false;
             color = OBJECTCOLOR_SWITCH_OFF;
             link->triggerActionViaLink();
         }
 
         void triggerAction()
         {
-            if (state) switchOff();
+            if (activated) switchOff();
             else       switchOn();
         }
         void triggerActionViaLink() {}
 
     private:
 
-        bool state;
+        bool activated;
         gameObject* link;
 };
 
@@ -178,18 +178,18 @@ class gameObject_Door : public gameObject
 {
     public:
 
-        gameObject_Door(int id_, bool state_):
+        gameObject_Door(int id_, bool opened_):
         gameObject::gameObject(id_,false,true,OBJECTTYPE_DOOR,OBJECTCOLOR_DOOR_CLOSED)
         {
-            state = state_;
+            opened = opened_;
 
-            if (state) open();
+            if (opened) open();
         }
 
         void open()
         {
             solid = false;
-            state = true;
+            opened = true;
             walkable = true;
             //gameMonsterAI::setWalkableMap(tile,isWalkable(tile));
             color = OBJECTCOLOR_DOOR_OPEN;
@@ -198,7 +198,7 @@ class gameObject_Door : public gameObject
         void close()
         {
             solid = true;
-            state = false;
+            opened = false;
             walkable = false;
             color = OBJECTCOLOR_DOOR_CLOSED;
         }
@@ -206,13 +206,13 @@ class gameObject_Door : public gameObject
         void triggerAction() {}
         void triggerActionViaLink() 
         {
-            if (state) close();
+            if (opened) close();
             else       open();
         }
 
     private:
 
-        bool state;
+        bool opened;
 
 
 };
@@ -311,67 +311,83 @@ class gameObject_Mppot : public gameObject
         short int value;
 };
 
-// ###############
-// #   Monster   #
-// ###############
+// #################
+// #   Creatures   #
+// #################
 
-class gameObject_Monster : public gameObject
+class gameObject_Creature : public gameObject
 {
-    public:
+     public:
 
-        gameObject_Monster(int id_, int x_, int y_, short int hp_):
-        gameObject::gameObject(id_,false,true,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER)
+        gameObject_Creature(int id, int x_, int y_, short int hp_, ObjectType type, ObjectColor color):
+        gameObject::gameObject(id,false,true,type,color)
         {
-            state = true;
+            alive = true;
             hp = hp_;
             x = x_;
             y = y_;
         }
 
-        void triggerAction() {}
-        void triggerActionViaLink() {}
+        virtual void triggerAction() {}
+        virtual void triggerActionViaLink() {}
 
-    private:
-
-        int x;
-        int y;
-        bool state;
-        short int hp;
-};
-
-// ############
-// #   Hero   #
-// ############
-
-class gameObject_Hero : public gameObject
-{
-    public:
-
-        gameObject_Hero(int id_, int x_, int y_):
-        gameObject::gameObject(id_,false,true,OBJECTTYPE_HERO,OBJECTCOLOR_HERO)
-        {
-            x = x_;
-            y = y_;
-
-            hp = 10;
-            mp = 10;
-            goldp = 0;
-        }
-        void triggerAction() { }
-        void triggerActionViaLink() {}
         int getX() { return x; }
         int getY() { return y; }
     
         void setX(int x_) { x = x_; }
         void setY(int y_) { y = y_; }
+
         void setPosition(int x_, int y_) { x = x_; y = y_; }
 
     private:
 
         int x;
         int y;
-
+        bool alive;
         short int hp;
+  
+};
+
+// ###############
+// #   Monster   #
+// ###############
+
+class gameObject_Monster : public gameObject_Creature
+{
+    public:
+
+        gameObject_Monster(int id, int x, int y, short int hp):
+        gameObject_Creature::gameObject_Creature(id,x,y,hp,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER)
+        {
+        }
+
+        void triggerAction() {}
+        void triggerActionViaLink() { }
+
+ //   private:
+
+};
+
+// ############
+// #   Hero   #
+// ############
+
+class gameObject_Hero : public gameObject_Creature
+{
+    public:
+
+        gameObject_Hero(int id, int x, int y):
+        gameObject_Creature::gameObject_Creature(id,x,y,10,OBJECTTYPE_HERO,OBJECTCOLOR_HERO)
+        {
+            mp = 10;
+            goldp = 0;
+        }
+
+        void triggerAction() { }
+        void triggerActionViaLink() { }
+
+    private:
+
         short int mp;
         short int goldp;
 };

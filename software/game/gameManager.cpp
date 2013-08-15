@@ -107,41 +107,22 @@ void gameManager::init()
 
 void gameManager::moveHero(Direction dir)
 {
+    
     #ifdef DEBUG
          if (dir == UP)    Serial.println(" > Moving hero : Up ");
     else if (dir == DOWN)  Serial.println(" > Moving hero : Down ");
     else if (dir == LEFT)  Serial.println(" > Moving hero : Left ");
     else if (dir == RIGHT) Serial.println(" > Moving hero : Right ");
     #endif
-   
-    int prev_x = theHero->getX();
-    int prev_y = theHero->getY();
-
-    int new_x = prev_x;
-    int new_y = prev_y;
-
-         if (dir == UP)    new_y++;
-    else if (dir == DOWN)  new_y--;
-    else if (dir == LEFT)  new_x--;
-    else if (dir == RIGHT) new_x++;
-   
-    if (theMap.isWalkable(GAME_TILE(new_x,new_y)))
+    
+    if (theMap.moveCreature(theHero,dir,theObjectCollection[0]))
     {
-
-        // Trigger action on the case if there's one
-        theMap.triggerAction(GAME_TILE(new_x,new_y));
-
-        // Move the hero
-        theMap.setTileLayer1(GAME_TILE(prev_x,prev_y), theObjectCollection[0]);
-        theMap.setTileLayer1(GAME_TILE(new_x ,new_y ), theHero               );
-        theHero->setPosition(new_x,new_y);
-
         // Update display
         theMap.updateCurrentDisplay(theHero);
-        
     }
     
 }
+
 
 
 

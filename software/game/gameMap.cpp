@@ -95,3 +95,40 @@ bool gameMap::isWalkable(int tile) const
 {
    return (layer0.isWalkable(tile) && layer1.isWalkable(tile));
 }
+
+bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir, gameObject* emptyObject)
+{
+   
+    int prev_x = theCreature->getX();
+    int prev_y = theCreature->getY();
+
+    int new_x = prev_x;
+    int new_y = prev_y;
+
+    bool actuallyMoved = false;
+
+         if (dir == UP)    new_y++;
+    else if (dir == DOWN)  new_y--;
+    else if (dir == LEFT)  new_x--;
+    else if (dir == RIGHT) new_x++;
+   
+    noInterrupts();
+    if (isWalkable(GAME_TILE(new_x,new_y)))
+    {
+
+        // Trigger action on this tile
+        triggerAction(GAME_TILE(new_x,new_y));
+
+        // Move the creature
+        layer1.setTile(GAME_TILE(prev_x,prev_y), emptyObject);
+        layer1.setTile(GAME_TILE(new_x ,new_y ), theCreature);
+        theCreature->setPosition(new_x,new_y);
+        
+        actuallyMoved = true;
+    }
+
+    interrupts();
+    return actuallyMoved;
+    
+}
+

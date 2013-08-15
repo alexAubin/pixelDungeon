@@ -92,19 +92,24 @@ void gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int end_y)
             best_d = tmp_d;
         }
     }
-    /*
+
+    // Go back to determine which direction to go
+    for (int d = GAME_AI_PATH_DEPTH ; d != 1 ; d--)
+    {
+        if (miniMap[MINIMAP_TILE(best_i,best_j+1)] == d-1) best_j++;
+        if (miniMap[MINIMAP_TILE(best_i,best_j-1)] == d-1) best_j--; 
+        if (miniMap[MINIMAP_TILE(best_i+1,best_j)] == d-1) best_i++;
+        if (miniMap[MINIMAP_TILE(best_i-1,best_j)] == d-1) best_i--;
+    }
+
+    /* 
     #ifdef DEBUG
         delay(100);
-        Serial.println("   > Best found :");
-        delay(100);
-        Serial.println("x :");
-        delay(100);
         Serial.println(offset_x + best_i);
-        delay(100);
-        Serial.println("y :");
         delay(100);
         Serial.println(offset_y + best_j);
         delay(100);
     #endif
     */
+    
 }
