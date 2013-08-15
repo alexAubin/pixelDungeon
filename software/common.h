@@ -30,7 +30,7 @@
 #include <Arduino.h>
 #include "lib/TimerOne/TimerOne.h"
 
-//#define DEBUG
+#define DEBUG
 
 // *********************************************************************
 //                         Prototypes
@@ -46,6 +46,9 @@ void updateCornerCurrentDisplay();
 
 void initTimer();
 void timerInterrupt();
+
+// Temporary
+void testPath();
 
 // *********************************************************************
 

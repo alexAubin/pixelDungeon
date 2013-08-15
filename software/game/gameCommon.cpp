@@ -21,38 +21,16 @@
 
 /**
  *	@author Alexandre Aubin
- *  @brief Map-of the game management class
-*/
-
-#ifndef GAME_MAP_H_
-#define GAME_MAP_H_
+ *  @brief  Common definition
+ */
 
 #include "gameCommon.h"
-#include "gameMapLayer.h"
-
-class gameMap
+	
+int distance(int a_x, int a_y, int b_x, int b_y)
 {
-	private:
+    int d_x = a_x - b_x;
+    int d_y = a_y - b_y;
 
-		gameMapLayer  layer1;
-		gameMapLayer  layer0;
+    return (d_x * d_x + d_y * d_y);
+}
 
-		int positionCurrentDisplay_x;
-		int positionCurrentDisplay_y;
-
-	public:
-
-		gameMap();
-
-        void updateCurrentDisplay(gameObject_Hero* theHero);
-		void setGameCurrentDisplay(int x, int y);
-
-		ObjectColor getColor(int tile)   const;
-        bool        isWalkable(int tile) const;
-        
-        void setTileLayer0(int tile,gameObject* object);
-        void setTileLayer1(int tile,gameObject* object);
-		void triggerAction(int tile);
-};
-
-#endif

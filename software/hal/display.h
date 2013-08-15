@@ -35,6 +35,7 @@
 
 #define DISPLAY_WIDTH 8
 #define DISPLAY_NPIX DISPLAY_WIDTH*DISPLAY_WIDTH
+#define DISPLAY_PIXEL(x,y) ((y) + DISPLAY_WIDTH * (x))
 
 // *********************************************************************
 //                         Colors

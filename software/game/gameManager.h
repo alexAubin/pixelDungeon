@@ -30,6 +30,7 @@
 #include "game/gameCommon.h"
 #include "game/gameMap.h"
 #include "game/gameData.h"
+#include "game/gameMonsterAI.h"
 
 class gameManager
 {
@@ -37,11 +38,14 @@ class gameManager
     public:
 
         // Constructor
-        gameManager() { };
+        gameManager() 
+        { 
+            gameMonsterAI::setLinkToTheMap( &(theMap) );
+        };
 
         void init();
 
-        // Interface with rest of the program
+        // Interface with the Keys HAL
 
         void upKey()    { moveHero(UP);    }
         void downKey()  { moveHero(DOWN);  }
@@ -50,15 +54,13 @@ class gameManager
 
     private:
 
-    // Attributes
+        // Attributes
 
         gameMap          theMap;
-
         gameObject*      theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
-
         gameObject_Hero* theHero;
 
-    // Methods
+        // Methods
 
         void moveHero(Direction dir);
 
@@ -68,5 +70,6 @@ class gameManager
 extern gameManager theGame;
 
 void initGame();
+void testPath();
 
 #endif

@@ -26,11 +26,15 @@
 
 #include "gameMap.h"
 
+gameMap::gameMap() 
+{ 
+};
+
 void gameMap::updateCurrentDisplay(gameObject_Hero* theHero)
 {
     int positionNewDisplay_x, positionNewDisplay_y;
 
-
+    // Manage borders on the X axis
 	if (theHero->getX() < DISPLAY_WIDTH/2) 
          positionNewDisplay_x = 0;
 	else if (theHero->getX() > GAME_MAP_HEIGHT - DISPLAY_WIDTH/2) 
@@ -38,6 +42,7 @@ void gameMap::updateCurrentDisplay(gameObject_Hero* theHero)
 	else 
          positionNewDisplay_x = theHero->getX() - DISPLAY_WIDTH/2;
 
+    // Manage borders on the Y axis
 	if (theHero->getY() < DISPLAY_WIDTH/2) 
          positionNewDisplay_y = 0;
 	else if (theHero->getY() > GAME_MAP_WIDTH  - DISPLAY_WIDTH/2) 
@@ -52,28 +57,28 @@ void gameMap::updateCurrentDisplay(gameObject_Hero* theHero)
 void gameMap::setGameCurrentDisplay(int x, int y)
 {
 
-	// Update the (x,y) current displa position
+	// Update the (x,y) current display position
 	positionCurrentDisplay_x = x;
 	positionCurrentDisplay_y = y;
 
 	for (int k = 0 ; k < DISPLAY_WIDTH ; k++)
 	for (int l = 0 ; l < DISPLAY_WIDTH ; l++)
 	{
-		currentDisplay[l + k*DISPLAY_WIDTH] = getColor(l+x,k+y);
+		currentDisplay[DISPLAY_PIXEL(k,l)] = getColor(GAME_TILE(l+x,k+y));
 	}
 }
 
-ObjectColor gameMap::getColor(int x, int y) const
+ObjectColor gameMap::getColor(int tile) const
 {
-	if (layer1.getType(x,y) == OBJECTTYPE_EMPTY)
-		return layer0.getColor(x,y);
+	if (layer1.getType(tile) == OBJECTTYPE_EMPTY)
+		return layer0.getColor(tile);
 	else
-		return layer1.getColor(x,y);
+		return layer1.getColor(tile);
 }
 
-void gameMap::triggerAction(int x, int y) const
+void gameMap::triggerAction(int tile)
 {
-    layer0.triggerAction(x,y);
+    layer0.triggerAction(tile);
 }
 
 void gameMap::setTileLayer0(int tile,gameObject* object)
@@ -86,8 +91,7 @@ void gameMap::setTileLayer1(int tile,gameObject* object)
     layer1.setTile(tile,object);
 }
 
-bool gameMap::isWalkable(int x, int y) const
+bool gameMap::isWalkable(int tile) const
 {
-   int tile = y + GAME_MAP_WIDTH*x;
    return (layer0.isWalkable(tile) && layer1.isWalkable(tile));
 }

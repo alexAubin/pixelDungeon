@@ -26,14 +26,14 @@
 
 #include "gameMapLayer.h"
 
-ObjectColor gameMapLayer::getColor(int x, int y) const
+ObjectColor gameMapLayer::getColor(int tile) const
 {
-	return layer[x*GAME_MAP_WIDTH + y]->getColor();
+	return layer[tile]->getColor();
 }
 
-ObjectType  gameMapLayer::getType(int x, int y) const
+ObjectType  gameMapLayer::getType(int tile) const
 {
-	return layer[x*GAME_MAP_WIDTH + y]->getType();
+	return layer[tile]->getType();
 }
 
 void gameMapLayer::setTile(int tile,gameObject* object)
@@ -46,7 +46,7 @@ bool gameMapLayer::isWalkable(int tile) const
     return layer[tile]->isWalkable();
 }
 
-void gameMapLayer::triggerAction(int x, int y) const
+void gameMapLayer::triggerAction(int tile)
 {
-    return layer[x*GAME_MAP_WIDTH+y]->triggerAction();
+    return layer[tile]->triggerAction();
 }

@@ -2,6 +2,7 @@
 *.slo
 *.lo
 *.o
+*.hex
 
 # Compiled Dynamic libraries
 *.so
@@ -11,3 +12,6 @@
 *.lai
 *.la
 *.a
+
+# Dependencies folder
+.dep

@@ -32,11 +32,15 @@
     #define GAME_MAP_WIDTH  16
 	#define GAME_MAP_HEIGHT 13
         
-    #define THEGAME_TOTALNUMBEROFOBJECTS 5
+    #define THEGAME_TOTALNUMBEROFOBJECTS 6
+
+    #define GAME_TILE(x,y) ((y) + GAME_MAP_WIDTH * (x))
 
     enum Direction
     {
         UP, DOWN, RIGHT, LEFT
     };
+
+    int distance(int a_x, int a_y, int b_x, int b_y);
 
 #endif

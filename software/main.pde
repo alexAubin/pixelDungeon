@@ -28,40 +28,64 @@
 
 // *********************************************************************
 
+extern int __bss_end;
+extern int* __brkval;
+
+int get_free_memory()
+{
+    int free_memory;
+
+    if((int)__brkval == 0)
+        free_memory = ((int)&free_memory) - ((int)&__bss_end);
+    else
+        free_memory = ((int)&free_memory) - ((int)__brkval);
+
+    return free_memory;
+}
+
+
+
+
 void setup()
 {
 
     #ifdef DEBUG
         Serial.begin(9600);
         Serial.println(" ");
-        Serial.println(" > Pixel Dungeon starting ... ");
-        Serial.println("      Initializing display... ");
+        Serial.println(" > Starting ... ");
+        Serial.println(" Init display ");
     #endif
     
     initDisplay();
 
     #ifdef DEBUG
-        Serial.println("      Initializing keys input... ");
+        delay(100);
+        Serial.println(" Init keys ");
     #endif
   
     initKeys();
 
     #ifdef DEBUG
-        Serial.println("      Initializing game... ");
+        delay(100);
+        Serial.println(" Init game ");
     #endif
 
     initGame();
 
     #ifdef DEBUG
-        Serial.println("      Initializing timers... ");
+        delay(100);
+        Serial.println(" Init timers ");
+        delay(1000);
     #endif
 
     initTimer();
 
     #ifdef DEBUG
-        Serial.println(" > Pixel Dungeon started succesfully. Waiting for inputs. ");
+        delay(100);
+        Serial.println(" > Success. Waitin for inputs. ");
     #endif
 
+	
 }
 
 // *********************************************************************
@@ -75,11 +99,11 @@ void loop()
 
 void initTimer()
 {
-	Timer1.initialize(100000);
+	Timer1.initialize(2000000);
 	Timer1.attachInterrupt(timerInterrupt);
 }
 
 void timerInterrupt()
 {
-	//delay(1000);
+    testPath();
 }

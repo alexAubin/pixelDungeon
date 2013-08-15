@@ -21,38 +21,33 @@
 
 /**
  *	@author Alexandre Aubin
- *  @brief Map-of the game management class
+ *  @brief Monster AI class
 */
 
-#ifndef GAME_MAP_H_
-#define GAME_MAP_H_
+#ifndef GAME_MONSTER_AI_H_
+#define GAME_MONSTER_AI_H_
 
 #include "gameCommon.h"
-#include "gameMapLayer.h"
+#include "gameMap.h"
 
-class gameMap
+#define GAME_AI_PATH_DEPTH 3
+#define GAME_AI_MINIMAP_WIDTH (GAME_AI_PATH_DEPTH * 2 + 1)
+#define GAME_AI_MINIMAP_SIZE GAME_AI_MINIMAP_WIDTH*GAME_AI_MINIMAP_WIDTH
+#define MINIMAP_TILE(x,y) ((y) + GAME_AI_MINIMAP_WIDTH * (x))
+
+class gameMonsterAI
 {
 	private:
 
-		gameMapLayer  layer1;
-		gameMapLayer  layer0;
-
-		int positionCurrentDisplay_x;
-		int positionCurrentDisplay_y;
+        static short int miniMap[GAME_AI_MINIMAP_SIZE];
+        static gameMap*  theMap;
 
 	public:
 
-		gameMap();
+		gameMonsterAI();
+        static void findBestWay(int begin_x, int begin_y, int end_x, int end_y);
+        static void setLinkToTheMap(gameMap* theMap_) { theMap = theMap_; };
 
-        void updateCurrentDisplay(gameObject_Hero* theHero);
-		void setGameCurrentDisplay(int x, int y);
-
-		ObjectColor getColor(int tile)   const;
-        bool        isWalkable(int tile) const;
-        
-        void setTileLayer0(int tile,gameObject* object);
-        void setTileLayer1(int tile,gameObject* object);
-		void triggerAction(int tile);
 };
 
 #endif

@@ -37,7 +37,7 @@ PROGMEM prog_uint16_t initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*1 */	0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
 /*2 */	0,0,1,1,0,1,0,1,0,1,1,0,0,0,0,0,
 /*3 */	0,1,1,0,0,1,0,1,0,0,1,1,1,1,1,0,
-/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,1,0,
+/*4 */	0,1,0,0,1,1,0,1,1,0,1,4,0,0,1,0,
 /*5 */	1,1,0,1,1,0,0,0,1,0,2,0,0,0,1,0,
 /*6 */	1,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,
 /*7 */	1,0,3,0,1,0,0,0,1,0,1,0,1,1,1,0,
@@ -69,20 +69,31 @@ PROGMEM prog_uint16_t initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 
 void initGame() { theGame.init(); };
 
+
+void testPath() 
+{
+    //delay(1000);
+    //Serial.println(" > test");
+    gameMonsterAI::findBestWay(6,6,6,2);
+    //Serial.println(" > test2");
+};
+
 void gameManager::init()
 {
     // Dirty temporary system for map initialization
     // TODO : more generic/developper friendly way to implement map
 
-    gameObject_Empty*  empty  = new gameObject_Empty(0);         
-    gameObject_Wall*   wall   = new gameObject_Wall(1);          
-    gameObject_Door*   door   = new gameObject_Door(2,false);    
-    gameObject_Switch* switc  = new gameObject_Switch(3,false,door);
+    gameObject_Empty*   empty    = new gameObject_Empty  (0);         
+    gameObject_Wall*    wall     = new gameObject_Wall   (1);          
+    gameObject_Door*    door     = new gameObject_Door   (2,false);    
+    gameObject_Switch*  switc    = new gameObject_Switch (3,false,door);
+    gameObject_Monster* monster  = new gameObject_Monster(4,4,11,3);
   
     theObjectCollection[0] = empty;
     theObjectCollection[1] = wall;
     theObjectCollection[2] = door;
     theObjectCollection[3] = switc;
+    theObjectCollection[4] = monster;
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {
@@ -91,9 +102,9 @@ void gameManager::init()
     }
 
 
-    theHero = new gameObject_Hero(4,6,6);         
-    theObjectCollection[4] = theHero;
-    theMap.setTileLayer1(6+GAME_MAP_WIDTH*6,theHero);
+    theHero = new gameObject_Hero(5,6,6);         
+    theObjectCollection[5] = theHero;
+    theMap.setTileLayer1(GAME_TILE(6,6),theHero);
      
     theMap.setGameCurrentDisplay(2,2);
 }
@@ -118,18 +129,16 @@ void gameManager::moveHero(Direction dir)
     else if (dir == LEFT)  new_x--;
     else if (dir == RIGHT) new_x++;
    
-    if (theMap.isWalkable(new_x,new_y))
+    if (theMap.isWalkable(GAME_TILE(new_x,new_y)))
     {
 
         // Trigger action on the case if there's one
-        theMap.triggerAction(new_x,new_y);
+        theMap.triggerAction(GAME_TILE(new_x,new_y));
 
         // Move the hero
-        theMap.setTileLayer1(prev_y+GAME_MAP_WIDTH*prev_x,theObjectCollection[0]);
-        theMap.setTileLayer1(new_y +GAME_MAP_WIDTH*new_x, theHero);
-
-        theHero->setX(new_x);
-        theHero->setY(new_y);
+        theMap.setTileLayer1(GAME_TILE(prev_x,prev_y), theObjectCollection[0]);
+        theMap.setTileLayer1(GAME_TILE(new_x ,new_y ), theHero               );
+        theHero->setPosition(new_x,new_y);
 
         // Update display
         theMap.updateCurrentDisplay(theHero);
@@ -137,4 +146,6 @@ void gameManager::moveHero(Direction dir)
     }
     
 }
+
+
 

@@ -191,6 +191,7 @@ class gameObject_Door : public gameObject
             solid = false;
             state = true;
             walkable = true;
+            //gameMonsterAI::setWalkableMap(tile,isWalkable(tile));
             color = OBJECTCOLOR_DOOR_OPEN;
         }
     
@@ -363,6 +364,7 @@ class gameObject_Hero : public gameObject
     
         void setX(int x_) { x = x_; }
         void setY(int y_) { y = y_; }
+        void setPosition(int x_, int y_) { x = x_; y = y_; }
 
     private:
 
