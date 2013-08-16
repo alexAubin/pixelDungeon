@@ -35,6 +35,8 @@ gameObject_Empty* gameMonsterAI::emptyObject;
 void gameMonsterAI::doMonsterAction()
 {
     if (activeMonster == 0) return;
+    
+    if (distance(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY()) == 1) return;
 
     Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
 
@@ -77,44 +79,56 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
     miniMap[MINIMAP_TILE(GAME_AI_PATH_DEPTH,GAME_AI_PATH_DEPTH)] = 0;
     
     // Actually run the "best-way" algorithm
-    for (short int d = 0 ; d < GAME_AI_PATH_DEPTH ; d++)
-    {
-        for (short int i = GAME_AI_PATH_DEPTH - d ; i <= GAME_AI_PATH_DEPTH + d ; i++)
-        for (short int j = GAME_AI_PATH_DEPTH - d ; j <= GAME_AI_PATH_DEPTH + d ; j++)
-        {
-            if (miniMap[MINIMAP_TILE(i,j)] != d) continue;
-            
-            // Expand the tile
-            if (miniMap[MINIMAP_TILE(i,j+1)] == -1) miniMap[MINIMAP_TILE(i,j+1)] = d+1;
-            if (miniMap[MINIMAP_TILE(i,j-1)] == -1) miniMap[MINIMAP_TILE(i,j-1)] = d+1;
-            if (miniMap[MINIMAP_TILE(i+1,j)] == -1) miniMap[MINIMAP_TILE(i+1,j)] = d+1;
-            if (miniMap[MINIMAP_TILE(i-1,j)] == -1) miniMap[MINIMAP_TILE(i-1,j)] = d+1;
-            
-        }
-    }
-
-
-    // Now find which node is closer to objective
     short int best_i = -1;
     short int best_j = -1;
-          int best_d = 999;
+          int best_dist = 999;
+    short int max_d = 0;
+
+    for (short int d = 0 ; d < GAME_AI_PATH_DEPTH ; d++)
+    {
+        for (short int i = GAME_AI_PATH_DEPTH - d ; (i <= GAME_AI_PATH_DEPTH + d) && (best_i == -1) ; i++)
+        for (short int j = GAME_AI_PATH_DEPTH - d ; (j <= GAME_AI_PATH_DEPTH + d) && (best_i == -1) ; j++)
+        {
+            if (miniMap[MINIMAP_TILE(i,j)] != d) continue;
+           
+            // Expand the tile
+            if (miniMap[MINIMAP_TILE(i,j+1)] == -1) { miniMap[MINIMAP_TILE(i,j+1)] = d+1; max_d = d+1; }
+            if (miniMap[MINIMAP_TILE(i,j-1)] == -1) { miniMap[MINIMAP_TILE(i,j-1)] = d+1; max_d = d+1; }
+            if (miniMap[MINIMAP_TILE(i+1,j)] == -1) { miniMap[MINIMAP_TILE(i+1,j)] = d+1; max_d = d+1; }
+            if (miniMap[MINIMAP_TILE(i-1,j)] == -1) { miniMap[MINIMAP_TILE(i-1,j)] = d+1; max_d = d+1; }
+ 
+            // If tile is in front of hero, 
+            if (distance(offset_x + i, offset_y + j, end_x, end_y) == 1)
+            {
+                best_i = i;
+                best_j = j;
+                max_d = d+1;
+            }           
+        }
+
+        if (best_i != -1) break;
+    }
+
+    // Now find which node is closer to objective if we haven't find a tile meanwhile with dist = 1
+
+    if (best_i == -1)
     for (short int i = 0 ; i < GAME_AI_MINIMAP_WIDTH ; i++)
     for (short int j = 0 ; j < GAME_AI_MINIMAP_WIDTH ; j++)
     {
-        if (miniMap[MINIMAP_TILE(i,j)] != GAME_AI_PATH_DEPTH) continue;
+        if (miniMap[MINIMAP_TILE(i,j)] != max_d) continue;
 
-        int tmp_d = distance(offset_x + i, offset_y + j, end_x, end_y);
+        int tmp_dist = distance(offset_x + i, offset_y + j, end_x, end_y);
         
-        if (tmp_d < best_d)
+        if (tmp_dist < best_dist)
         {
             best_i = i;
             best_j = j;
-            best_d = tmp_d;
+            best_dist = tmp_dist;
         }
     }
 
     // Go back to determine which direction to go
-    for (int d = GAME_AI_PATH_DEPTH ; d != 1 ; d--)
+    for (int d = max_d ; d != 1 ; d--)
     {
         if (miniMap[MINIMAP_TILE(best_i,best_j+1)] == d-1) best_j++;
         if (miniMap[MINIMAP_TILE(best_i,best_j-1)] == d-1) best_j--; 
@@ -122,9 +136,11 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
         if (miniMap[MINIMAP_TILE(best_i-1,best_j)] == d-1) best_i--;
     }
 
-    if (best_i == GAME_AI_PATH_DEPTH + 1) return UP;
-    if (best_i == GAME_AI_PATH_DEPTH - 1) return DOWN;
-    if (best_j == GAME_AI_PATH_DEPTH + 1) return RIGHT;
-    if (best_j == GAME_AI_PATH_DEPTH - 1) return LEFT;
+    if (best_i - 1 == GAME_AI_PATH_DEPTH) return UP;
+    if (best_i + 1 == GAME_AI_PATH_DEPTH) return DOWN;
+    if (best_j - 1 == GAME_AI_PATH_DEPTH) return RIGHT;
+    if (best_j + 1 == GAME_AI_PATH_DEPTH) return LEFT;
+    
+    return NOMOVE;
 
 }

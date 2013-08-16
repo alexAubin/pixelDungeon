@@ -38,7 +38,7 @@
 
     enum Direction
     {
-        UP, DOWN, RIGHT, LEFT
+        UP, DOWN, RIGHT, LEFT, NOMOVE
     };
 
     int distance(int a_x, int a_y, int b_x, int b_y);
