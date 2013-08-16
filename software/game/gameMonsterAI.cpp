@@ -28,8 +28,28 @@
 
 short int gameMonsterAI::miniMap[GAME_AI_MINIMAP_SIZE];
 gameMap*  gameMonsterAI::theMap;
+gameObject_Hero* gameMonsterAI::theHero;
+gameObject_Monster* gameMonsterAI::activeMonster = 0;
+gameObject_Empty* gameMonsterAI::emptyObject;
 
-void gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int end_y)
+void gameMonsterAI::doMonsterAction()
+{
+    if (activeMonster == 0) return;
+
+    Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
+
+    int prev_x = activeMonster->getX();
+    int prev_y = activeMonster->getY();
+
+    if (theMap->moveCreature(activeMonster,bestWay,emptyObject))
+    {
+        theMap->updateTileDisplay(prev_x,prev_y);
+        theMap->updateTileDisplay(activeMonster->getX(),activeMonster->getY());
+    }
+}
+
+
+Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int end_y)
 {
 
 
@@ -102,14 +122,9 @@ void gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int end_y)
         if (miniMap[MINIMAP_TILE(best_i-1,best_j)] == d-1) best_i--;
     }
 
-    /* 
-    #ifdef DEBUG
-        delay(100);
-        Serial.println(offset_x + best_i);
-        delay(100);
-        Serial.println(offset_y + best_j);
-        delay(100);
-    #endif
-    */
-    
+    if (best_i == GAME_AI_PATH_DEPTH + 1) return UP;
+    if (best_i == GAME_AI_PATH_DEPTH - 1) return DOWN;
+    if (best_j == GAME_AI_PATH_DEPTH + 1) return RIGHT;
+    if (best_j == GAME_AI_PATH_DEPTH - 1) return LEFT;
+
 }

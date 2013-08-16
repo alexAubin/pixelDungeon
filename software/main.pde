@@ -95,7 +95,7 @@ void loop()
 
 void initTimer()
 {
-	Timer1.initialize(2000000);
+	Timer1.initialize(1000000);
 	Timer1.attachInterrupt(gameTimerHandler);
 }
 

@@ -70,7 +70,8 @@ PROGMEM prog_uint16_t initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 void initGame() { theGame.init(); };
 void gameTimerHandler() 
 {  
-    gameMonsterAI::findBestWay(6,6,6,2);
+    gameMonsterAI::doMonsterAction();
+//    gameMonsterAI::findBestWay(6,6,6,2);
 };
 
 
@@ -85,6 +86,8 @@ void gameManager::init()
     gameObject_Switch*  switc    = new gameObject_Switch (3,false,door);
     gameObject_Monster* monster  = new gameObject_Monster(4,4,11,3);
   
+    gameMonsterAI::addToActiveMonster(monster);
+
     theObjectCollection[0] = empty;
     theObjectCollection[1] = wall;
     theObjectCollection[2] = door;
@@ -102,7 +105,13 @@ void gameManager::init()
     theObjectCollection[5] = theHero;
     theMap.setTileLayer1(GAME_TILE(6,6),theHero);
      
-    theMap.setGameCurrentDisplay(2,2);
+    theMap.updateCurrentDisplay(2,2);
+
+    // God dammit, this is ugly.
+    // I need to find something better for this.
+    gameMonsterAI::setLinkToTheHero( theHero );
+    gameMonsterAI::setEmptyObject( empty );
+
 }
 
 void gameManager::moveHero(Direction dir)
@@ -118,7 +127,7 @@ void gameManager::moveHero(Direction dir)
     if (theMap.moveCreature(theHero,dir,theObjectCollection[0]))
     {
         // Update display
-        theMap.updateCurrentDisplay(theHero);
+        theMap.setCurrentDisplay(theHero);
     }
     
 }

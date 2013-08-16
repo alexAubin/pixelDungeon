@@ -40,13 +40,29 @@ class gameMonsterAI
 	private:
 
         static short int miniMap[GAME_AI_MINIMAP_SIZE];
-        static gameMap*  theMap;
+        static gameMap*            theMap;
+
+        // Will be a tab later (except if I think of a better system..)
+        static gameObject_Monster* activeMonster;
+        
+        // God dammit, this is ugly.
+        // I need to find something better for this.
+        static gameObject_Hero*    theHero;
+        static gameObject_Empty*   emptyObject;
 
 	public:
 
 		gameMonsterAI();
-        static void findBestWay(int begin_x, int begin_y, int end_x, int end_y);
+        static Direction findBestWay(int begin_x, int begin_y, int end_x, int end_y);
         static void setLinkToTheMap(gameMap* theMap_) { theMap = theMap_; };
+        static void addToActiveMonster(gameObject_Monster* theMonster) { activeMonster = theMonster; };
+
+        static void doMonsterAction();
+
+        // God dammit, this is ugly.
+        // I need to find something better for this.
+        static void setLinkToTheHero( gameObject_Hero* theHero_)    { theHero = theHero_;         };
+        static void setEmptyObject(gameObject_Empty* emptyObject_ ) { emptyObject = emptyObject_; };
 
 };
 

@@ -44,8 +44,9 @@ class gameMap
 
 		gameMap();
 
-        void updateCurrentDisplay(gameObject_Hero* theHero);
-		void setGameCurrentDisplay(int x, int y);
+        void setCurrentDisplay(gameObject_Hero* theHero);
+		void updateCurrentDisplay(int x, int y);
+        void updateTileDisplay(int x, int y);
 
 		ObjectColor getColor(int tile)   const;
         bool        isWalkable(int tile) const;

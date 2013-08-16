@@ -30,7 +30,7 @@ gameMap::gameMap()
 { 
 };
 
-void gameMap::updateCurrentDisplay(gameObject_Hero* theHero)
+void gameMap::setCurrentDisplay(gameObject_Hero* theHero)
 {
     int positionNewDisplay_x, positionNewDisplay_y;
 
@@ -50,22 +50,34 @@ void gameMap::updateCurrentDisplay(gameObject_Hero* theHero)
 	else 
          positionNewDisplay_y = theHero->getY() - DISPLAY_WIDTH/2;
 
-    setGameCurrentDisplay(positionNewDisplay_x,positionNewDisplay_y);
+    updateCurrentDisplay(positionNewDisplay_x,positionNewDisplay_y);
 
 }
 
-void gameMap::setGameCurrentDisplay(int x, int y)
+void gameMap::updateCurrentDisplay(int x, int y)
 {
 
 	// Update the (x,y) current display position
 	positionCurrentDisplay_x = x;
 	positionCurrentDisplay_y = y;
 
-	for (int k = 0 ; k < DISPLAY_WIDTH ; k++)
-	for (int l = 0 ; l < DISPLAY_WIDTH ; l++)
+	for (short int k = 0 ; k < DISPLAY_WIDTH ; k++)
+	for (short int l = 0 ; l < DISPLAY_WIDTH ; l++)
 	{
-		currentDisplay[DISPLAY_PIXEL(k,l)] = getColor(GAME_TILE(l+x,k+y));
+		currentDisplay[DISPLAY_PIXEL(k,l)] = getColor(GAME_TILE(k+x,l+y));
 	}
+}
+
+void gameMap::updateTileDisplay(int x, int y)
+{
+
+	// Update the (x,y) current display position
+	short int k = x - positionCurrentDisplay_x;
+    short int l = y - positionCurrentDisplay_y;
+
+    if ((k < 0) || (l < 0) || (k >= DISPLAY_WIDTH) || (l >= DISPLAY_WIDTH)) return;
+
+	currentDisplay[DISPLAY_PIXEL(k,l)] = getColor(GAME_TILE(x,y));
 }
 
 ObjectColor gameMap::getColor(int tile) const
@@ -107,10 +119,10 @@ bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir, game
 
     bool actuallyMoved = false;
 
-         if (dir == UP)    new_y++;
-    else if (dir == DOWN)  new_y--;
-    else if (dir == LEFT)  new_x--;
-    else if (dir == RIGHT) new_x++;
+         if (dir == UP)    new_x++;
+    else if (dir == DOWN)  new_x--;
+    else if (dir == LEFT)  new_y--;
+    else if (dir == RIGHT) new_y++;
    
     noInterrupts();
     if (isWalkable(GAME_TILE(new_x,new_y)))
