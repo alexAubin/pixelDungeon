@@ -41,17 +41,18 @@
 //                         Colors
 // *********************************************************************
 
-#define DISPLAYCOLOR_EMPTY    0
-#define DISPLAYCOLOR_WHITE    1
-#define DISPLAYCOLOR_RED      2
-#define DISPLAYCOLOR_GREEN    3
-#define DISPLAYCOLOR_BLUE     4
-#define DISPLAYCOLOR_YELLOW   5
-#define DISPLAYCOLOR_MAGENTA  6
-#define DISPLAYCOLOR_CYAN     7
-#define DISPLAYCOLOR_ORANGE   8
-#define DISPLAYCOLOR_VIOLET   9
-#define DISPLAYCOLOR_KINGBLUE 10
+#define DISPLAYCOLOR_EMPTY      0
+#define DISPLAYCOLOR_WHITE      1
+#define DISPLAYCOLOR_RED        2
+#define DISPLAYCOLOR_GREEN      3
+#define DISPLAYCOLOR_BLUE       4
+#define DISPLAYCOLOR_YELLOW     5
+#define DISPLAYCOLOR_MAGENTA    6
+#define DISPLAYCOLOR_CYAN       7
+#define DISPLAYCOLOR_ORANGE     8
+#define DISPLAYCOLOR_VIOLET     9
+#define DISPLAYCOLOR_KINGBLUE   10
+#define DISPLAYCOLOR_LIGHTGREEN 11
 
 // *********************************************************************
 //                         		Misc

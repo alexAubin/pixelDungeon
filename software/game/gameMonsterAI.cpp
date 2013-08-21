@@ -26,6 +26,9 @@
 
 #include "gameMonsterAI.h"
 
+class gameManager;
+extern gameManager theGame;
+
 short int gameMonsterAI::miniMap[GAME_AI_MINIMAP_SIZE];
 gameMap*  gameMonsterAI::theMap;
 gameObject_Hero* gameMonsterAI::theHero;
@@ -34,20 +37,36 @@ gameObject_Empty* gameMonsterAI::emptyObject;
 
 void gameMonsterAI::doMonsterAction()
 {
+
     if (activeMonster == 0) return;
-    
-    if (distance(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY()) == 1) return;
 
-    Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
+     // Disable interrupts
+    noInterrupts();
 
-    int prev_x = activeMonster->getX();
-    int prev_y = activeMonster->getY();
-
-    if (theMap->moveCreature(activeMonster,bestWay,emptyObject))
+    // If we're right next to the hero, attack him
+    if (distance(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY()) == 1)
     {
-        theMap->updateTileDisplay(prev_x,prev_y);
-        theMap->updateTileDisplay(activeMonster->getX(),activeMonster->getY());
+        theHero->receiveAttack();
+        theMap->updateTileDisplay(theHero->getX(),theHero->getY());
     }
+    // Otherwise, try to find a path/best direction to go to the hero
+    else
+    {
+        Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
+
+        int prev_x = activeMonster->getX();
+        int prev_y = activeMonster->getY();
+
+        if (theMap->moveCreature(activeMonster,bestWay,emptyObject))
+        {
+            theMap->updateTileDisplay(prev_x,prev_y);
+            theMap->updateTileDisplay(activeMonster->getX(),activeMonster->getY());
+        }
+    }
+
+    // Re-enable interrupts
+    interrupts();
+
 }
 
 

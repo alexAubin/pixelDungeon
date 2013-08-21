@@ -124,7 +124,6 @@ bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir, game
     else if (dir == LEFT)  new_y--;
     else if (dir == RIGHT) new_y++;
    
-    noInterrupts();
     if (isWalkable(GAME_TILE(new_x,new_y)))
     {
 
@@ -139,7 +138,6 @@ bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir, game
         actuallyMoved = true;
     }
 
-    interrupts();
     return actuallyMoved;
     
 }

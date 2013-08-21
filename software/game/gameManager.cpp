@@ -40,7 +40,7 @@ PROGMEM prog_uint16_t initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,1,0,
 /*5 */	1,1,0,1,1,0,0,0,1,0,2,0,0,0,1,0,
 /*6 */	1,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,
-/*7 */	1,0,3,0,1,0,0,0,1,0,1,0,1,1,1,0,
+/*7 */	1,0,3,0,1,0,0,5,1,0,1,0,1,1,1,0,
 /*8 */	1,0,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
 /*9 */	1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,
 /*10*/	0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,
@@ -85,7 +85,8 @@ void gameManager::init()
     gameObject_Door*    door     = new gameObject_Door   (2,false);    
     gameObject_Switch*  switc    = new gameObject_Switch (3,false,door);
     gameObject_Monster* monster  = new gameObject_Monster(4,4,11,3);
-  
+    gameObject_Hppot*   potion   = new gameObject_Hppot (5,3);
+
     gameMonsterAI::addToActiveMonster(monster);
 
     theObjectCollection[0] = empty;
@@ -93,6 +94,7 @@ void gameManager::init()
     theObjectCollection[2] = door;
     theObjectCollection[3] = switc;
     theObjectCollection[4] = monster;
+    theObjectCollection[5] = potion;
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {
@@ -101,8 +103,8 @@ void gameManager::init()
     }
 
 
-    theHero = new gameObject_Hero(5,6,6);         
-    theObjectCollection[5] = theHero;
+    theHero = new gameObject_Hero(6,6,6);         
+    theObjectCollection[6] = theHero;
     theMap.setTileLayer1(GAME_TILE(6,6),theHero);
      
     theMap.updateCurrentDisplay(2,2);
@@ -117,6 +119,9 @@ void gameManager::init()
 void gameManager::moveHero(Direction dir)
 {
     
+    // Disable interrupts
+    noInterrupts();
+
     #ifdef DEBUG
          if (dir == UP)    Serial.println(" > Moving hero : Up ");
     else if (dir == DOWN)  Serial.println(" > Moving hero : Down ");
@@ -129,6 +134,9 @@ void gameManager::moveHero(Direction dir)
         // Update display
         theMap.setCurrentDisplay(theHero);
     }
+    
+    // Re-enable interrupts
+    interrupts();
     
 }
 

@@ -90,8 +90,8 @@ void displayColor(int color)
 {
     if (color == DISPLAYCOLOR_WHITE)
     {
-      digitalWrite(REDLED, HIGH);
       digitalWrite(GREENLED, HIGH);
+      digitalWrite(REDLED, HIGH);
       digitalWrite(BLUELED, HIGH);
 	  PRINTCOLOR_WAIT_UNIT;
 	  PRINTCOLOR_WAIT_UNIT;
@@ -103,13 +103,22 @@ void displayColor(int color)
     {
       digitalWrite(REDLED, HIGH);
       PRINTCOLOR_WAIT_UNIT;
-     // PRINTCOLOR_WAIT_UNIT;
+      PRINTCOLOR_WAIT_UNIT;
       digitalWrite(REDLED, LOW);
     }
     else if (color == DISPLAYCOLOR_GREEN)
     {
       digitalWrite(GREENLED, HIGH);
       PRINTCOLOR_WAIT_UNIT;
+      PRINTCOLOR_WAIT_UNIT;
+      digitalWrite(GREENLED, LOW);
+    }
+    else if (color == DISPLAYCOLOR_LIGHTGREEN)
+    {
+      digitalWrite(REDLED, HIGH);
+      digitalWrite(GREENLED, HIGH);
+      PRINTCOLOR_WAIT_UNIT;
+      digitalWrite(REDLED, LOW);
       PRINTCOLOR_WAIT_UNIT;
       digitalWrite(GREENLED, LOW);
     }
