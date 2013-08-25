@@ -82,33 +82,25 @@ void gameMap::updateTileDisplay(int x, int y)
 
 ObjectColor gameMap::getColor(int tile) const
 {
-	if (layer1.getType(tile) == OBJECTTYPE_EMPTY)
-		return layer0.getColor(tile);
-	else
-		return layer1.getColor(tile);
+	return map[tile]->getColor();
 }
 
 void gameMap::triggerAction(int tile)
 {
-    layer0.triggerAction(tile);
+    return map[tile]->triggerAction();
 }
 
-void gameMap::setTileLayer0(int tile,gameObject* object)
+void gameMap::setTile(int tile,gameObject* object)
 {
-    layer0.setTile(tile,object);
-}
-
-void gameMap::setTileLayer1(int tile,gameObject* object)
-{
-    layer1.setTile(tile,object);
+    map[tile] = object;
 }
 
 bool gameMap::isWalkable(int tile) const
 {
-   return (layer0.isWalkable(tile) && layer1.isWalkable(tile));
+   return map[tile]->isWalkable();
 }
 
-bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir, gameObject* emptyObject)
+bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir)
 {
    
     int prev_x = theCreature->getX();
@@ -116,8 +108,6 @@ bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir, game
 
     int new_x = prev_x;
     int new_y = prev_y;
-
-    bool actuallyMoved = false;
 
          if (dir == UP)    new_x++;
     else if (dir == DOWN)  new_x--;
@@ -127,18 +117,60 @@ bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir, game
     if (isWalkable(GAME_TILE(new_x,new_y)))
     {
 
-        // Trigger action on this tile
+        // Trigger action on the new tile
         triggerAction(GAME_TILE(new_x,new_y));
 
-        // Move the creature
-        layer1.setTile(GAME_TILE(prev_x,prev_y), emptyObject);
-        layer1.setTile(GAME_TILE(new_x ,new_y ), theCreature);
-        theCreature->setPosition(new_x,new_y);
+        // Actually move the creature
+
+            // Replace previous tile with the object the creature is standing on
+            setTile(GAME_TILE(prev_x,prev_y), theCreature->getObjectStandingOn());
+
+            // Set the new "object standing on" for the creature according to new tile
+            theCreature->setObjectStandingOn(map[GAME_TILE(new_x,new_y)]);
+
+            // Set the position of the creature to the new tile
+            setTile(GAME_TILE(new_x ,new_y ), theCreature);
+            theCreature->setPosition(new_x,new_y);
         
-        actuallyMoved = true;
+        return true;
+    }
+    else
+    {
+        return false;
     }
 
-    return actuallyMoved;
-    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

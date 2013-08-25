@@ -323,25 +323,28 @@ class gameObject_Creature : public gameObject
 {
      public:
 
-        gameObject_Creature(int id, int x_, int y_, short int hp_, ObjectType type, ObjectColor color):
+        gameObject_Creature(int id, int x_, int y_, short int hp_, ObjectType type, ObjectColor color, gameObject* objectStandingOn_):
         gameObject::gameObject(id,false,true,type,color)
         {
             alive = true;
             hp = hp_;
             x = x_;
             y = y_;
+            objectStandingOn = objectStandingOn_;
         }
 
-        virtual void triggerAction() {}
-        virtual void triggerActionViaLink() {}
+        virtual void triggerAction()        { }
+        virtual void triggerActionViaLink() { }
 
-        int getX() { return x; }
-        int getY() { return y; }
+        int         getX()                { return x; }
+        int         getY()                { return y; }
+        gameObject* getObjectStandingOn() { return objectStandingOn; }
     
-        void setX(int x_) { x = x_; }
-        void setY(int y_) { y = y_; }
+        void setX(int x_)                            { x = x_; }
+        void setY(int y_)                            { y = y_; }
+        void setPosition(int x_, int y_)             { x = x_; y = y_; }
+        void setObjectStandingOn(gameObject* object) { objectStandingOn = object; }
 
-        void setPosition(int x_, int y_) { x = x_; y = y_; }
         
     protected:
 
@@ -349,6 +352,8 @@ class gameObject_Creature : public gameObject
         int y;
         bool alive;
         short int hp;
+
+        gameObject* objectStandingOn;
   
 };
 
@@ -360,8 +365,8 @@ class gameObject_Monster : public gameObject_Creature
 {
     public:
 
-        gameObject_Monster(int id, int x, int y, short int hp):
-        gameObject_Creature::gameObject_Creature(id,x,y,hp,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER)
+        gameObject_Monster(int id, int x, int y, short int hp, gameObject* objectStandingOn):
+        gameObject_Creature::gameObject_Creature(id,x,y,hp,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER,objectStandingOn)
         {
         }
 
@@ -380,8 +385,8 @@ class gameObject_Hero : public gameObject_Creature
 {
     public:
 
-        gameObject_Hero(int id, int x, int y):
-        gameObject_Creature::gameObject_Creature(id,x,y,8,OBJECTTYPE_HERO,OBJECTCOLOR_HERO_FULLHEALTH)
+        gameObject_Hero(int id, int x, int y, gameObject* objectStandingOn):
+        gameObject_Creature::gameObject_Creature(id,x,y,8,OBJECTTYPE_HERO,OBJECTCOLOR_HERO_FULLHEALTH,objectStandingOn)
         {
             mp = 10;
             goldp = 0;
@@ -397,7 +402,7 @@ class gameObject_Hero : public gameObject_Creature
                  if (hp >= 7) color = OBJECTCOLOR_HERO_FULLHEALTH;
             else if (hp >= 5) color = OBJECTCOLOR_HERO_3QRTHEALTH;
             else if (hp >= 3) color = OBJECTCOLOR_HERO_2QRTHEALTH;
-            else if (hp >= 2) color = OBJECTCOLOR_HERO_1QRTHEALTH;
+            else if (hp >= 1) color = OBJECTCOLOR_HERO_1QRTHEALTH;
         }
 
     private:

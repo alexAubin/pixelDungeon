@@ -28,14 +28,13 @@
 #define GAME_MAP_H_
 
 #include "gameCommon.h"
-#include "gameMapLayer.h"
+#include "gameObject.h"
 
 class gameMap
 {
 	private:
 
-		gameMapLayer  layer1;
-		gameMapLayer  layer0;
+		gameObject*  map[GAME_MAP_WIDTH * GAME_MAP_HEIGHT];
 
 		int positionCurrentDisplay_x;
 		int positionCurrentDisplay_y;
@@ -51,11 +50,9 @@ class gameMap
 		ObjectColor getColor(int tile)   const;
         bool        isWalkable(int tile) const;
         
-        void setTileLayer0(int tile,gameObject* object);
-        void setTileLayer1(int tile,gameObject* object);
+        void setTile(int tile,gameObject* object);
 		void triggerAction(int tile);
         
-        bool moveCreature(gameObject_Creature* theCreature, Direction dir, gameObject* emptyObject);
+        bool moveCreature(gameObject_Creature* theCreature, Direction dir);
 };
-
 #endif

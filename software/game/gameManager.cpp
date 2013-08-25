@@ -27,16 +27,16 @@
 #include "game/gameManager.h"
 #include <avr/pgmspace.h>
 
-PROGMEM const short int initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
+PROGMEM const short int initMap[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 {
 //      0 1 2 3 4 5 6 7 8 9 101112131415
 /*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
 /*1 */	0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
 /*2 */	0,0,1,1,0,1,0,1,0,1,1,0,0,0,0,0,
 /*3 */	0,1,1,0,0,1,0,1,0,0,1,1,1,1,1,0,
-/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,1,0,
+/*4 */	0,1,0,0,1,1,0,1,1,0,1,4,0,0,1,0,
 /*5 */	1,1,0,1,1,0,0,0,1,0,2,0,0,0,1,0,
-/*6 */	1,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,
+/*6 */	1,0,0,0,1,0,6,0,1,1,1,0,0,0,1,0,
 /*7 */	1,0,3,0,1,0,0,0,1,0,1,0,1,1,1,0,
 /*8 */	1,5,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
 /*9 */	1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,
@@ -45,30 +45,9 @@ PROGMEM const short int initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*12*/	0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0
 };
 
-
-PROGMEM const short int initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
-{
-//      0 1 2 3 4 5 6 7 8 9 101112131415
-/*0 */  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*1 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*2 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*3 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*4 */	0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,
-/*5 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*6 */	0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,
-/*7 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*8 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*9 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*10*/	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*11*/	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*12*/	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-};
-
 gameMap          gameManager::theMap;
 gameObject*      gameManager::theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
 gameObject_Hero* gameManager::theHero;
-
-
 
 gameObject_Monster* gameManager::init()
 {
@@ -79,9 +58,9 @@ gameObject_Monster* gameManager::init()
     gameObject_Wall*    wall     = new gameObject_Wall   (1);          
     gameObject_Door*    door     = new gameObject_Door   (2,false);    
     gameObject_Switch*  switc    = new gameObject_Switch (3,false,door);
-    gameObject_Monster* monster  = new gameObject_Monster(4,4,11,3);
+    gameObject_Monster* monster  = new gameObject_Monster(4,4,11,3,empty);
     gameObject_Hppot*   potion   = new gameObject_Hppot  (5,3);
-                        theHero  = new gameObject_Hero   (6,6,6);         
+                        theHero  = new gameObject_Hero   (6,6,6,empty);
 
     theObjectCollection[0] = empty;
     theObjectCollection[1] = wall;
@@ -93,8 +72,7 @@ gameObject_Monster* gameManager::init()
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {
-        theMap.setTileLayer0(i,theObjectCollection[pgm_read_word_near(initLayer0+i)]);
-        theMap.setTileLayer1(i,theObjectCollection[pgm_read_word_near(initLayer1+i)]);
+        theMap.setTile(i,theObjectCollection[pgm_read_word_near(initMap+i)]);
     }
 
     theMap.setCurrentDisplay(theHero);
@@ -115,7 +93,7 @@ void gameManager::moveHero(Direction dir)
     else if (dir == RIGHT) Serial.println(" > Moving hero : Right ");
     #endif
     
-    if (theMap.moveCreature(theHero,dir,theObjectCollection[0]))
+    if (theMap.moveCreature(theHero,dir))
     {
         // Update display
         theMap.setCurrentDisplay(theHero);
