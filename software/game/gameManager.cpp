@@ -25,12 +25,9 @@
  */
 
 #include "game/gameManager.h"
-
-gameManager theGame;
-
 #include <avr/pgmspace.h>
 
-PROGMEM prog_uint16_t initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
+PROGMEM const short int initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 {
 //      0 1 2 3 4 5 6 7 8 9 101112131415
 /*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
@@ -40,8 +37,8 @@ PROGMEM prog_uint16_t initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,1,0,
 /*5 */	1,1,0,1,1,0,0,0,1,0,2,0,0,0,1,0,
 /*6 */	1,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,
-/*7 */	1,0,3,0,1,0,0,5,1,0,1,0,1,1,1,0,
-/*8 */	1,0,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
+/*7 */	1,0,3,0,1,0,0,0,1,0,1,0,1,1,1,0,
+/*8 */	1,5,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
 /*9 */	1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,
 /*10*/	0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,
 /*11*/	0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,
@@ -49,7 +46,7 @@ PROGMEM prog_uint16_t initLayer0[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 };
 
 
-PROGMEM prog_uint16_t initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
+PROGMEM const short int initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 {
 //      0 1 2 3 4 5 6 7 8 9 101112131415
 /*0 */  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -58,7 +55,7 @@ PROGMEM prog_uint16_t initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*3 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 /*4 */	0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,
 /*5 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-/*6 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+/*6 */	0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,
 /*7 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 /*8 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 /*9 */	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -67,15 +64,13 @@ PROGMEM prog_uint16_t initLayer1[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*12*/	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 };
 
-void initGame() { theGame.init(); };
-void gameTimerHandler() 
-{  
-    gameMonsterAI::doMonsterAction();
-//    gameMonsterAI::findBestWay(6,6,6,2);
-};
+gameMap          gameManager::theMap;
+gameObject*      gameManager::theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
+gameObject_Hero* gameManager::theHero;
 
 
-void gameManager::init()
+
+gameObject_Monster* gameManager::init()
 {
     // Dirty temporary system for map initialization
     // TODO : more generic/developper friendly way to implement map
@@ -85,9 +80,8 @@ void gameManager::init()
     gameObject_Door*    door     = new gameObject_Door   (2,false);    
     gameObject_Switch*  switc    = new gameObject_Switch (3,false,door);
     gameObject_Monster* monster  = new gameObject_Monster(4,4,11,3);
-    gameObject_Hppot*   potion   = new gameObject_Hppot (5,3);
-
-    gameMonsterAI::addToActiveMonster(monster);
+    gameObject_Hppot*   potion   = new gameObject_Hppot  (5,3);
+                        theHero  = new gameObject_Hero   (6,6,6);         
 
     theObjectCollection[0] = empty;
     theObjectCollection[1] = wall;
@@ -95,25 +89,17 @@ void gameManager::init()
     theObjectCollection[3] = switc;
     theObjectCollection[4] = monster;
     theObjectCollection[5] = potion;
+    theObjectCollection[6] = theHero;
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {
         theMap.setTileLayer0(i,theObjectCollection[pgm_read_word_near(initLayer0+i)]);
-        theMap.setTileLayer1(i,theObjectCollection[pgm_read_word_near(initLayer0+i)]);
+        theMap.setTileLayer1(i,theObjectCollection[pgm_read_word_near(initLayer1+i)]);
     }
 
+    theMap.setCurrentDisplay(theHero);
 
-    theHero = new gameObject_Hero(6,6,6);         
-    theObjectCollection[6] = theHero;
-    theMap.setTileLayer1(GAME_TILE(6,6),theHero);
-     
-    theMap.updateCurrentDisplay(2,2);
-
-    // God dammit, this is ugly.
-    // I need to find something better for this.
-    gameMonsterAI::setLinkToTheHero( theHero );
-    gameMonsterAI::setEmptyObject( empty );
-
+    return monster;
 }
 
 void gameManager::moveHero(Direction dir)

@@ -30,46 +30,42 @@
 #include "game/gameCommon.h"
 #include "game/gameMap.h"
 #include "game/gameData.h"
-#include "game/gameMonsterAI.h"
 
 class gameManager
 {
     
     public:
 
-        // Constructor
-        gameManager() 
-        { 
-            gameMonsterAI::setLinkToTheMap( &(theMap) );
-        };
+        // Constructor (not used)
+        gameManager() { };
 
-        void init();
+        static gameObject_Monster* init();
+
+        // Accessors
+
+        static gameMap*         getTheMap()              { return &theMap;             }
+        static gameObject**     getTheObjectCollection() { return theObjectCollection; }
+        static gameObject_Hero* getTheHero()             { return theHero;             }
 
         // Interface with the Keys HAL
 
-        void upKey()    { moveHero(UP);    }
-        void downKey()  { moveHero(DOWN);  }
-        void rightKey() { moveHero(RIGHT); }
-        void leftKey()  { moveHero(LEFT);  }
+        static void upKey()    { moveHero(UP);    }
+        static void downKey()  { moveHero(DOWN);  }
+        static void rightKey() { moveHero(RIGHT); }
+        static void leftKey()  { moveHero(LEFT);  }
 
     private:
 
         // Attributes
 
-        gameMap          theMap;
-        gameObject*      theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
-        gameObject_Hero* theHero;
+        static gameMap          theMap;
+        static gameObject*      theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
+        static gameObject_Hero* theHero;
 
         // Methods
 
-        void moveHero(Direction dir);
-
+        static void moveHero(Direction dir);
 
 };
-
-extern gameManager theGame;
-
-void initGame();
-void testPath();
 
 #endif

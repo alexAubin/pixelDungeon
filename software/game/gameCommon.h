@@ -41,6 +41,9 @@
         UP, DOWN, RIGHT, LEFT, NOMOVE
     };
 
+    void initGame(); 
+    void gameTimerHandler();
+
     int distance(int a_x, int a_y, int b_x, int b_y);
 
 #endif

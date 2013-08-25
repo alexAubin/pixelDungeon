@@ -20,7 +20,7 @@
 */
 
 /**
- *	@author Alexandre Aubin
+ *  @author Alexandre Aubin
  *  @brief  Display-related functions
 */
 
@@ -93,48 +93,48 @@ void displayColor(int color)
       digitalWrite(GREENLED, HIGH);
       digitalWrite(REDLED, HIGH);
       digitalWrite(BLUELED, HIGH);
-	  PRINTCOLOR_WAIT_UNIT;
-	  PRINTCOLOR_WAIT_UNIT;
-	  digitalWrite(REDLED, LOW);
-	  digitalWrite(BLUELED, LOW);
-	  digitalWrite(GREENLED, LOW);
+      DISPLAYCOLOR_WAITUNIT;
+      DISPLAYCOLOR_WAITUNIT;
+      digitalWrite(REDLED, LOW);
+      digitalWrite(BLUELED, LOW);
+      digitalWrite(GREENLED, LOW);
     }
     else if (color == DISPLAYCOLOR_RED)
     {
       digitalWrite(REDLED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(REDLED, LOW);
     }
     else if (color == DISPLAYCOLOR_GREEN)
     {
       digitalWrite(GREENLED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(GREENLED, LOW);
     }
     else if (color == DISPLAYCOLOR_LIGHTGREEN)
     {
       digitalWrite(REDLED, HIGH);
       digitalWrite(GREENLED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(REDLED, LOW);
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(GREENLED, LOW);
     }
     else if (color == DISPLAYCOLOR_BLUE)
     {
       digitalWrite(BLUELED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(BLUELED, LOW);
     }
     else if (color == DISPLAYCOLOR_YELLOW)
     {
       digitalWrite(REDLED, HIGH);
       digitalWrite(GREENLED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(REDLED, LOW);
       digitalWrite(GREENLED, LOW);
     }
@@ -142,17 +142,17 @@ void displayColor(int color)
     {
       digitalWrite(BLUELED, HIGH);
       digitalWrite(REDLED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(BLUELED, LOW);
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(REDLED, LOW);
     }
     else if (color == DISPLAYCOLOR_CYAN)
     {
       digitalWrite(GREENLED, HIGH);
       digitalWrite(BLUELED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(GREENLED, LOW);
       digitalWrite(BLUELED, LOW);
     }
@@ -160,27 +160,27 @@ void displayColor(int color)
     {
       digitalWrite(REDLED, HIGH);
       digitalWrite(GREENLED, HIGH);
-     PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(GREENLED, LOW);
-     PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(REDLED, LOW);
     }
     else if (color == DISPLAYCOLOR_VIOLET)
     {
-	  digitalWrite(BLUELED, HIGH);
+      digitalWrite(BLUELED, HIGH);
       digitalWrite(REDLED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(REDLED, LOW);
-      PRINTCOLOR_WAIT_UNIT;
-	  digitalWrite(BLUELED, LOW);
+      DISPLAYCOLOR_WAITUNIT;
+      digitalWrite(BLUELED, LOW);
     }
     else if (color == DISPLAYCOLOR_KINGBLUE)
     {
       digitalWrite(BLUELED, HIGH);
       digitalWrite(GREENLED, HIGH);
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(GREENLED, LOW);
-      PRINTCOLOR_WAIT_UNIT;
+      DISPLAYCOLOR_WAITUNIT;
       digitalWrite(BLUELED, LOW);
     }
 }

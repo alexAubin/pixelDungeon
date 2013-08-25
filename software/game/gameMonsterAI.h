@@ -29,6 +29,7 @@
 
 #include "gameCommon.h"
 #include "gameMap.h"
+#include "gameManager.h"
 
 #define GAME_AI_PATH_DEPTH 3
 #define GAME_AI_MINIMAP_WIDTH (GAME_AI_PATH_DEPTH * 2 + 1)
@@ -52,17 +53,18 @@ class gameMonsterAI
 
 	public:
 
-		gameMonsterAI();
+		gameMonsterAI() { }
+
+        static void init(gameObject_Monster* theMonster) 
+        {   
+            theMap        = gameManager::getTheMap();
+            theHero       = gameManager::getTheHero();
+            emptyObject   = (gameObject_Empty*) (gameManager::getTheObjectCollection())[0];
+            activeMonster = theMonster;
+        }
         static Direction findBestWay(int begin_x, int begin_y, int end_x, int end_y);
         static void setLinkToTheMap(gameMap* theMap_) { theMap = theMap_; };
-        static void addToActiveMonster(gameObject_Monster* theMonster) { activeMonster = theMonster; };
-
         static void doMonsterAction();
-
-        // God dammit, this is ugly.
-        // I need to find something better for this.
-        static void setLinkToTheHero( gameObject_Hero* theHero_)    { theHero = theHero_;         };
-        static void setEmptyObject(gameObject_Empty* emptyObject_ ) { emptyObject = emptyObject_; };
 
 };
 

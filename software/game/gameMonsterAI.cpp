@@ -26,14 +26,11 @@
 
 #include "gameMonsterAI.h"
 
-class gameManager;
-extern gameManager theGame;
-
-short int gameMonsterAI::miniMap[GAME_AI_MINIMAP_SIZE];
-gameMap*  gameMonsterAI::theMap;
-gameObject_Hero* gameMonsterAI::theHero;
-gameObject_Monster* gameMonsterAI::activeMonster = 0;
-gameObject_Empty* gameMonsterAI::emptyObject;
+short int           gameMonsterAI::miniMap[GAME_AI_MINIMAP_SIZE];
+gameMap*            gameMonsterAI::theMap;
+gameObject_Hero*    gameMonsterAI::theHero;
+gameObject_Monster* gameMonsterAI::activeMonster;
+gameObject_Empty*   gameMonsterAI::emptyObject;
 
 void gameMonsterAI::doMonsterAction()
 {
@@ -53,7 +50,7 @@ void gameMonsterAI::doMonsterAction()
     else
     {
         Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
-
+         
         int prev_x = activeMonster->getX();
         int prev_y = activeMonster->getY();
 
@@ -62,6 +59,7 @@ void gameMonsterAI::doMonsterAction()
             theMap->updateTileDisplay(prev_x,prev_y);
             theMap->updateTileDisplay(activeMonster->getX(),activeMonster->getY());
         }
+        
     }
 
     // Re-enable interrupts
@@ -103,6 +101,7 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
           int best_dist = 999;
     short int max_d = 0;
 
+    
     for (short int d = 0 ; d < GAME_AI_PATH_DEPTH ; d++)
     {
         for (short int i = GAME_AI_PATH_DEPTH - d ; (i <= GAME_AI_PATH_DEPTH + d) && (best_i == -1) ; i++)
@@ -155,11 +154,14 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
         if (miniMap[MINIMAP_TILE(best_i-1,best_j)] == d-1) best_i--;
     }
 
+    /*
     if (best_i - 1 == GAME_AI_PATH_DEPTH) return UP;
     if (best_i + 1 == GAME_AI_PATH_DEPTH) return DOWN;
     if (best_j - 1 == GAME_AI_PATH_DEPTH) return RIGHT;
     if (best_j + 1 == GAME_AI_PATH_DEPTH) return LEFT;
+    */
     
     return NOMOVE;
+
 
 }

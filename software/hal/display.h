@@ -54,11 +54,7 @@
 #define DISPLAYCOLOR_KINGBLUE   10
 #define DISPLAYCOLOR_LIGHTGREEN 11
 
-// *********************************************************************
-//                         		Misc
-// *********************************************************************
-
-#define PRINTCOLOR_WAIT_UNIT delayMicroseconds(150)
+#define DISPLAYCOLOR_WAITUNIT delayMicroseconds(150)
 
 // *********************************************************************
 //                         IO config (pin numbers)
@@ -85,7 +81,6 @@ extern int currentDisplay[DISPLAY_NPIX];
 // *********************************************************************
 //                           Prototypes
 // *********************************************************************
-
 
 void displayRefreshNextPixel();
 void displayColor(int color);

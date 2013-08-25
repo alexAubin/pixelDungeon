@@ -25,7 +25,21 @@
  */
 
 #include "gameCommon.h"
-	
+#include "gameManager.h"
+#include "gameMonsterAI.h"
+
+void initGame() 
+{ 
+    gameObject_Monster* monster = gameManager::init();
+    // Temporary "monster" in argument until activation is done automatically
+    gameMonsterAI::init(monster);
+};
+
+void gameTimerHandler() 
+{  
+    gameMonsterAI::doMonsterAction();
+};
+
 int distance(int a_x, int a_y, int b_x, int b_y)
 {
     int d_x = a_x - b_x;
