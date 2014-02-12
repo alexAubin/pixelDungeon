@@ -49,8 +49,8 @@ void gameMonsterAI::doMonsterAction()
     else
     {
         Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
-        bestWay = UP;
-         
+        //bestWay = UP;
+        
         int prev_x = activeMonster->getX();
         int prev_y = activeMonster->getY();
 
@@ -59,7 +59,6 @@ void gameMonsterAI::doMonsterAction()
             theMap->updateTileDisplay(prev_x,prev_y);
             theMap->updateTileDisplay(activeMonster->getX(),activeMonster->getY());
         }
-        
     }
 
     // Re-enable interrupts
@@ -153,12 +152,13 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
     }
 
 
-//         if (best_i - 1 == GAME_AI_PATH_DEPTH) return UP;
-//    else if (best_i + 1 == GAME_AI_PATH_DEPTH) return DOWN;
-//    else if (best_j - 1 == GAME_AI_PATH_DEPTH) return RIGHT;
-//    else if (best_j + 1 == GAME_AI_PATH_DEPTH) return LEFT;
-//    else
-      return NOMOVE;
+      if (best_i - 1 == GAME_AI_PATH_DEPTH) return UP;
+      else if (best_i + 1 == GAME_AI_PATH_DEPTH) return DOWN;
+      else if (best_j - 1 == GAME_AI_PATH_DEPTH) return RIGHT;
+      else if (best_j + 1 == GAME_AI_PATH_DEPTH) return LEFT;
+       else
+       return NOMOVE;
+
 
 
 }

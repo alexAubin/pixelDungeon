@@ -249,7 +249,8 @@ endif
 endif
 
 # flags
-CPPFLAGS := -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections
+CPPFLAGS := -O0 -Wall -fno-exceptions -ffunction-sections -fdata-sections
+#CPPFLAGS := -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections
 CPPFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CPPFLAGS += -mmcu=$(BOARD_BUILD_MCU)
 CPPFLAGS += -DF_CPU=$(BOARD_BUILD_FCPU) -DARDUINO=$(ARDUINOCONST)
@@ -262,7 +263,8 @@ CPPINOFLAGS := -x c++ -include $(ARDUINOCOREDIR)/Arduino.h
 AVRDUDEFLAGS := $(addprefix -C , $(AVRDUDECONF)) -DV
 AVRDUDEFLAGS += -p $(BOARD_BUILD_MCU) -P $(SERIALDEV)
 AVRDUDEFLAGS += -c $(BOARD_UPLOAD_PROTOCOL) -b $(BOARD_UPLOAD_SPEED)
-LINKFLAGS := -Os -Wl,--gc-sections -mmcu=$(BOARD_BUILD_MCU)
+#LINKFLAGS := -O -Wl,--gc-sections -mmcu=$(BOARD_BUILD_MCU)
+LINKFLAGS := -O0 -Wl,--gc-sections -mmcu=$(BOARD_BUILD_MCU)
 
 # figure out which arg to use with stty
 STTYFARG := $(shell stty --help > /dev/null 2>&1 && echo -F || echo -f)
