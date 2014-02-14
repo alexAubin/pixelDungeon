@@ -151,7 +151,6 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
         if (miniMap[MINIMAP_TILE(best_i-1,best_j)] == d-1) best_i--;
     }
 
-
       if (best_i - 1 == GAME_AI_PATH_DEPTH) return UP;
       else if (best_i + 1 == GAME_AI_PATH_DEPTH) return DOWN;
       else if (best_j - 1 == GAME_AI_PATH_DEPTH) return RIGHT;
