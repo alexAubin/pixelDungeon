@@ -28,7 +28,8 @@
 #define GAME_COMMON_H_
 
 	#include "hal/display.h"
-	
+    #include <avr/wdt.h>
+
     #define GAME_MAP_WIDTH  16
 	#define GAME_MAP_HEIGHT 13
         

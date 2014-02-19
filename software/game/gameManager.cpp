@@ -48,6 +48,7 @@ PROGMEM const short int initMap[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 gameMap          gameManager::theMap;
 gameObject*      gameManager::theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
 gameObject_Hero* gameManager::theHero;
+short int        gameManager::gameOver = -1;
 
 gameObject_Monster* gameManager::init()
 {
@@ -86,22 +87,37 @@ void gameManager::moveHero(Direction dir)
     // Disable interrupts
     noInterrupts();
 
-    #ifdef DEBUG
-         if (dir == UP)    Serial.println(" > Moving hero : Up ");
-    else if (dir == DOWN)  Serial.println(" > Moving hero : Down ");
-    else if (dir == LEFT)  Serial.println(" > Moving hero : Left ");
-    else if (dir == RIGHT) Serial.println(" > Moving hero : Right ");
-    #endif
-    
-    if (theMap.moveCreature(theHero,dir))
+    if (gameManager::getGameOverStatus() == -1) 
     {
-        // Update display
-        theMap.setCurrentDisplay(theHero);
+
+#ifdef DEBUG
+        if (dir == UP)    Serial.println(" > Moving hero : Up ");
+        else if (dir == DOWN)  Serial.println(" > Moving hero : Down ");
+        else if (dir == LEFT)  Serial.println(" > Moving hero : Left ");
+        else if (dir == RIGHT) Serial.println(" > Moving hero : Right ");
+#endif
+
+        if (theMap.moveCreature(theHero,dir))
+        {
+            // Update display
+            theMap.setCurrentDisplay(theHero);
+        }
     }
-    
+
     // Re-enable interrupts
     interrupts();
     
+}
+
+void gameManager::triggerGameOver()
+{
+    gameOver = 0;
+    
+	for (short int k = 0 ; k < DISPLAY_WIDTH ; k++)
+	for (short int l = 0 ; l < DISPLAY_WIDTH ; l++)
+	{
+		currentDisplay[DISPLAY_PIXEL(k,l)] = DISPLAYCOLOR_EMPTY;
+	}
 }
 
 

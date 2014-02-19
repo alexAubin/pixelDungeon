@@ -395,7 +395,7 @@ class gameObject_Hero : public gameObject_Creature
         void triggerAction() { }
         void triggerActionViaLink() { }
 
-        void receiveAttack() 
+        short int receiveAttack() 
         {
             if (hp > 0) hp--;
 
@@ -403,6 +403,9 @@ class gameObject_Hero : public gameObject_Creature
             else if (hp >= 5) color = OBJECTCOLOR_HERO_3QRTHEALTH;
             else if (hp >= 3) color = OBJECTCOLOR_HERO_2QRTHEALTH;
             else if (hp >= 1) color = OBJECTCOLOR_HERO_1QRTHEALTH;
+            else              color = OBJECTCOLOR_MONSTER;
+        
+            return hp;
         }
 
     private:

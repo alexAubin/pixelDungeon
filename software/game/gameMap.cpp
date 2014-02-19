@@ -170,7 +170,3 @@ bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir)
 
 
 
-
-
-
-

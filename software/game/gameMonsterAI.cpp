@@ -42,7 +42,8 @@ void gameMonsterAI::doMonsterAction()
     // If we're right next to the hero, attack him
     if (distance(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY()) == 1)
     {
-        theHero->receiveAttack();
+        short int hpLeft = theHero->receiveAttack();
+        if (hpLeft == 0) gameManager::triggerGameOver();
         theMap->updateTileDisplay(theHero->getX(),theHero->getY());
     }
     // Otherwise, try to find a path/best direction to go to the hero

@@ -37,7 +37,9 @@ class gameManager
     public:
 
         // Constructor (not used)
-        gameManager() { };
+        gameManager() 
+        {
+        };
 
         static gameObject_Monster* init();
 
@@ -54,6 +56,15 @@ class gameManager
         static void rightKey() { moveHero(RIGHT); }
         static void leftKey()  { moveHero(LEFT);  }
 
+        static void triggerGameOver();
+        static short int getGameOverStatus() { if (gameOver != -1) gameOver++; return gameOver; }
+       
+        static void triggerReboot()
+        {
+            wdt_enable(WDTO_15MS);
+            while (1) { }
+        }
+
     private:
 
         // Attributes
@@ -61,6 +72,8 @@ class gameManager
         static gameMap          theMap;
         static gameObject*      theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
         static gameObject_Hero* theHero;
+        
+        static short int gameOver;
 
         // Methods
 

@@ -36,9 +36,15 @@ void initGame()
 };
 
 void gameTimerHandler() 
-{  
-    gameMonsterAI::doMonsterAction();
+{
+    short int gameOverStatus = gameManager::getGameOverStatus();
+
+    if (gameOverStatus == -1)
+        gameMonsterAI::doMonsterAction();
+    else if (gameOverStatus >= 5) 
+        gameManager::triggerReboot();
 };
+
 
 int distance(int a_x, int a_y, int b_x, int b_y)
 {
