@@ -49,6 +49,7 @@ gameMap          gameManager::theMap;
 gameObject*      gameManager::theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
 gameObject_Hero* gameManager::theHero;
 short int        gameManager::gameOver = -1;
+bool             gameManager::attackMode = false;
 
 gameObject_Monster* gameManager::init()
 {
@@ -60,7 +61,7 @@ gameObject_Monster* gameManager::init()
     gameObject_Door*    door     = new gameObject_Door   (2,false);    
     gameObject_Switch*  switc    = new gameObject_Switch (3,false,door);
     gameObject_Monster* monster  = new gameObject_Monster(4,4,11,3,empty);
-    gameObject_Hppot*   potion   = new gameObject_Hppot  (5,3);
+    gameObject_Hppot*   potion   = new gameObject_Hppot  (5,4);
                         theHero  = new gameObject_Hero   (6,6,6,empty);
 
     theObjectCollection[0] = empty;
@@ -81,7 +82,7 @@ gameObject_Monster* gameManager::init()
     return monster;
 }
 
-void gameManager::moveHero(Direction dir)
+void gameManager::heroMove(Direction dir)
 {
     
     // Disable interrupts
@@ -107,6 +108,10 @@ void gameManager::moveHero(Direction dir)
     // Re-enable interrupts
     interrupts();
     
+}
+
+void gameManager::heroAttack(Direction dir)
+{
 }
 
 void gameManager::triggerGameOver()

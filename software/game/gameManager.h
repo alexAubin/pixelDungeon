@@ -51,21 +51,17 @@ class gameManager
 
         // Interface with the Keys HAL
 
-        static void upKey()    { moveHero(UP);    }
-        static void downKey()  { moveHero(DOWN);  }
-        static void rightKey() { moveHero(RIGHT); }
-        static void leftKey()  { moveHero(LEFT);  }
-        static void aFallKey() { moveHero(UP);    }
-        static void aRiseKey() { moveHero(DOWN);  }
+        static void upKey()    { if (attackMode) heroAttack(UP);    else heroMove(UP);   }
+        static void downKey()  { if (attackMode) heroAttack(DOWN);  else heroMove(DOWN);  }
+        static void rightKey() { if (attackMode) heroAttack(RIGHT); else heroMove(RIGHT); }
+        static void leftKey()  { if (attackMode) heroAttack(LEFT);  else heroMove(LEFT);  }
+        static void aFallKey() { attackMode = true; }
+        static void aRiseKey() { attackMode = false;  }
 
         static void triggerGameOver();
         static short int getGameOverStatus() { if (gameOver != -1) gameOver++; return gameOver; }
        
-        static void triggerReboot()
-        {
-            wdt_enable(WDTO_15MS);
-            while (1) { }
-        }
+        static void triggerReboot() { wdt_enable(WDTO_15MS); while (1) { } }
 
     private:
 
@@ -79,7 +75,10 @@ class gameManager
 
         // Methods
 
-        static void moveHero(Direction dir);
+        static void heroMove(Direction dir);
+        static void heroAttack(Direction dir);
+
+        static bool attackMode; 
 
 };
 

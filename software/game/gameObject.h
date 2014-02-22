@@ -419,8 +419,12 @@ class gameObject_Hppot : public gameObject
 
         void triggerAction() 
         {
-            color = OBJECTCOLOR_EMPTY;
-            ((gameObject_Hero*) gameObject::theHero)->restoreHealth(4);
+            if (state == true)
+            {
+                color = OBJECTCOLOR_EMPTY;
+                ((gameObject_Hero*) gameObject::theHero)->restoreHealth(value);
+                state = false;
+            }
         }
         void triggerActionViaLink() {}
 
