@@ -55,6 +55,8 @@ class gameManager
         static void downKey()  { moveHero(DOWN);  }
         static void rightKey() { moveHero(RIGHT); }
         static void leftKey()  { moveHero(LEFT);  }
+        static void aFallKey() { moveHero(UP);    }
+        static void aRiseKey() { moveHero(DOWN);  }
 
         static void triggerGameOver();
         static short int getGameOverStatus() { if (gameOver != -1) gameOver++; return gameOver; }

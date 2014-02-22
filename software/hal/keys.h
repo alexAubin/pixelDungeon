@@ -38,6 +38,7 @@
 #define DOWN_KEY 3
 #define LEFT_KEY 5
 #define RIGHT_KEY 2
+#define A_KEY 6
 
 // *********************************************************************
 //                           Prototypes
@@ -47,5 +48,7 @@ void upInterruptHandler();
 void downInterruptHandler();
 void leftInterruptHandler();
 void rightInterruptHandler();
+void aRiseInterruptHandler();
+void aFallInterruptHandler();
 
 #endif

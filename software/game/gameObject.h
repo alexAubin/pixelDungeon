@@ -76,6 +76,8 @@ class gameObject
              solid   =  solid_;
              type    =  type_;
              color   =  color_;
+
+             if (type == OBJECTTYPE_HERO) theHero = this;
         }
 
 
@@ -89,6 +91,8 @@ class gameObject
         // Triggers
         virtual void triggerAction() = 0;
         virtual void triggerActionViaLink() = 0;
+
+        static gameObject* theHero;
 
     protected:
 
@@ -164,7 +168,7 @@ class gameObject_Switch : public gameObject
         void triggerAction()
         {
             if (activated) switchOff();
-            else       switchOn();
+            else           switchOn();
         }
         void triggerActionViaLink() {}
 
@@ -211,7 +215,7 @@ class gameObject_Door : public gameObject
         void triggerActionViaLink() 
         {
             if (opened) close();
-            else       open();
+            else        open();
         }
 
     private:
@@ -267,29 +271,6 @@ class gameObject_Goldp : public gameObject
         short int value;
 };
 
-// ##############
-// #   HP Pot   #
-// ##############
-
-class gameObject_Hppot : public gameObject
-{
-    public:
-
-        gameObject_Hppot(int id_, short int value_):
-        gameObject::gameObject(id_,true,false,OBJECTTYPE_HPPOT,OBJECTCOLOR_HPPOT)
-        {
-            state = true;
-            value = value_;
-        }
-
-        void triggerAction() {}
-        void triggerActionViaLink() {}
-
-    private:
-
-        bool state;
-        short int value;
-};
 
 // ##############
 // #   MP Pot   #
@@ -344,7 +325,6 @@ class gameObject_Creature : public gameObject
         void setY(int y_)                            { y = y_; }
         void setPosition(int x_, int y_)             { x = x_; y = y_; }
         void setObjectStandingOn(gameObject* object) { objectStandingOn = object; }
-
         
     protected:
 
@@ -395,9 +375,16 @@ class gameObject_Hero : public gameObject_Creature
         void triggerAction() { }
         void triggerActionViaLink() { }
 
-        short int receiveAttack() 
+        short int receiveAttack()                  { return modifyHealth(-1);      }
+        short int restoreHealth(short int restore) { return modifyHealth(restore); }
+
+        short int modifyHealth(short int modifier)
         {
-            if (hp > 0) hp--;
+            
+            hp += modifier;
+
+            if (hp < 0) hp = 0;
+            if (hp > 8) hp = 8;
 
                  if (hp >= 7) color = OBJECTCOLOR_HERO_FULLHEALTH;
             else if (hp >= 5) color = OBJECTCOLOR_HERO_3QRTHEALTH;
@@ -412,6 +399,35 @@ class gameObject_Hero : public gameObject_Creature
 
         short int mp;
         short int goldp;
+};
+
+
+// ##############
+// #   HP Pot   #
+// ##############
+
+class gameObject_Hppot : public gameObject
+{
+    public:
+
+        gameObject_Hppot(int id_, short int value_):
+        gameObject::gameObject(id_,true,false,OBJECTTYPE_HPPOT,OBJECTCOLOR_HPPOT)
+        {
+            state = true;
+            value = value_;
+        }
+
+        void triggerAction() 
+        {
+            color = OBJECTCOLOR_EMPTY;
+            ((gameObject_Hero*) gameObject::theHero)->restoreHealth(4);
+        }
+        void triggerActionViaLink() {}
+
+    private:
+
+        bool state;
+        short int value;
 };
 
 #endif

@@ -64,15 +64,30 @@ void rightInterruptHandler()
     gameManager::rightKey();
 }
 
+void aRiseInterruptHandler()
+{
+	if (!digitalRead(A_KEY)) return;
+    gameManager::aRiseKey();
+}
+
+void aFallInterruptHandler()
+{
+	if (digitalRead(A_KEY)) return;
+    gameManager::aFallKey();
+}
+
 void initKeys()
 {
 	pinMode(UP_KEY,    INPUT); digitalWrite(UP_KEY,    HIGH);
 	pinMode(DOWN_KEY,  INPUT); digitalWrite(DOWN_KEY,  HIGH);
 	pinMode(LEFT_KEY,  INPUT); digitalWrite(LEFT_KEY,  HIGH);
 	pinMode(RIGHT_KEY, INPUT); digitalWrite(RIGHT_KEY, HIGH);
+	pinMode(A_KEY,     INPUT); digitalWrite(RIGHT_KEY, HIGH);
 
 	PCintPort::attachInterrupt(UP_KEY,    &upInterruptHandler,    FALLING);
 	PCintPort::attachInterrupt(DOWN_KEY,  &downInterruptHandler,  FALLING);
 	PCintPort::attachInterrupt(LEFT_KEY,  &leftInterruptHandler,  FALLING);
 	PCintPort::attachInterrupt(RIGHT_KEY, &rightInterruptHandler, FALLING);
+	PCintPort::attachInterrupt(A_KEY,     &aFallInterruptHandler, FALLING);
+	//PCintPort::attachInterrupt(A_KEY,     &aRiseInterruptHandler, RISING);
 }
