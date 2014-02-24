@@ -60,7 +60,7 @@ gameObject_Monster* gameManager::init()
     gameObject_Wall*    wall     = new gameObject_Wall   (1);          
     gameObject_Door*    door     = new gameObject_Door   (2,false);    
     gameObject_Switch*  switc    = new gameObject_Switch (3,false,door);
-    gameObject_Monster* monster  = new gameObject_Monster(4,4,11,3,empty);
+    gameObject_Monster* monster  = new gameObject_Monster(4,4,11,8,empty);
     gameObject_Hppot*   potion   = new gameObject_Hppot  (5,4);
                         theHero  = new gameObject_Hero   (6,6,6,empty);
 
@@ -84,25 +84,15 @@ gameObject_Monster* gameManager::init()
 
 void gameManager::heroMove(Direction dir)
 {
+    if (gameManager::getGameOverStatus() != -1) return;
     
     // Disable interrupts
     noInterrupts();
 
-    if (gameManager::getGameOverStatus() == -1) 
+    if (theMap.moveCreature(theHero,dir))
     {
-
-#ifdef DEBUG
-        if (dir == UP)    Serial.println(" > Moving hero : Up ");
-        else if (dir == DOWN)  Serial.println(" > Moving hero : Down ");
-        else if (dir == LEFT)  Serial.println(" > Moving hero : Left ");
-        else if (dir == RIGHT) Serial.println(" > Moving hero : Right ");
-#endif
-
-        if (theMap.moveCreature(theHero,dir))
-        {
-            // Update display
-            theMap.setCurrentDisplay(theHero);
-        }
+        // Update display
+        theMap.setCurrentDisplay(theHero);
     }
 
     // Re-enable interrupts
@@ -112,6 +102,18 @@ void gameManager::heroMove(Direction dir)
 
 void gameManager::heroAttack(Direction dir)
 {
+    if (gameManager::getGameOverStatus() != -1) return;
+
+    noInterrupts();
+    
+    if (theMap.heroAttack(theHero,dir))
+    {
+        // Update display
+        theMap.setCurrentDisplay(theHero);
+    }
+
+    interrupts();
+
 }
 
 void gameManager::triggerGameOver()

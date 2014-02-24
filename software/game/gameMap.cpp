@@ -141,32 +141,23 @@ bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir)
 
 }
 
+bool gameMap::heroAttack(gameObject_Hero* theHero, Direction dir)
+{
+    int target_x = theHero->getX();
+    int target_y = theHero->getY();
 
+         if (dir == UP)    target_x++;
+    else if (dir == DOWN)  target_x--;
+    else if (dir == LEFT)  target_y--;
+    else if (dir == RIGHT) target_y++;
+    
+    if (map[GAME_TILE(target_x,target_y)]->getType() == OBJECTTYPE_MONSTER)
+    {
+        ((gameObject_Monster*) map[GAME_TILE(target_x,target_y)])->receiveAttack();
+        return true;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return false;
+}
 
 

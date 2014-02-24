@@ -106,6 +106,24 @@ void displayColor(int color)
       DISPLAYCOLOR_WAITUNIT;
       digitalWrite(REDLED, LOW);
     }
+    else if (color == DISPLAYCOLOR_RED_HIGH)
+    {
+      digitalWrite(REDLED, HIGH);
+      DISPLAYCOLOR_WAITUNIT;
+      digitalWrite(REDLED, LOW);
+    }
+    else if (color == DISPLAYCOLOR_RED_MEDIUM)
+    {
+      digitalWrite(REDLED, HIGH);
+      delayMicroseconds(75);
+      digitalWrite(REDLED, LOW);
+    }
+    else if (color == DISPLAYCOLOR_RED_LOW)
+    {
+      digitalWrite(REDLED, HIGH);
+      delayMicroseconds(37);
+      digitalWrite(REDLED, LOW);
+    }
     else if (color == DISPLAYCOLOR_GREEN)
     {
       digitalWrite(GREENLED, HIGH);

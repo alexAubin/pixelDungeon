@@ -50,7 +50,6 @@ void gameMonsterAI::doMonsterAction()
     else
     {
         Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
-        //bestWay = UP;
         
         int prev_x = activeMonster->getX();
         int prev_y = activeMonster->getY();
@@ -73,8 +72,6 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
 {
     int offset_x = begin_x - GAME_AI_PATH_DEPTH;
     int offset_y = begin_y - GAME_AI_PATH_DEPTH;
-
-
     
     // Fill minimap with walkable/nonwalkable flags
     for (short int i = 0 ; i < GAME_AI_MINIMAP_WIDTH ; i++) { short int x = offset_x + i;
@@ -152,12 +149,11 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
         if (miniMap[MINIMAP_TILE(best_i-1,best_j)] == d-1) best_i--;
     }
 
-      if (best_i - 1 == GAME_AI_PATH_DEPTH) return UP;
+      if (best_i - 1 == GAME_AI_PATH_DEPTH)      return UP;
       else if (best_i + 1 == GAME_AI_PATH_DEPTH) return DOWN;
       else if (best_j - 1 == GAME_AI_PATH_DEPTH) return RIGHT;
       else if (best_j + 1 == GAME_AI_PATH_DEPTH) return LEFT;
-       else
-       return NOMOVE;
+      else                                       return NOMOVE;
 
 
 

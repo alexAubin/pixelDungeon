@@ -54,5 +54,6 @@ class gameMap
 		void triggerAction(int tile);
         
         bool moveCreature(gameObject_Creature* theCreature, Direction dir);
+        bool heroAttack(gameObject_Hero* theHero, Direction dir);
 };
 #endif

@@ -46,22 +46,27 @@ enum ObjectType
 
 enum ObjectColor
 {
-    OBJECTCOLOR_EMPTY           = DISPLAYCOLOR_EMPTY,
-    OBJECTCOLOR_WALL            = DISPLAYCOLOR_WHITE,
-    OBJECTCOLOR_SWITCH_OFF      = DISPLAYCOLOR_KINGBLUE,
-    OBJECTCOLOR_SWITCH_ON       = DISPLAYCOLOR_ORANGE,
-    OBJECTCOLOR_DOOR_CLOSED     = DISPLAYCOLOR_CYAN,
-    OBJECTCOLOR_DOOR_OPEN       = DISPLAYCOLOR_EMPTY,
-    OBJECTCOLOR_TELEPORT        = DISPLAYCOLOR_ORANGE,
-    OBJECTCOLOR_GOLDP           = DISPLAYCOLOR_YELLOW,
-    OBJECTCOLOR_MONSTER         = DISPLAYCOLOR_RED,
-    OBJECTCOLOR_HPPOT           = DISPLAYCOLOR_GREEN,
-    OBJECTCOLOR_MPPOT           = DISPLAYCOLOR_VIOLET,
+    OBJECTCOLOR_EMPTY              = DISPLAYCOLOR_EMPTY,
+    OBJECTCOLOR_WALL               = DISPLAYCOLOR_WHITE,
+    OBJECTCOLOR_SWITCH_OFF         = DISPLAYCOLOR_KINGBLUE,
+    OBJECTCOLOR_SWITCH_ON          = DISPLAYCOLOR_ORANGE,
+    OBJECTCOLOR_DOOR_CLOSED        = DISPLAYCOLOR_CYAN,
+    OBJECTCOLOR_DOOR_OPEN          = DISPLAYCOLOR_EMPTY,
+    OBJECTCOLOR_TELEPORT           = DISPLAYCOLOR_ORANGE,
+    OBJECTCOLOR_GOLDP              = DISPLAYCOLOR_YELLOW,
+    OBJECTCOLOR_HPPOT              = DISPLAYCOLOR_GREEN,
+    OBJECTCOLOR_MPPOT              = DISPLAYCOLOR_VIOLET,
 
-    OBJECTCOLOR_HERO_FULLHEALTH = DISPLAYCOLOR_GREEN,
-    OBJECTCOLOR_HERO_3QRTHEALTH = DISPLAYCOLOR_LIGHTGREEN,
-    OBJECTCOLOR_HERO_2QRTHEALTH = DISPLAYCOLOR_YELLOW,
-    OBJECTCOLOR_HERO_1QRTHEALTH = DISPLAYCOLOR_ORANGE
+    OBJECTCOLOR_HERO_FULLHEALTH    = DISPLAYCOLOR_GREEN,
+    OBJECTCOLOR_HERO_3QRTHEALTH    = DISPLAYCOLOR_LIGHTGREEN,
+    OBJECTCOLOR_HERO_2QRTHEALTH    = DISPLAYCOLOR_YELLOW,
+    OBJECTCOLOR_HERO_1QRTHEALTH    = DISPLAYCOLOR_ORANGE,
+
+    OBJECTCOLOR_MONSTER_FULLHEALTH = DISPLAYCOLOR_RED,
+    OBJECTCOLOR_MONSTER_3QRTHEALTH = DISPLAYCOLOR_RED_HIGH,
+    OBJECTCOLOR_MONSTER_2QRTHEALTH = DISPLAYCOLOR_RED_MEDIUM,
+    OBJECTCOLOR_MONSTER_1QRTHEALTH = DISPLAYCOLOR_RED_LOW
+
 };
 
 class gameObject
@@ -304,11 +309,13 @@ class gameObject_Creature : public gameObject
 {
      public:
 
-        gameObject_Creature(int id, int x_, int y_, short int hp_, ObjectType type, ObjectColor color, gameObject* objectStandingOn_):
+        gameObject_Creature(int id, int x_, int y_, short int hpMax_, ObjectType type, ObjectColor color, gameObject* objectStandingOn_):
         gameObject::gameObject(id,false,true,type,color)
         {
             alive = true;
-            hp = hp_;
+            hpMax = hpMax_;
+            hp = hpMax;
+
             x = x_;
             y = y_;
             objectStandingOn = objectStandingOn_;
@@ -325,13 +332,32 @@ class gameObject_Creature : public gameObject
         void setY(int y_)                            { y = y_; }
         void setPosition(int x_, int y_)             { x = x_; y = y_; }
         void setObjectStandingOn(gameObject* object) { objectStandingOn = object; }
+       
+        short int receiveAttack()                  { return modifyHealth(-1);      }
+        short int restoreHealth(short int restore) { return modifyHealth(restore); }
+
+        short int modifyHealth(short int modifier)
+        {
+            
+            hp += modifier;
+
+            if (hp < 0)     hp = 0;
+            if (hp > hpMax) hp = hpMax;
+
+            color = healthToColor();
         
+            return hp;
+        }
+
+        virtual ObjectColor healthToColor() = 0;
+
     protected:
 
         int x;
         int y;
         bool alive;
         short int hp;
+        short int hpMax;
 
         gameObject* objectStandingOn;
   
@@ -345,13 +371,22 @@ class gameObject_Monster : public gameObject_Creature
 {
     public:
 
-        gameObject_Monster(int id, int x, int y, short int hp, gameObject* objectStandingOn):
-        gameObject_Creature::gameObject_Creature(id,x,y,hp,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER,objectStandingOn)
+        gameObject_Monster(int id, int x, int y, short int hpMax, gameObject* objectStandingOn):
+        gameObject_Creature::gameObject_Creature(id,x,y,hpMax,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER_FULLHEALTH,objectStandingOn)
         {
         }
 
         void triggerAction() {}
         void triggerActionViaLink() { }
+
+        virtual ObjectColor healthToColor()
+        {
+                 if (hp >= 7) return OBJECTCOLOR_MONSTER_FULLHEALTH;
+            else if (hp >= 5) return OBJECTCOLOR_MONSTER_3QRTHEALTH;
+            else if (hp >= 3) return OBJECTCOLOR_MONSTER_2QRTHEALTH;
+            else if (hp >= 1) return OBJECTCOLOR_MONSTER_1QRTHEALTH;
+            else              return OBJECTCOLOR_MONSTER_1QRTHEALTH;
+        }
 
  //   private:
 
@@ -375,25 +410,15 @@ class gameObject_Hero : public gameObject_Creature
         void triggerAction() { }
         void triggerActionViaLink() { }
 
-        short int receiveAttack()                  { return modifyHealth(-1);      }
-        short int restoreHealth(short int restore) { return modifyHealth(restore); }
-
-        short int modifyHealth(short int modifier)
+        virtual ObjectColor healthToColor()
         {
-            
-            hp += modifier;
-
-            if (hp < 0) hp = 0;
-            if (hp > 8) hp = 8;
-
-                 if (hp >= 7) color = OBJECTCOLOR_HERO_FULLHEALTH;
-            else if (hp >= 5) color = OBJECTCOLOR_HERO_3QRTHEALTH;
-            else if (hp >= 3) color = OBJECTCOLOR_HERO_2QRTHEALTH;
-            else if (hp >= 1) color = OBJECTCOLOR_HERO_1QRTHEALTH;
-            else              color = OBJECTCOLOR_MONSTER;
-        
-            return hp;
+                 if (hp >= 7) return OBJECTCOLOR_HERO_FULLHEALTH;
+            else if (hp >= 5) return OBJECTCOLOR_HERO_3QRTHEALTH;
+            else if (hp >= 3) return OBJECTCOLOR_HERO_2QRTHEALTH;
+            else if (hp >= 1) return OBJECTCOLOR_HERO_1QRTHEALTH;
+            else              return OBJECTCOLOR_MONSTER_FULLHEALTH;
         }
+
 
     private:
 
@@ -422,7 +447,7 @@ class gameObject_Hppot : public gameObject
             if (state == true)
             {
                 color = OBJECTCOLOR_EMPTY;
-                ((gameObject_Hero*) gameObject::theHero)->restoreHealth(value);
+                ((gameObject_Creature*) gameObject::theHero)->restoreHealth(value);
                 state = false;
             }
         }
