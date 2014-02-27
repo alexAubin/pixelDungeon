@@ -33,7 +33,7 @@
     #define GAME_MAP_WIDTH  16
 	#define GAME_MAP_HEIGHT 13
         
-    #define THEGAME_TOTALNUMBEROFOBJECTS 7
+    #define THEGAME_TOTALNUMBEROFOBJECTS 8
 
     #define GAME_TILE(x,y) ((y) + GAME_MAP_WIDTH * (x))
 

@@ -27,3 +27,4 @@
 #include "gameObject.h"
 
 gameObject* gameObject::theHero = 0;
+gameObject* gameObject::emptyObject = 0;

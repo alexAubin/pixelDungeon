@@ -74,34 +74,33 @@ class gameObject
     public:
 
         // Constructor
-        gameObject(int id_, bool walkable_, bool solid_, ObjectType type_, ObjectColor color_)
+        gameObject(bool walkable_, bool solid_, ObjectType type_, ObjectColor color_)
         {
-              id     =   id_;
-            walkable = walkable_;
+             walkable = walkable_;
              solid   =  solid_;
              type    =  type_;
              color   =  color_;
 
-             if (type == OBJECTTYPE_HERO) theHero = this;
+             if (type == OBJECTTYPE_HERO)  theHero = this;
+             if (type == OBJECTTYPE_EMPTY) emptyObject = this;
         }
 
 
         // Accessors
-        int getId()            const { return id;       };
         ObjectType getType()   const { return type;     };
         bool isWalkable()      const { return walkable; };
         bool isSolid()         const { return solid;    };
         ObjectColor getColor() const { return color;    };
 
         // Triggers
-        virtual void triggerAction() = 0;
-        virtual void triggerActionViaLink() = 0;
+        virtual void triggerFromAction() = 0;
+        virtual void triggerFromLink() = 0;
 
         static gameObject* theHero;
+        static gameObject* emptyObject;
 
     protected:
 
-        int id;
         bool walkable;
         bool solid;
         ObjectType type;
@@ -117,11 +116,11 @@ class gameObject_Empty : public gameObject
 {
     public:
 
-        gameObject_Empty(int id_):
-        gameObject::gameObject(id_,true,false,OBJECTTYPE_EMPTY,OBJECTCOLOR_EMPTY) { }
+        gameObject_Empty():
+        gameObject::gameObject(true,false,OBJECTTYPE_EMPTY,OBJECTCOLOR_EMPTY) { }
 
-        void triggerAction() {}
-        void triggerActionViaLink() {}
+        void triggerFromAction() {}
+        void triggerFromLink() {}
 };
 
 // #############
@@ -132,11 +131,11 @@ class gameObject_Wall : public gameObject
 {
     public:
 
-        gameObject_Wall(int id_):
-        gameObject::gameObject(id_,false,true,OBJECTTYPE_WALL,OBJECTCOLOR_WALL) { } 
+        gameObject_Wall():
+        gameObject::gameObject(false,true,OBJECTTYPE_WALL,OBJECTCOLOR_WALL) { } 
 
-        void triggerAction() {}
-        void triggerActionViaLink() {}
+        void triggerFromAction() {}
+        void triggerFromLink() {}
 };
 
 // ################
@@ -147,12 +146,14 @@ class gameObject_Switch : public gameObject
 {
     public:
 
-        gameObject_Switch(int id_, bool activated_, gameObject* link_):
-        gameObject::gameObject(id_,true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_SWITCH_OFF)
+        gameObject_Switch(bool activated_, gameObject* link_, bool singleUse_):
+        gameObject::gameObject(true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_SWITCH_OFF)
         {
             activated = activated_;
             link = link_;
-            
+            if (singleUse_) usage = 1;
+            else usage = -1;
+
             if (activated_) color = OBJECTCOLOR_SWITCH_ON;
         }
 
@@ -160,26 +161,36 @@ class gameObject_Switch : public gameObject
         {
             activated = true;
             color = OBJECTCOLOR_SWITCH_ON;
-            link->triggerActionViaLink();
+            link->triggerFromLink();
         }
 
         void switchOff()
         {
             activated = false;
             color = OBJECTCOLOR_SWITCH_OFF;
-            link->triggerActionViaLink();
+            link->triggerFromLink();
         }
 
-        void triggerAction()
+        void triggerFromAction()
         {
+            if (!usage) return;
+
             if (activated) switchOff();
             else           switchOn();
+
+            if (usage > 0) 
+            {
+                usage--;
+                color = OBJECTCOLOR_EMPTY;
+            }
+
         }
-        void triggerActionViaLink() {}
+        void triggerFromLink() {}
 
     private:
 
         bool activated;
+        short int usage;
         gameObject* link;
 };
 
@@ -191,8 +202,8 @@ class gameObject_Door : public gameObject
 {
     public:
 
-        gameObject_Door(int id_, bool opened_):
-        gameObject::gameObject(id_,false,true,OBJECTTYPE_DOOR,OBJECTCOLOR_DOOR_CLOSED)
+        gameObject_Door(bool opened_):
+        gameObject::gameObject(false,true,OBJECTTYPE_DOOR,OBJECTCOLOR_DOOR_CLOSED)
         {
             opened = opened_;
 
@@ -216,8 +227,8 @@ class gameObject_Door : public gameObject
             color = OBJECTCOLOR_DOOR_CLOSED;
         }
 
-        void triggerAction() {}
-        void triggerActionViaLink() 
+        void triggerFromAction() {}
+        void triggerFromLink() 
         {
             if (opened) close();
             else        open();
@@ -238,14 +249,14 @@ class gameObject_Teleport : public gameObject
 {
     public:
 
-        gameObject_Teleport(int id_, gameObject* link_):
-        gameObject::gameObject(id_,true,false,OBJECTTYPE_TELEPORT,OBJECTCOLOR_TELEPORT)
+        gameObject_Teleport(gameObject* link_):
+        gameObject::gameObject(true,false,OBJECTTYPE_TELEPORT,OBJECTCOLOR_TELEPORT)
         {
             link = link_;
         }
 
-        void triggerAction() {}
-        void triggerActionViaLink() {}
+        void triggerFromAction() {}
+        void triggerFromLink() {}
 
     private:
 
@@ -260,15 +271,15 @@ class gameObject_Goldp : public gameObject
 {
     public:
 
-        gameObject_Goldp(int id_, short int value_):
-        gameObject::gameObject(id_,true,false,OBJECTTYPE_GOLDP,OBJECTCOLOR_GOLDP)
+        gameObject_Goldp(short int value_):
+        gameObject::gameObject(true,false,OBJECTTYPE_GOLDP,OBJECTCOLOR_GOLDP)
         {
             state = true;
             value = value_;
         }
 
-        void triggerAction() {}
-        void triggerActionViaLink() {}
+        void triggerFromAction() {}
+        void triggerFromLink() {}
 
     private:
 
@@ -285,15 +296,15 @@ class gameObject_Mppot : public gameObject
 {
     public:
 
-        gameObject_Mppot(int id_, short int value_):
-        gameObject::gameObject(id_,true,false,OBJECTTYPE_MPPOT,OBJECTCOLOR_MPPOT)
+        gameObject_Mppot(short int value_):
+        gameObject::gameObject(true,false,OBJECTTYPE_MPPOT,OBJECTCOLOR_MPPOT)
         {
             state = true;
             value = value_;
         }
 
-        void triggerAction() {}
-        void triggerActionViaLink() {}
+        void triggerFromAction() {}
+        void triggerFromLink() {}
 
     private:
 
@@ -309,8 +320,8 @@ class gameObject_Creature : public gameObject
 {
      public:
 
-        gameObject_Creature(int id, int x_, int y_, short int hpMax_, ObjectType type, ObjectColor color, gameObject* objectStandingOn_):
-        gameObject::gameObject(id,false,true,type,color)
+        gameObject_Creature(int x_, int y_, short int hpMax_, ObjectType type, ObjectColor color):
+        gameObject::gameObject(false,true,type,color)
         {
             alive = true;
             hpMax = hpMax_;
@@ -318,11 +329,12 @@ class gameObject_Creature : public gameObject
 
             x = x_;
             y = y_;
-            objectStandingOn = objectStandingOn_;
+            objectStandingOn = emptyObject;
         }
 
-        virtual void triggerAction()        { }
-        virtual void triggerActionViaLink() { }
+        virtual void triggerFromAction() { }
+        virtual void triggerFromLink()   { }
+        virtual void triggerFromDeath() = 0;
 
         int         getX()                { return x; }
         int         getY()                { return y; }
@@ -371,13 +383,14 @@ class gameObject_Monster : public gameObject_Creature
 {
     public:
 
-        gameObject_Monster(int id, int x, int y, short int hpMax, gameObject* objectStandingOn):
-        gameObject_Creature::gameObject_Creature(id,x,y,hpMax,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER_FULLHEALTH,objectStandingOn)
+        gameObject_Monster(int x, int y, short int hpMax):
+        gameObject_Creature::gameObject_Creature(x,y,hpMax,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER_FULLHEALTH)
         {
         }
 
-        void triggerAction() {}
-        void triggerActionViaLink() { }
+        void triggerFromAction() { }
+        void triggerFromLink()   { }
+        void triggerFromDeath()  { }
 
         virtual ObjectColor healthToColor()
         {
@@ -400,15 +413,16 @@ class gameObject_Hero : public gameObject_Creature
 {
     public:
 
-        gameObject_Hero(int id, int x, int y, gameObject* objectStandingOn):
-        gameObject_Creature::gameObject_Creature(id,x,y,8,OBJECTTYPE_HERO,OBJECTCOLOR_HERO_FULLHEALTH,objectStandingOn)
+        gameObject_Hero(int x, int y):
+        gameObject_Creature::gameObject_Creature(x,y,8,OBJECTTYPE_HERO,OBJECTCOLOR_HERO_FULLHEALTH)
         {
             mp = 10;
             goldp = 0;
         }
 
-        void triggerAction() { }
-        void triggerActionViaLink() { }
+        void triggerFromAction() { }
+        void triggerFromLink()   { }
+        void triggerFromDeath()  { }
 
         virtual ObjectColor healthToColor()
         {
@@ -435,14 +449,14 @@ class gameObject_Hppot : public gameObject
 {
     public:
 
-        gameObject_Hppot(int id_, short int value_):
-        gameObject::gameObject(id_,true,false,OBJECTTYPE_HPPOT,OBJECTCOLOR_HPPOT)
+        gameObject_Hppot(short int value_):
+        gameObject::gameObject(true,false,OBJECTTYPE_HPPOT,OBJECTCOLOR_HPPOT)
         {
             state = true;
             value = value_;
         }
 
-        void triggerAction() 
+        void triggerFromAction() 
         {
             if (state == true)
             {
@@ -451,7 +465,7 @@ class gameObject_Hppot : public gameObject
                 state = false;
             }
         }
-        void triggerActionViaLink() {}
+        void triggerFromLink() {}
 
     private:
 

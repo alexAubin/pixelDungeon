@@ -85,9 +85,9 @@ ObjectColor gameMap::getColor(int tile) const
 	return map[tile]->getColor();
 }
 
-void gameMap::triggerAction(int tile)
+void gameMap::triggerFromAction(int tile)
 {
-    return map[tile]->triggerAction();
+    return map[tile]->triggerFromAction();
 }
 
 void gameMap::setTile(int tile,gameObject* object)
@@ -118,7 +118,7 @@ bool gameMap::moveCreature(gameObject_Creature* theCreature, Direction dir)
     {
 
         // Trigger action on the new tile
-        triggerAction(GAME_TILE(new_x,new_y));
+        triggerFromAction(GAME_TILE(new_x,new_y));
 
         // Actually move the creature
 

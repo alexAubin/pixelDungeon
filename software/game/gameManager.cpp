@@ -34,10 +34,10 @@ PROGMEM const short int initMap[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*1 */	0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
 /*2 */	0,0,1,1,0,1,0,1,0,1,1,0,0,0,0,0,
 /*3 */	0,1,1,0,0,1,0,1,0,0,1,1,1,1,1,0,
-/*4 */	0,1,0,0,1,1,0,1,1,0,1,4,0,0,1,0,
-/*5 */	1,1,0,1,1,0,0,0,1,0,2,0,0,0,1,0,
+/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,1,0,
+/*5 */	1,1,0,1,1,0,0,0,1,0,2,0,0,4,1,0,
 /*6 */	1,0,0,0,1,0,6,0,1,1,1,0,0,0,1,0,
-/*7 */	1,0,3,0,1,0,0,0,1,0,1,0,1,1,1,0,
+/*7 */	1,0,3,0,1,0,0,0,1,0,1,7,1,1,1,0,
 /*8 */	1,5,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
 /*9 */	1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,
 /*10*/	0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,
@@ -56,21 +56,16 @@ gameObject_Monster* gameManager::init()
     // Dirty temporary system for map initialization
     // TODO : more generic/developper friendly way to implement map
 
-    gameObject_Empty*   empty    = new gameObject_Empty  (0);         
-    gameObject_Wall*    wall     = new gameObject_Wall   (1);          
-    gameObject_Door*    door     = new gameObject_Door   (2,false);    
-    gameObject_Switch*  switc    = new gameObject_Switch (3,false,door);
-    gameObject_Monster* monster  = new gameObject_Monster(4,4,11,8,empty);
-    gameObject_Hppot*   potion   = new gameObject_Hppot  (5,4);
-                        theHero  = new gameObject_Hero   (6,6,6,empty);
+    theObjectCollection[0] = new gameObject_Empty  ();         
+    theObjectCollection[1] = new gameObject_Wall   ();          
+    theObjectCollection[2] = new gameObject_Door   (false);    
+    theObjectCollection[3] = new gameObject_Switch (false,theObjectCollection[2],false);
+    theObjectCollection[4] = new gameObject_Monster(5,13,8);
+    theObjectCollection[5] = new gameObject_Hppot  (4);
+    theObjectCollection[6] = new gameObject_Hero   (6,6);
+    theObjectCollection[7] = new gameObject_Door   (false);    
 
-    theObjectCollection[0] = empty;
-    theObjectCollection[1] = wall;
-    theObjectCollection[2] = door;
-    theObjectCollection[3] = switc;
-    theObjectCollection[4] = monster;
-    theObjectCollection[5] = potion;
-    theObjectCollection[6] = theHero;
+    theHero = (gameObject_Hero*) theObjectCollection[6];
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {
@@ -79,7 +74,7 @@ gameObject_Monster* gameManager::init()
 
     theMap.setCurrentDisplay(theHero);
 
-    return monster;
+    return (gameObject_Monster*) theObjectCollection[4];
 }
 
 void gameManager::heroMove(Direction dir)
