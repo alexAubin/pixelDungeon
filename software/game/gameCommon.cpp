@@ -30,9 +30,7 @@
 
 void initGame() 
 { 
-    gameObject_Monster* monster = gameManager::init();
-    // Temporary "monster" in argument until activation is done automatically
-    gameMonsterAI::init(monster);
+    gameManager::init();
 };
 
 void gameTimerHandler() 
@@ -40,7 +38,7 @@ void gameTimerHandler()
     short int gameOverStatus = gameManager::getGameOverStatus();
 
     if (gameOverStatus == -1)
-        gameMonsterAI::doMonsterAction();
+        gameMonsterAI::doMonstersAction();
     else if (gameOverStatus >= 5) 
         gameManager::triggerReboot();
 };

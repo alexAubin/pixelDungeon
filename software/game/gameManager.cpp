@@ -25,6 +25,7 @@
  */
 
 #include "game/gameManager.h"
+#include "game/gameMonsterAI.h"
 #include <avr/pgmspace.h>
 
 PROGMEM const short int initMap[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
@@ -51,7 +52,7 @@ gameObject_Hero* gameManager::theHero;
 short int        gameManager::gameOver = -1;
 bool             gameManager::attackMode = false;
 
-gameObject_Monster* gameManager::init()
+void gameManager::init()
 {
     // Dirty temporary system for map initialization
     // TODO : more generic/developper friendly way to implement map
@@ -73,8 +74,11 @@ gameObject_Monster* gameManager::init()
     }
 
     theMap.setCurrentDisplay(theHero);
+    
+    gameMonsterAI::init();
+    gameMonsterAI::activate((gameObject_Monster*) theObjectCollection[4]);
 
-    return (gameObject_Monster*) theObjectCollection[4];
+    return;
 }
 
 void gameManager::heroMove(Direction dir)

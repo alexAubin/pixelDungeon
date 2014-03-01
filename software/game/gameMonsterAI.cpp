@@ -28,44 +28,79 @@
 
 short int           gameMonsterAI::miniMap[GAME_AI_MINIMAP_SIZE];
 gameMap*            gameMonsterAI::theMap;
-gameObject_Monster* gameMonsterAI::activeMonster;
+gameObject_Monster* gameMonsterAI::activeMonsters[GAME_AI_MAX_ACTIVE_MONSTERS];
 
-void gameMonsterAI::doMonsterAction()
+void gameMonsterAI::activate(gameObject_Monster* theMonster) 
 {
-    if (activeMonster == 0) return;
+    for (int i = 0 ; i < GAME_AI_MAX_ACTIVE_MONSTERS ; i++)
+        if (activeMonsters[i] == 0) 
+        {
+            activeMonsters[i] = theMonster;
+            return;
+        }
+}
 
+void gameMonsterAI::deactivate(gameObject_Monster* theMonster) 
+{
+    bool found = false;
+
+    for (int i = 0 ; i < GAME_AI_MAX_ACTIVE_MONSTERS ; i++)
+    {
+        if (found)
+        {
+            activeMonsters[i-1] = activeMonsters[i];
+            activeMonsters[i] = 0;
+        }
+        else if (activeMonsters[i] == theMonster) 
+        {
+            activeMonsters[i] = 0;
+            found = true;
+        }
+    }   
+}
+
+
+void gameMonsterAI::doMonstersAction()
+{
     // Disable interrupts
     noInterrupts();
 
-    gameObject_Hero* theHero = (gameObject_Hero*) gameObject::theHero;
-
-    // If we're right next to the hero, attack him
-    if (distance(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY()) == 1)
+    for (int i = 0 ; i < GAME_AI_MAX_ACTIVE_MONSTERS ; i++)
     {
-        theHero->receiveAttack();
-        theMap->updateTileDisplay(theHero->getX(),theHero->getY());
-    }
-    // Otherwise, try to find a path/best direction to go to the hero
-    else
-    {
-        Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
-        
-        int prev_x = activeMonster->getX();
-        int prev_y = activeMonster->getY();
+        gameObject_Monster* activeMonster = 0;
 
-        if (theMap->moveCreature(activeMonster,bestWay))
+        if (activeMonsters[i] == 0) break;
+        else { activeMonster = activeMonsters[i]; }
+
+        gameObject_Hero* theHero = (gameObject_Hero*) gameObject::theHero;
+
+        // If we're right next to the hero, attack him
+        if (distance(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY()) == 1)
         {
-            theMap->updateTileDisplay(prev_x,prev_y);
-            theMap->updateTileDisplay(activeMonster->getX(),activeMonster->getY());
+            theHero->receiveAttack();
+            theMap->updateTileDisplay(theHero->getX(),theHero->getY());
+        }
+        // Otherwise, try to find a path/best direction to go to the hero
+        else
+        {
+            Direction bestWay = findBestWay(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY());
+
+            int prev_x = activeMonster->getX();
+            int prev_y = activeMonster->getY();
+
+            if (theMap->moveCreature(activeMonster,bestWay))
+            {
+                theMap->updateTileDisplay(prev_x,prev_y);
+                theMap->updateTileDisplay(activeMonster->getX(),activeMonster->getY());
+            }
         }
     }
-
+        
     // Re-enable interrupts
     interrupts();
    
 
 }
-
 
 Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int end_y)
 {

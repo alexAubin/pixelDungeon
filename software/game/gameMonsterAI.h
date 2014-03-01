@@ -35,29 +35,32 @@
 #define GAME_AI_MINIMAP_WIDTH (GAME_AI_PATH_DEPTH * 2 + 1)
 #define GAME_AI_MINIMAP_SIZE GAME_AI_MINIMAP_WIDTH*GAME_AI_MINIMAP_WIDTH
 #define MINIMAP_TILE(x,y) ((y) + GAME_AI_MINIMAP_WIDTH * (x))
+#define GAME_AI_MAX_ACTIVE_MONSTERS 8
 
 class gameMonsterAI
 {
 	private:
 
-        static short int miniMap[GAME_AI_MINIMAP_SIZE];
+        static short int           miniMap[GAME_AI_MINIMAP_SIZE];
         static gameMap*            theMap;
-
-        // Will be a tab later (except if I think of a better system..)
-        static gameObject_Monster* activeMonster;
+        static gameObject_Monster* activeMonsters[GAME_AI_MAX_ACTIVE_MONSTERS];
         
 	public:
 
 		gameMonsterAI() { }
 
-        static void init(gameObject_Monster* theMonster) 
+        static void init() 
         {   
-            theMap        = gameManager::getTheMap();
-            activeMonster = theMonster;
+            theMap         = gameManager::getTheMap();
+            for (int i = 0 ; i < GAME_AI_MAX_ACTIVE_MONSTERS ; i++) activeMonsters[i] = 0;
         }
+        
+        static void activate(gameObject_Monster* theMonster); 
+        static void deactivate(gameObject_Monster* theMonster); 
+
         static Direction findBestWay(int begin_x, int begin_y, int end_x, int end_y);
         static void setLinkToTheMap(gameMap* theMap_) { theMap = theMap_; };
-        static void doMonsterAction();
+        static void doMonstersAction();
         
         static Direction findBestWay2(int begin_x, int begin_y, int end_x, int end_y);
 

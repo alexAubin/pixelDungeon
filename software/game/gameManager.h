@@ -41,7 +41,7 @@ class gameManager
         {
         };
 
-        static gameObject_Monster* init();
+        static void init();
 
         // Accessors
 
