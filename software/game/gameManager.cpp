@@ -61,9 +61,9 @@ void gameManager::init()
     theObjectCollection[3] = new gameObject_Door   (false);
     theObjectCollection[4] = new gameObject_Switch (false,false,theObjectCollection[3]);
     theObjectCollection[5] = new gameObject_Door   (false);
-    theObjectCollection[6] = new gameObject_Monster(3,14,8);
+    theObjectCollection[6] = new gameObject_Monster(3,14,8,theObjectCollection[3],theObjectCollection[5]);
     theObjectCollection[7] = new gameObject_Hppot  (4);
-    theObjectCollection[8] = new gameObject_Switch (false,true,theObjectCollection[6]);
+    theObjectCollection[8] = new gameObject_Switch (false,true,theObjectCollection[3],theObjectCollection[6]);
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {

@@ -150,11 +150,13 @@ class gameObject_Switch : public gameObject
 {
     public:
 
-        gameObject_Switch(bool activated_, bool invisibleAndSingleUse_, gameObject* link_):
+        gameObject_Switch(bool activated_, bool invisibleAndSingleUse_, gameObject* link0, gameObject* link1 = 0, gameObject* link2 = 0):
         gameObject::gameObject(true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_EMPTY)
         {
             activated = activated_;
-            link = link_;
+            links[0] = link0;
+            links[1] = link1;
+            links[2] = link2;
             
             if (invisibleAndSingleUse_) usage = 1;
             else
@@ -163,21 +165,24 @@ class gameObject_Switch : public gameObject
                 if (activated_) color = OBJECTCOLOR_SWITCH_ON;
                 else            color = OBJECTCOLOR_SWITCH_OFF;
             }
-            
         }
 
         void switchOn()
         {
             activated = true;
             if (usage < 0) color = OBJECTCOLOR_SWITCH_ON;
-            link->triggerFromLink();
+            if (links[0]) links[0]->triggerFromLink();
+            if (links[1]) links[1]->triggerFromLink();
+            if (links[2]) links[2]->triggerFromLink();
         }
 
         void switchOff()
         {
             activated = false;
             if (usage < 0) color = OBJECTCOLOR_SWITCH_OFF;
-            link->triggerFromLink();
+            if (links[0]) links[0]->triggerFromLink();
+            if (links[1]) links[1]->triggerFromLink();
+            if (links[2]) links[2]->triggerFromLink();
         }
 
         void triggerFromAction()
@@ -195,7 +200,7 @@ class gameObject_Switch : public gameObject
 
         bool activated;
         short int usage;
-        gameObject* link;
+        gameObject* links[3];
 };
 
 // #############
@@ -353,10 +358,11 @@ class gameObject_Creature : public gameObject
 
         short int modifyHealth(short int modifier)
         {
-            
+            if (hp <= 0) return 0;
+
             hp += modifier;
 
-            if (hp < 0)     { hp = 0; triggerFromDeath(); }
+            if (hp <= 0)  { hp = 0; triggerFromDeath(); }
             if (hp > hpMax) hp = hpMax;
 
             color = healthToColor();
@@ -386,13 +392,16 @@ class gameObject_Monster : public gameObject_Creature
 {
     public:
 
-        gameObject_Monster(int x, int y, short int hpMax):
+        gameObject_Monster(int x, int y, short int hpMax, gameObject* deathLink0 = 0, gameObject* deathLink1 = 0, gameObject* deathLink2 = 0):
         gameObject_Creature::gameObject_Creature(x,y,hpMax,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER_FULLHEALTH)
         {
+            deathLinks[0] = deathLink0;
+            deathLinks[1] = deathLink1;
+            deathLinks[2] = deathLink2;
         }
 
         void triggerFromAction() { }
-        void triggerFromDeath()  { }
+        void triggerFromDeath();
         void triggerFromLink();
 
         virtual ObjectColor healthToColor()
@@ -403,9 +412,11 @@ class gameObject_Monster : public gameObject_Creature
             else if (hp >= 1) return OBJECTCOLOR_MONSTER_1QRTHEALTH;
             else              return OBJECTCOLOR_MONSTER_1QRTHEALTH;
         }
+        
 
- //   private:
+    private:
 
+        gameObject* deathLinks[3];
 };
 
 // ############
