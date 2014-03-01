@@ -21,14 +21,9 @@ This work is using the [PinChangeInt](http://code.google.com/p/arduino-pinchange
 To-do list
 ----------
 
-- "Game Over" system when Hero's HP reach 0
-- Enable HP potions
-- Hero attack system (require to add button 'A')
-- Monster death that trigger objects (door, drop)
-- Switch trigger multiples objects (several door, activate monster, ..)
-- Put gameManager attributes/method in static
 - Magic/projectile system (require to add button 'B')
 - Converter PNG map to map implementation
-
-
+- Implement a ~full map playable map
+- Work on a first PCB version
+- Work on housing
 
