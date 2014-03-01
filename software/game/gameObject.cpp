@@ -25,6 +25,13 @@
 */
 
 #include "gameObject.h"
+#include "gameManager.h"
 
 gameObject* gameObject::theHero = 0;
 gameObject* gameObject::emptyObject = 0;
+
+void gameObject_Hero::triggerFromDeath() 
+{
+    gameManager::triggerGameOver();
+}
+

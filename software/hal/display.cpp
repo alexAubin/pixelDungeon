@@ -73,7 +73,8 @@ void displayRefreshNextPixel()
   if (currentPixel == DISPLAY_NPIX) currentPixel = 0;
 
   int color = currentDisplay[currentPixel];
-  if (color == DISPLAYCOLOR_EMPTY) return;
+  //if (color == DISPLAYCOLOR_EMPTY) return;
+  if (color == DISPLAYCOLOR_EMPTY) { interrupts(); delayMicroseconds(10);  noInterrupts(); return; }
 
   digitalWrite(X0, bitRead(currentPixel,0));
   digitalWrite(X1, bitRead(currentPixel,1));

@@ -30,6 +30,8 @@
 #include "../hal/display.h"
 #include "gameCommon.h"
 
+class gameManager;
+
 enum ObjectType
 {
     OBJECTTYPE_EMPTY,
@@ -353,7 +355,7 @@ class gameObject_Creature : public gameObject
             
             hp += modifier;
 
-            if (hp < 0)     hp = 0;
+            if (hp < 0)     { hp = 0; triggerFromDeath(); }
             if (hp > hpMax) hp = hpMax;
 
             color = healthToColor();
@@ -422,7 +424,7 @@ class gameObject_Hero : public gameObject_Creature
 
         void triggerFromAction() { }
         void triggerFromLink()   { }
-        void triggerFromDeath()  { }
+        void triggerFromDeath(); 
 
         virtual ObjectColor healthToColor()
         {

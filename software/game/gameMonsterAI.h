@@ -46,10 +46,6 @@ class gameMonsterAI
         // Will be a tab later (except if I think of a better system..)
         static gameObject_Monster* activeMonster;
         
-        // God dammit, this is ugly.
-        // I need to find something better for this.
-        static gameObject_Hero*    theHero;
-
 	public:
 
 		gameMonsterAI() { }
@@ -57,7 +53,6 @@ class gameMonsterAI
         static void init(gameObject_Monster* theMonster) 
         {   
             theMap        = gameManager::getTheMap();
-            theHero       = gameManager::getTheHero();
             activeMonster = theMonster;
         }
         static Direction findBestWay(int begin_x, int begin_y, int end_x, int end_y);

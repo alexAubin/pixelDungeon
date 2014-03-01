@@ -28,22 +28,21 @@
 
 short int           gameMonsterAI::miniMap[GAME_AI_MINIMAP_SIZE];
 gameMap*            gameMonsterAI::theMap;
-gameObject_Hero*    gameMonsterAI::theHero;
 gameObject_Monster* gameMonsterAI::activeMonster;
 
 void gameMonsterAI::doMonsterAction()
 {
-
     if (activeMonster == 0) return;
 
     // Disable interrupts
     noInterrupts();
 
+    gameObject_Hero* theHero = (gameObject_Hero*) gameObject::theHero;
+
     // If we're right next to the hero, attack him
     if (distance(activeMonster->getX(),activeMonster->getY(),theHero->getX(),theHero->getY()) == 1)
     {
-        short int hpLeft = theHero->receiveAttack();
-        if (hpLeft == 0) gameManager::triggerGameOver();
+        theHero->receiveAttack();
         theMap->updateTileDisplay(theHero->getX(),theHero->getY());
     }
     // Otherwise, try to find a path/best direction to go to the hero
