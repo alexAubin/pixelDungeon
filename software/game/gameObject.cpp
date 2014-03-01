@@ -26,12 +26,19 @@
 
 #include "gameObject.h"
 #include "gameManager.h"
+#include "gameMonsterAI.h"
 
-gameObject* gameObject::theHero = 0;
+gameObject_Hero* gameObject::theHero = 0;
 gameObject* gameObject::emptyObject = 0;
 
 void gameObject_Hero::triggerFromDeath() 
 {
     gameManager::triggerGameOver();
 }
+
+void gameObject_Monster::triggerFromLink() 
+{
+    gameMonsterAI::activate(this);
+}
+
 

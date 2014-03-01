@@ -47,7 +47,6 @@ class gameManager
 
         static gameMap*         getTheMap()              { return &theMap;             }
         static gameObject**     getTheObjectCollection() { return theObjectCollection; }
-        static gameObject_Hero* getTheHero()             { return theHero;             }
 
         // Interface with the Keys HAL
 
@@ -69,7 +68,6 @@ class gameManager
 
         static gameMap          theMap;
         static gameObject*      theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
-        static gameObject_Hero* theHero;
         
         static short int gameOver;
 

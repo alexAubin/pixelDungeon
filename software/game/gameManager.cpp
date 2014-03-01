@@ -33,22 +33,20 @@ PROGMEM const short int initMap[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 //      0 1 2 3 4 5 6 7 8 9 101112131415
 /*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
 /*1 */	0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
-/*2 */	0,0,1,1,0,1,0,1,0,1,1,0,0,0,0,0,
-/*3 */	0,1,1,0,0,1,0,1,0,0,1,1,1,1,1,0,
-/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,1,0,
-/*5 */	1,1,0,1,1,0,0,0,1,0,2,0,0,4,1,0,
-/*6 */	1,0,0,0,1,0,6,0,1,1,1,0,0,0,1,0,
-/*7 */	1,0,3,0,1,0,0,0,1,0,1,7,1,1,1,0,
-/*8 */	1,5,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
+/*2 */	0,0,1,1,0,1,0,1,0,1,1,1,1,1,1,1,
+/*3 */	0,1,1,0,0,1,0,1,0,0,1,0,0,0,6,1,
+/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,0,1,
+/*5 */	1,1,0,1,1,0,0,0,1,0,3,8,0,0,0,1,
+/*6 */	1,0,0,0,1,0,2,0,1,1,1,0,0,0,0,1,
+/*7 */	1,0,4,0,1,0,0,0,1,0,1,5,1,1,1,1,
+/*8 */	1,0,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
 /*9 */	1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,
-/*10*/	0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,
+/*10*/	0,0,0,0,1,0,7,0,0,0,0,0,1,0,0,0,
 /*11*/	0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,0,
 /*12*/	0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0
 };
-
 gameMap          gameManager::theMap;
 gameObject*      gameManager::theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
-gameObject_Hero* gameManager::theHero;
 short int        gameManager::gameOver = -1;
 bool             gameManager::attackMode = false;
 
@@ -59,25 +57,22 @@ void gameManager::init()
 
     theObjectCollection[0] = new gameObject_Empty  ();         
     theObjectCollection[1] = new gameObject_Wall   ();          
-    theObjectCollection[2] = new gameObject_Door   (false);    
-    theObjectCollection[3] = new gameObject_Switch (false,theObjectCollection[2],false);
-    theObjectCollection[4] = new gameObject_Monster(5,13,8);
-    theObjectCollection[5] = new gameObject_Hppot  (4);
-    theObjectCollection[6] = new gameObject_Hero   (6,6);
-    theObjectCollection[7] = new gameObject_Door   (false);    
-
-    theHero = (gameObject_Hero*) theObjectCollection[6];
+    theObjectCollection[2] = new gameObject_Hero   (6,6);
+    theObjectCollection[3] = new gameObject_Door   (false);
+    theObjectCollection[4] = new gameObject_Switch (false,false,theObjectCollection[3]);
+    theObjectCollection[5] = new gameObject_Door   (false);
+    theObjectCollection[6] = new gameObject_Monster(3,14,8);
+    theObjectCollection[7] = new gameObject_Hppot  (4);
+    theObjectCollection[8] = new gameObject_Switch (false,true,theObjectCollection[6]);
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {
         theMap.setTile(i,theObjectCollection[pgm_read_word_near(initMap+i)]);
     }
 
-    theMap.setCurrentDisplay(theHero);
+    theMap.setCurrentDisplay(gameObject::theHero);
     
     gameMonsterAI::init();
-    gameMonsterAI::activate((gameObject_Monster*) theObjectCollection[4]);
-
     return;
 }
 
@@ -88,10 +83,10 @@ void gameManager::heroMove(Direction dir)
     // Disable interrupts
     noInterrupts();
 
-    if (theMap.moveCreature(theHero,dir))
+    if (theMap.moveCreature(gameObject::theHero,dir))
     {
         // Update display
-        theMap.setCurrentDisplay(theHero);
+        theMap.setCurrentDisplay(gameObject::theHero);
     }
 
     // Re-enable interrupts
@@ -105,10 +100,10 @@ void gameManager::heroAttack(Direction dir)
 
     noInterrupts();
     
-    if (theMap.heroAttack(theHero,dir))
+    if (theMap.heroAttack(gameObject::theHero,dir))
     {
         // Update display
-        theMap.setCurrentDisplay(theHero);
+        theMap.setCurrentDisplay(gameObject::theHero);
     }
 
     interrupts();

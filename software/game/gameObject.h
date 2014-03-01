@@ -71,6 +71,8 @@ enum ObjectColor
 
 };
 
+class gameObject_Hero;
+
 class gameObject
 {
     public:
@@ -83,7 +85,7 @@ class gameObject
              type    =  type_;
              color   =  color_;
 
-             if (type == OBJECTTYPE_HERO)  theHero = this;
+             if (type == OBJECTTYPE_HERO)  theHero = (gameObject_Hero*) this;
              if (type == OBJECTTYPE_EMPTY) emptyObject = this;
         }
 
@@ -98,7 +100,7 @@ class gameObject
         virtual void triggerFromAction() = 0;
         virtual void triggerFromLink() = 0;
 
-        static gameObject* theHero;
+        static gameObject_Hero* theHero;
         static gameObject* emptyObject;
 
     protected:
@@ -148,28 +150,33 @@ class gameObject_Switch : public gameObject
 {
     public:
 
-        gameObject_Switch(bool activated_, gameObject* link_, bool singleUse_):
-        gameObject::gameObject(true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_SWITCH_OFF)
+        gameObject_Switch(bool activated_, bool invisibleAndSingleUse_, gameObject* link_):
+        gameObject::gameObject(true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_EMPTY)
         {
             activated = activated_;
             link = link_;
-            if (singleUse_) usage = 1;
-            else usage = -1;
-
-            if (activated_) color = OBJECTCOLOR_SWITCH_ON;
+            
+            if (invisibleAndSingleUse_) usage = 1;
+            else
+            {
+                usage = -1;
+                if (activated_) color = OBJECTCOLOR_SWITCH_ON;
+                else            color = OBJECTCOLOR_SWITCH_OFF;
+            }
+            
         }
 
         void switchOn()
         {
             activated = true;
-            color = OBJECTCOLOR_SWITCH_ON;
+            if (usage < 0) color = OBJECTCOLOR_SWITCH_ON;
             link->triggerFromLink();
         }
 
         void switchOff()
         {
             activated = false;
-            color = OBJECTCOLOR_SWITCH_OFF;
+            if (usage < 0) color = OBJECTCOLOR_SWITCH_OFF;
             link->triggerFromLink();
         }
 
@@ -180,12 +187,7 @@ class gameObject_Switch : public gameObject
             if (activated) switchOff();
             else           switchOn();
 
-            if (usage > 0) 
-            {
-                usage--;
-                color = OBJECTCOLOR_EMPTY;
-            }
-
+            if (usage > 0) usage--;
         }
         void triggerFromLink() {}
 
@@ -335,7 +337,6 @@ class gameObject_Creature : public gameObject
         }
 
         virtual void triggerFromAction() { }
-        virtual void triggerFromLink()   { }
         virtual void triggerFromDeath() = 0;
 
         int         getX()                { return x; }
@@ -391,8 +392,8 @@ class gameObject_Monster : public gameObject_Creature
         }
 
         void triggerFromAction() { }
-        void triggerFromLink()   { }
         void triggerFromDeath()  { }
+        void triggerFromLink();
 
         virtual ObjectColor healthToColor()
         {
@@ -463,7 +464,7 @@ class gameObject_Hppot : public gameObject
             if (state == true)
             {
                 color = OBJECTCOLOR_EMPTY;
-                ((gameObject_Creature*) gameObject::theHero)->restoreHealth(value);
+                gameObject::theHero->restoreHealth(value);
                 state = false;
             }
         }
