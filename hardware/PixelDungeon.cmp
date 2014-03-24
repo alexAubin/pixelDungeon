@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2012-apr-16-27)-stable date = Sat Mar 22 19:13:40 2014
+Cmp-Mod V01 Created by CvPcb (2012-apr-16-27)-stable date = Sat Mar 22 20:21:40 2014
 
 BeginCmp
 TimeStamp = /532DBB1B;
@@ -46,28 +46,28 @@ BeginCmp
 TimeStamp = /4E2332D9;
 Reference = DMUX1;
 ValeurCmp = DEMUX;
-IdModule  = DIP-16__300;
+IdModule  = DEMUX;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E232F7F;
 Reference = DMUX2;
 ValeurCmp = DEMUX;
-IdModule  = DIP-16__300;
+IdModule  = DEMUX;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E232F82;
 Reference = DMUX3;
 ValeurCmp = DEMUX;
-IdModule  = DIP-16__300;
+IdModule  = DEMUX;
 EndCmp
 
 BeginCmp
 TimeStamp = /4E232F9F;
 Reference = DMUX4;
 ValeurCmp = DEMUX;
-IdModule  = DIP-16__300;
+IdModule  = DEMUX;
 EndCmp
 
 BeginCmp

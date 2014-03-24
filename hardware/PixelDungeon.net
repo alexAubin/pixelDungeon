@@ -1,4 +1,4 @@
-# EESchema Netlist Version 1.1 created  Sat Mar 22 19:51:17 2014
+# EESchema Netlist Version 1.1 created  sam. 22 mars 2014 22:13:07 CET
 (
  ( /532DBD19 $noname  SW4 SW_PUSH {Lib=SW_PUSH}
   (    1 GND )
@@ -74,11 +74,11 @@
  )
  ( /50195C79 $noname  R23 R_green {Lib=R}
   (    1 /G1 )
-  (    2 N-000055 )
+  (    2 N-000056 )
  )
  ( /50195C67 $noname  R24 R_green {Lib=R}
   (    1 /G2 )
-  (    2 N-000057 )
+  (    2 N-000058 )
  )
  ( /50195C50 $noname  R25 R_green {Lib=R}
   (    1 /G3 )
@@ -86,58 +86,72 @@
  )
  ( /50195C3F $noname  R26 R_green {Lib=R}
   (    1 /G4 )
-  (    2 N-000060 )
+  (    2 N-000061 )
  )
  ( /50195C1A $noname  R27 R_green {Lib=R}
   (    1 /G5 )
-  (    2 N-000061 )
+  (    2 N-000062 )
  )
  ( /50195C18 $noname  R28 R_green {Lib=R}
   (    1 /G6 )
-  (    2 N-000063 )
+  (    2 N-000064 )
  )
  ( /50195C16 $noname  R29 R_green {Lib=R}
   (    1 /G7 )
-  (    2 N-000064 )
+  (    2 N-000065 )
  )
  ( /50195BDC $noname  R30 R_green {Lib=R}
   (    1 /G8 )
-  (    2 N-000066 )
+  (    2 N-000067 )
  )
  ( /50195BAD $noname  R7 R_blue {Lib=R}
-  (    1 N-000047 )
+  (    1 N-000046 )
   (    2 /B1 )
  )
  ( /50195BAB $noname  R8 R_blue {Lib=R}
-  (    1 N-000046 )
+  (    1 N-000045 )
   (    2 /B2 )
  )
  ( /50195BA8 $noname  R9 R_blue {Lib=R}
-  (    1 N-000048 )
+  (    1 N-000047 )
   (    2 /B3 )
  )
  ( /50195BA7 $noname  R10 R_blue {Lib=R}
-  (    1 N-000073 )
+  (    1 N-000074 )
   (    2 /B4 )
  )
  ( /50195BA5 $noname  R11 R_blue {Lib=R}
-  (    1 N-000072 )
+  (    1 N-000073 )
   (    2 /B5 )
  )
  ( /50195BA1 $noname  R12 R_blue {Lib=R}
-  (    1 N-000071 )
+  (    1 N-000072 )
   (    2 /B6 )
  )
  ( /50195B82 $noname  R13 R_blue {Lib=R}
-  (    1 N-000070 )
+  (    1 N-000071 )
   (    2 /B7 )
  )
  ( /50195B3E $noname  R14 R_blue {Lib=R}
-  (    1 N-000069 )
+  (    1 N-000070 )
   (    2 /B8 )
  )
  ( /4E232F7F $noname  DMUX2 DEMUX {Lib=DEMUX}
-  (    ~ /Vcc )
+  (    1 /X0 )
+  (    2 /X1 )
+  (    3 /X2 )
+  (    4 ? )
+  (    6 /GREENLED )
+  (    7 /G8 )
+  (    8 GND )
+  (    9 /G7 )
+  (   10 /G6 )
+  (   11 /G5 )
+  (   12 /G4 )
+  (   13 /G3 )
+  (   14 /G2 )
+  (   15 /G1 )
+  (   16 /Vcc )
  )
  ( /501950CE DIL28  IC1 ATMEGA8-P {Lib=ATMEGA8-P}
   (    1 ? )
@@ -171,7 +185,7 @@
  )
  ( /4E4D7130 $noname  R22 R_red {Lib=R}
   (    1 /R8 )
-  (    2 N-000059 )
+  (    2 N-000060 )
  )
  ( /4E4D70FA $noname  R19 R_red {Lib=R}
   (    1 /R5 )
@@ -179,14 +193,14 @@
  )
  ( /4E4D70F9 $noname  R20 R_red {Lib=R}
   (    1 /R6 )
-  (    2 N-000062 )
+  (    2 N-000063 )
  )
  ( /4E4D70F8 $noname  R21 R_red {Lib=R}
   (    1 N-000005 )
   (    2 /R7 )
  )
  ( /4E4D70C7 $noname  R18 R_red {Lib=R}
-  (    1 N-000065 )
+  (    1 N-000066 )
   (    2 /R4 )
  )
  ( /4E4D70C1 $noname  R17 R_red {Lib=R}
@@ -202,43 +216,85 @@
   (    2 /R1 )
  )
  ( /4E232F82 $noname  DMUX3 DEMUX {Lib=DEMUX}
-  (    ~ /Vcc )
+  (    1 /X0 )
+  (    2 /X1 )
+  (    3 /X2 )
+  (    4 ? )
+  (    6 /BLUELED )
+  (    7 /B8 )
+  (    8 GND )
+  (    9 /B7 )
+  (   10 /B6 )
+  (   11 /B5 )
+  (   12 /B4 )
+  (   13 /B3 )
+  (   14 /B2 )
+  (   15 /B1 )
+  (   16 /Vcc )
  )
  ( /4E232F9F $noname  DMUX4 DEMUX {Lib=DEMUX}
-  (    ~ /Vcc )
+  (    1 /Y0 )
+  (    2 /Y1 )
+  (    3 /Y2 )
+  (    4 ? )
+  (    6 GND )
+  (    7 /GND8 )
+  (    8 GND )
+  (    9 /GND7 )
+  (   10 /GND6 )
+  (   11 /GND5 )
+  (   12 /GND4 )
+  (   13 /GND3 )
+  (   14 /GND2 )
+  (   15 /GND1 )
+  (   16 /Vcc )
  )
  ( /4E2332D9 $noname  DMUX1 DEMUX {Lib=DEMUX}
-  (    ~ /Vcc )
+  (    1 /X0 )
+  (    2 /X1 )
+  (    3 /X2 )
+  (    4 ? )
+  (    6 /REDLED )
+  (    7 /R8 )
+  (    8 GND )
+  (    9 /R7 )
+  (   10 /R6 )
+  (   11 /R5 )
+  (   12 /R4 )
+  (   13 /R3 )
+  (   14 /R2 )
+  (   15 /R1 )
+  (   16 /Vcc )
  )
  ( /4E232C4C $noname  LM1 LED_MATRIX {Lib=LED_MATRIX}
-  (    1 N-000047 )
-  (    2 N-000046 )
-  (    3 N-000048 )
-  (    4 N-000073 )
-  (    5 N-000072 )
-  (    6 N-000071 )
-  (    7 N-000070 )
-  (    8 N-000069 )
+  (    1 N-000046 )
+  (    2 N-000045 )
+  (    3 N-000047 )
+  (    4 N-000074 )
+  (    5 N-000073 )
+  (    6 N-000072 )
+  (    7 N-000071 )
+  (    8 N-000070 )
   (    9 N-000003 )
   (   10 N-000077 )
   (   11 N-000004 )
-  (   12 N-000065 )
+  (   12 N-000066 )
   (   13 N-000006 )
-  (   14 N-000062 )
+  (   14 N-000063 )
   (   15 N-000005 )
-  (   16 N-000059 )
+  (   16 N-000060 )
   (   17 /GND1 )
   (   18 /GND2 )
   (   19 /GND3 )
   (   20 /GND4 )
-  (   21 N-000066 )
-  (   22 N-000064 )
-  (   23 N-000063 )
-  (   24 N-000061 )
-  (   25 N-000060 )
+  (   21 N-000067 )
+  (   22 N-000065 )
+  (   23 N-000064 )
+  (   24 N-000062 )
+  (   25 N-000061 )
   (   26 N-000079 )
-  (   27 N-000057 )
-  (   28 N-000055 )
+  (   27 N-000058 )
+  (   28 N-000056 )
   (   29 /GND5 )
   (   30 /GND6 )
   (   31 /GND7 )
@@ -494,267 +550,273 @@ $endlist
 $endfootprintlist
 }
 { Pin List by Nets
+Net 1 "/Vcc" "Vcc"
+ DMUX1 16
+ IC1 7
+ DMUX2 16
+ DMUX4 16
+ DMUX3 16
 Net 3 "" ""
- R15 1
  LM1 9
+ R15 1
 Net 4 "" ""
- LM1 11
  R17 2
+ LM1 11
 Net 5 "" ""
- LM1 15
  R21 1
+ LM1 15
 Net 6 "" ""
  R19 2
  LM1 13
 Net 7 "/B6" "B6"
+ DMUX3 10
  R12 2
- DMUX3 ~
-Net 9 "/B2" "B2"
- DMUX3 ~
+Net 8 "/B2" "B2"
  R8 2
-Net 10 "/B3" "B3"
- DMUX3 ~
+ DMUX3 14
+Net 9 "/B3" "B3"
+ DMUX3 13
  R9 2
-Net 11 "/B5" "B5"
+Net 10 "/B5" "B5"
  R11 2
- DMUX3 ~
-Net 12 "/B8" "B8"
+ DMUX3 11
+Net 11 "/B8" "B8"
  R14 2
- DMUX3 ~
-Net 13 "/GND8" "GND8"
- DMUX4 ~
+ DMUX3 7
+Net 12 "/GND8" "GND8"
+ DMUX4 7
  LM1 32
-Net 14 "/GND7" "GND7"
- DMUX4 ~
+Net 13 "/GND7" "GND7"
  LM1 31
-Net 15 "/GND5" "GND5"
- DMUX4 ~
+ DMUX4 9
+Net 14 "/GND5" "GND5"
  LM1 29
-Net 16 "/G3" "G3"
+ DMUX4 11
+Net 15 "/G3" "G3"
+ DMUX2 13
  R25 1
- DMUX2 ~
-Net 17 "/G2" "G2"
- DMUX2 ~
+Net 16 "/G2" "G2"
+ DMUX2 14
  R24 1
-Net 18 "/X1" "X1"
+Net 17 "/X1" "X1"
+ DMUX2 2
+ DMUX3 2
  IC1 24
- DMUX2 ~
- DMUX1 ~
- DMUX3 ~
-Net 19 "GND" "GND"
- DMUX1 ~
- DMUX4 ~
- SW2 1
+ DMUX1 2
+Net 18 "GND" "GND"
+ DMUX1 8
+ DMUX4 6
+ DMUX4 8
+ SW3 1
  SW6 1
  IC1 8
- SW5 1
- C2 2
- C5 2
- DMUX4 ~
- C6 2
- DMUX2 ~
- SW3 1
- DMUX3 ~
- C1 2
- C4 2
- C3 2
+ DMUX2 8
  SW4 1
+ C1 2
+ C6 2
+ C5 2
+ SW5 1
+ C3 2
+ C4 2
+ DMUX3 8
+ SW2 1
  SW1 1
-Net 21 "/B" "B"
- IC1 13
+ C2 2
+Net 20 "/B" "B"
  R6 1
+ IC1 13
  C6 1
-Net 22 "/REDLED" "REDLED"
+Net 21 "/REDLED" "REDLED"
  IC1 19
- DMUX1 ~
-Net 23 "/Y2" "Y2"
+ DMUX1 6
+Net 22 "/Y2" "Y2"
  IC1 28
- DMUX4 ~
-Net 24 "/GREENLED" "GREENLED"
+ DMUX4 3
+Net 23 "/GREENLED" "GREENLED"
  IC1 18
- DMUX2 ~
-Net 25 "/Y1" "Y1"
- DMUX4 ~
+ DMUX2 6
+Net 24 "/Y1" "Y1"
+ DMUX4 2
  IC1 27
-Net 26 "/BLUELED" "BLUELED"
- DMUX3 ~
+Net 25 "/BLUELED" "BLUELED"
+ DMUX3 6
  IC1 17
-Net 27 "/Y0" "Y0"
- DMUX4 ~
+Net 26 "/Y0" "Y0"
  IC1 26
-Net 29 "/X2" "X2"
+ DMUX4 1
+Net 28 "/X2" "X2"
  IC1 25
- DMUX1 ~
- DMUX2 ~
- DMUX3 ~
-Net 32 "/X0" "X0"
- DMUX1 ~
- DMUX3 ~
+ DMUX3 3
+ DMUX2 3
+ DMUX1 3
+Net 31 "/X0" "X0"
  IC1 23
- DMUX2 ~
-Net 34 "/A" "A"
+ DMUX1 1
+ DMUX3 1
+ DMUX2 1
+Net 33 "/A" "A"
  R5 1
  C5 1
  IC1 12
-Net 36 "/LEFT" "LEFT"
+Net 35 "/LEFT" "LEFT"
  C4 1
  R4 1
  IC1 11
-Net 40 "/DOWN" "DOWN"
- IC1 6
+Net 39 "/DOWN" "DOWN"
  R2 1
+ IC1 6
  C2 1
-Net 41 "/UP" "UP"
- IC1 5
- R1 1
+Net 40 "/UP" "UP"
  C1 1
-Net 42 "/RIGHT" "RIGHT"
+ R1 1
+ IC1 5
+Net 41 "/RIGHT" "RIGHT"
+ IC1 4
  R3 1
  C3 1
- IC1 4
-Net 45 "/R3" "R3"
- DMUX1 ~
+Net 44 "/R3" "R3"
+ DMUX1 13
  R17 1
-Net 46 "" ""
+Net 45 "" ""
  LM1 2
  R8 1
-Net 47 "" ""
- LM1 1
+Net 46 "" ""
  R7 1
-Net 48 "" ""
+ LM1 1
+Net 47 "" ""
  LM1 3
  R9 1
-Net 49 "/R4" "R4"
- DMUX1 ~
+Net 48 "/R4" "R4"
  R18 2
-Net 50 "/R6" "R6"
+ DMUX1 12
+Net 49 "/R6" "R6"
  R20 1
- DMUX1 ~
-Net 51 "/R7" "R7"
- DMUX1 ~
+ DMUX1 10
+Net 50 "/R7" "R7"
  R21 2
-Net 52 "/R8" "R8"
- DMUX1 ~
+ DMUX1 9
+Net 51 "/R8" "R8"
  R22 1
-Net 53 "/R5" "R5"
+ DMUX1 7
+Net 52 "/R5" "R5"
+ DMUX1 11
  R19 1
- DMUX1 ~
-Net 54 "/GND3" "GND3"
+Net 53 "/R1" "R1"
+ DMUX1 15
+ R15 2
+Net 54 "/R2" "R2"
+ DMUX1 14
+ R16 1
+Net 55 "/GND3" "GND3"
  LM1 19
- DMUX4 ~
-Net 55 "" ""
+ DMUX4 13
+Net 56 "" ""
  R23 2
  LM1 28
-Net 56 "/GND2" "GND2"
- DMUX4 ~
+Net 57 "/GND2" "GND2"
  LM1 18
-Net 57 "" ""
+ DMUX4 14
+Net 58 "" ""
  LM1 27
  R24 2
-Net 58 "/GND1" "GND1"
- DMUX4 ~
+Net 59 "/GND1" "GND1"
+ DMUX4 15
  LM1 17
-Net 59 "" ""
+Net 60 "" ""
  R22 2
  LM1 16
-Net 60 "" ""
- LM1 25
- R26 2
 Net 61 "" ""
- R27 2
- LM1 24
+ R26 2
+ LM1 25
 Net 62 "" ""
+ LM1 24
+ R27 2
+Net 63 "" ""
  R20 2
  LM1 14
-Net 63 "" ""
+Net 64 "" ""
  R28 2
  LM1 23
-Net 64 "" ""
- R29 2
- LM1 22
 Net 65 "" ""
+ LM1 22
+ R29 2
+Net 66 "" ""
  R18 1
  LM1 12
-Net 66 "" ""
- LM1 21
+Net 67 "" ""
  R30 2
-Net 67 "/GND6" "GND6"
- DMUX4 ~
+ LM1 21
+Net 68 "/GND6" "GND6"
  LM1 30
-Net 68 "/GND4" "GND4"
- DMUX4 ~
+ DMUX4 10
+Net 69 "/GND4" "GND4"
  LM1 20
-Net 69 "" ""
- LM1 8
- R14 1
+ DMUX4 12
 Net 70 "" ""
+ R14 1
+ LM1 8
+Net 71 "" ""
  LM1 7
  R13 1
-Net 71 "" ""
+Net 72 "" ""
  R12 1
  LM1 6
-Net 72 "" ""
+Net 73 "" ""
  R11 1
  LM1 5
-Net 73 "" ""
+Net 74 "" ""
  LM1 4
  R10 1
-Net 74 "/R2" "R2"
- R16 1
- DMUX1 ~
-Net 75 "/R1" "R1"
- DMUX1 ~
- R15 2
 Net 77 "" ""
  R16 2
  LM1 10
 Net 78 "/G4" "G4"
- DMUX2 ~
+ DMUX2 12
  R26 1
 Net 79 "" ""
- R25 2
  LM1 26
+ R25 2
 Net 80 "/G1" "G1"
- DMUX2 ~
  R23 1
+ DMUX2 15
 Net 81 "" ""
- R1 2
  SW1 2
+ R1 2
 Net 82 "/G5" "G5"
- DMUX2 ~
  R27 1
+ DMUX2 11
 Net 83 "" ""
  SW2 2
  R2 2
 Net 84 "" ""
- R6 2
  SW6 2
+ R6 2
 Net 85 "/B4" "B4"
+ DMUX3 12
  R10 2
- DMUX3 ~
 Net 87 "/B7" "B7"
- DMUX3 ~
+ DMUX3 9
  R13 2
 Net 88 "/B1" "B1"
- DMUX3 ~
+ DMUX3 15
  R7 2
 Net 89 "/G8" "G8"
- DMUX2 ~
  R30 1
+ DMUX2 7
 Net 90 "/G7" "G7"
  R29 1
- DMUX2 ~
+ DMUX2 9
 Net 91 "/G6" "G6"
- DMUX2 ~
+ DMUX2 10
  R28 1
 Net 92 "" ""
- SW4 2
  R4 2
+ SW4 2
 Net 93 "" ""
- SW5 2
  R5 2
+ SW5 2
 Net 94 "" ""
- SW3 2
  R3 2
+ SW3 2
 }
 #End

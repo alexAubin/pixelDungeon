@@ -1,4 +1,4 @@
-update=Sat Mar 22 19:15:48 2014
+update=sam. 22 mars 2014 22:14:56 CET
 last_client=pcbnew
 [eeschema]
 version=1
@@ -71,8 +71,8 @@ EquName1=devcms
 [pcbnew]
 version=1
 PadDrlX=320
-PadDimH=600
-PadDimV=600
+PadDimH=550
+PadDimV=550
 BoardThickness=630
 TxtPcbV=800
 TxtPcbH=600
@@ -100,3 +100,4 @@ LibName10=pga_sockets
 LibName11=valves
 LibName12=/home/alex/dev/pixelDungeon/hardware/PixelDungeon
 LibName13=/home/alex/dev/pixelDungeon/hardware/PixelDungeon2
+LibName14=PixelDungeon3
