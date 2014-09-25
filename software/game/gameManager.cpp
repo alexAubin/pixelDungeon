@@ -31,14 +31,14 @@
 PROGMEM const short int initMap[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 {
 //      0 1 2 3 4 5 6 7 8 9 101112131415
-/*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
+/*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,10,
 /*1 */	0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
 /*2 */	0,0,1,1,0,1,0,1,0,1,1,1,1,1,1,1,
-/*3 */	0,1,1,0,0,1,0,1,0,0,1,0,0,0,6,1,
-/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,0,1,
-/*5 */	1,1,0,1,1,0,0,0,1,0,3,8,0,0,0,1,
+/*3 */	0,1,1,0,0,1,0,1,0,0,1,0,0,8,6,1,
+/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,9,1,
+/*5 */	1,1,0,1,1,0,0,0,1,0,3,11,0,0,0,1,
 /*6 */	1,0,0,0,1,0,2,0,1,1,1,0,0,0,0,1,
-/*7 */	1,0,4,0,1,0,0,0,1,0,1,5,1,1,1,1,
+/*7 */	1,0,0,0,1,4,0,0,1,0,1,5,1,1,1,1,
 /*8 */	1,0,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
 /*9 */	1,1,1,1,1,0,0,0,1,1,1,0,1,0,0,0,
 /*10*/	0,0,0,0,1,0,7,0,0,0,0,0,1,0,0,0,
@@ -63,7 +63,10 @@ void gameManager::init()
     theObjectCollection[5] = new gameObject_Door   (false);
     theObjectCollection[6] = new gameObject_Monster(3,14,8,theObjectCollection[3],theObjectCollection[5]);
     theObjectCollection[7] = new gameObject_Hppot  (4);
-    theObjectCollection[8] = new gameObject_Switch (false,true,theObjectCollection[3],theObjectCollection[6]);
+    theObjectCollection[8] = new gameObject_Monster(3,13,8);
+    theObjectCollection[9] = new gameObject_Monster(4,14,8);
+    theObjectCollection[10] = new gameObject_Switch(false,true,theObjectCollection[8],theObjectCollection[9]);
+    theObjectCollection[11] = new gameObject_Switch(false,true,theObjectCollection[3],theObjectCollection[6],theObjectCollection[10]);
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {

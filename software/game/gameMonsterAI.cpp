@@ -88,6 +88,8 @@ void gameMonsterAI::doMonstersAction()
             int prev_x = activeMonster->getX();
             int prev_y = activeMonster->getY();
 
+            if (bestWay == NOMOVE) return;
+
             if (theMap->moveCreature(activeMonster,bestWay))
             {
                 theMap->updateTileDisplay(prev_x,prev_y);
@@ -155,6 +157,8 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
 
         if (best_i != -1) break;
     }
+        
+    if (max_d == 0) return NOMOVE;
 
     // Now find which node is closer to objective if we haven't find a tile meanwhile with dist = 1
 
@@ -183,12 +187,10 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
         if (miniMap[MINIMAP_TILE(best_i-1,best_j)] == d-1) best_i--;
     }
 
-      if (best_i - 1 == GAME_AI_PATH_DEPTH)      return UP;
-      else if (best_i + 1 == GAME_AI_PATH_DEPTH) return DOWN;
-      else if (best_j - 1 == GAME_AI_PATH_DEPTH) return RIGHT;
-      else if (best_j + 1 == GAME_AI_PATH_DEPTH) return LEFT;
-      else                                       return NOMOVE;
-
-
+    if (best_i - 1 == GAME_AI_PATH_DEPTH)      return UP;
+    else if (best_i + 1 == GAME_AI_PATH_DEPTH) return DOWN;
+    else if (best_j - 1 == GAME_AI_PATH_DEPTH) return RIGHT;
+    else if (best_j + 1 == GAME_AI_PATH_DEPTH) return LEFT;
+    else                                       return NOMOVE;
 
 }

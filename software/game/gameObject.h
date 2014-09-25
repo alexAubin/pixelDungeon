@@ -194,7 +194,7 @@ class gameObject_Switch : public gameObject
 
             if (usage > 0) usage--;
         }
-        void triggerFromLink() {}
+        void triggerFromLink() { triggerFromAction(); }
 
     private:
 
