@@ -250,7 +250,7 @@ endif
 
 # flags
 OPTIMIZATION := -O2
-CPPFLAGS := $(OPTIMIZATION) -Wall -fno-exceptions -ffunction-sections -fdata-sections
+CPPFLAGS := $(OPTIMIZATION) -Wall -fno-exceptions -ffunction-sections -fdata-sections -Wno-sign-compare
 CPPFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CPPFLAGS += -mmcu=$(BOARD_BUILD_MCU)
 CPPFLAGS += -DF_CPU=$(BOARD_BUILD_FCPU) -DARDUINO=$(ARDUINOCONST)

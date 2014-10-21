@@ -31,12 +31,12 @@
 PROGMEM const short int initMap[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 {
 //      0 1 2 3 4 5 6 7 8 9 101112131415
-/*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,10,
+/*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
 /*1 */	0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
 /*2 */	0,0,1,1,0,1,0,1,0,1,1,1,1,1,1,1,
 /*3 */	0,1,1,0,0,1,0,1,0,0,1,0,0,8,6,1,
 /*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,9,1,
-/*5 */	1,1,0,1,1,0,0,0,1,0,3,11,0,0,0,1,
+/*5 */	1,1,0,1,1,0,0,0,1,0,3,10,0,0,0,1,
 /*6 */	1,0,0,0,1,0,2,0,1,1,1,0,0,0,0,1,
 /*7 */	1,0,0,0,1,4,0,0,1,0,1,5,1,1,1,1,
 /*8 */	1,0,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
@@ -59,14 +59,16 @@ void gameManager::init()
     theObjectCollection[1] = new gameObject_Wall   ();          
     theObjectCollection[2] = new gameObject_Hero   (6,6);
     theObjectCollection[3] = new gameObject_Door   (false);
-    theObjectCollection[4] = new gameObject_Switch (false,false,theObjectCollection[3]);
+    gameObject* linksFor4[1] = { theObjectCollection[3] };
+    theObjectCollection[4] = new gameObject_Switch (false,false,linksFor4,1);
     theObjectCollection[5] = new gameObject_Door   (false);
-    theObjectCollection[6] = new gameObject_Monster(3,14,8,theObjectCollection[3],theObjectCollection[5]);
+    gameObject* linksFor6[2] = { theObjectCollection[3], theObjectCollection[5] };
+    theObjectCollection[6] = new gameObject_Monster(3,14,8,linksFor6,2);
     theObjectCollection[7] = new gameObject_Hppot  (4);
     theObjectCollection[8] = new gameObject_Monster(3,13,8);
     theObjectCollection[9] = new gameObject_Monster(4,14,8);
-    theObjectCollection[10] = new gameObject_Switch(false,true,theObjectCollection[8],theObjectCollection[9]);
-    theObjectCollection[11] = new gameObject_Switch(false,true,theObjectCollection[3],theObjectCollection[6],theObjectCollection[10]);
+    gameObject* linksFor10[3] = { theObjectCollection[8], theObjectCollection[9], theObjectCollection[6] };
+    theObjectCollection[10] = new gameObject_Switch(false,true,linksFor10,3);
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {

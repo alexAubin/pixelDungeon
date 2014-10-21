@@ -150,14 +150,18 @@ class gameObject_Switch : public gameObject
 {
     public:
 
-        gameObject_Switch(bool activated_, bool invisibleAndSingleUse_, gameObject* link0, gameObject* link1 = 0, gameObject* link2 = 0):
+        gameObject_Switch(bool activated_, bool invisibleAndSingleUse_, gameObject** links_, short int nLinks_):
         gameObject::gameObject(true,false,OBJECTTYPE_SWITCH,OBJECTCOLOR_EMPTY)
         {
             activated = activated_;
-            links[0] = link0;
-            links[1] = link1;
-            links[2] = link2;
-            
+
+            nLinks = nLinks_;
+            links = new gameObject*[nLinks];
+            for (short int i = 0 ; i < nLinks ; i++)
+            {
+                links[i] = links_[i]; 
+            }
+
             if (invisibleAndSingleUse_) usage = 1;
             else
             {
@@ -171,18 +175,22 @@ class gameObject_Switch : public gameObject
         {
             activated = true;
             if (usage < 0) color = OBJECTCOLOR_SWITCH_ON;
-            if (links[0]) links[0]->triggerFromLink();
-            if (links[1]) links[1]->triggerFromLink();
-            if (links[2]) links[2]->triggerFromLink();
+           
+            for (int i = 0 ; i < nLinks ; i++)
+            {
+                if (links[i]) links[i]->triggerFromLink();
+            }
         }
 
         void switchOff()
         {
             activated = false;
             if (usage < 0) color = OBJECTCOLOR_SWITCH_OFF;
-            if (links[0]) links[0]->triggerFromLink();
-            if (links[1]) links[1]->triggerFromLink();
-            if (links[2]) links[2]->triggerFromLink();
+
+            for (int i = 0 ; i < nLinks ; i++)
+            {
+                if (links[i]) links[i]->triggerFromLink();
+            }
         }
 
         void triggerFromAction()
@@ -200,7 +208,8 @@ class gameObject_Switch : public gameObject
 
         bool activated;
         short int usage;
-        gameObject* links[3];
+        gameObject** links;
+        short int nLinks;
 };
 
 // #############
@@ -392,12 +401,15 @@ class gameObject_Monster : public gameObject_Creature
 {
     public:
 
-        gameObject_Monster(int x, int y, short int hpMax, gameObject* deathLink0 = 0, gameObject* deathLink1 = 0, gameObject* deathLink2 = 0):
+        gameObject_Monster(int x, int y, short int hpMax, gameObject** deathLinks_ = 0, short int nDeathLinks_ = 0):
         gameObject_Creature::gameObject_Creature(x,y,hpMax,OBJECTTYPE_MONSTER,OBJECTCOLOR_MONSTER_FULLHEALTH)
         {
-            deathLinks[0] = deathLink0;
-            deathLinks[1] = deathLink1;
-            deathLinks[2] = deathLink2;
+            nDeathLinks = nDeathLinks_;
+            deathLinks = new gameObject*[nDeathLinks];
+            for (short int i = 0 ; i < nDeathLinks ; i++)
+            {
+                deathLinks[i] = deathLinks_[i]; 
+            }
         }
 
         void triggerFromAction() { }
@@ -416,7 +428,8 @@ class gameObject_Monster : public gameObject_Creature
 
     private:
 
-        gameObject* deathLinks[3];
+        gameObject** deathLinks;
+        short int nDeathLinks;
 };
 
 // ############

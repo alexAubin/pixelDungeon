@@ -44,9 +44,11 @@ void gameObject_Monster::triggerFromLink()
 void gameObject_Monster::triggerFromDeath() 
 {
     gameMonsterAI::deactivate(this);
-    if (deathLinks[0]) deathLinks[0]->triggerFromLink();
-    if (deathLinks[1]) deathLinks[1]->triggerFromLink();
-    if (deathLinks[2]) deathLinks[2]->triggerFromLink();
+     
+    for (int i = 0 ; i < nDeathLinks ; i++)
+    {
+        if (deathLinks[i]) deathLinks[i]->triggerFromLink();
+    }
 
     gameManager::getTheMap()->setTile(GAME_TILE(x,y), gameObject::emptyObject);
 }
