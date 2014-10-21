@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>Pixel Dungeon - Level designer</title>
+
+    </head>
+    <body onload="loadGrid()">
+        <center>
+        <canvas id="grid" width="500px" height="500px" onclick="clickHandler(event)">
+        </canvas>
+        <div id="debug"></div>
+        </center>    
+
+
+        <script type="text/javascript">
+
+            // Define map parameters
+            var mapWidth  = 16;
+            var mapHeight = 16;
+
+            var tileSize       = 25;
+            var tileEmptyColor = "rgba(200,200,200,0.5)";
+            var tileSpace      = 2;
+
+            function loadGrid()
+            {
+                // Get canvas
+                var c = document.getElementById("grid").getContext("2d");
+                
+                // Draw grid
+                for (var x = 0 ; x < mapWidth  ; x++)
+                for (var y = 0 ; y < mapHeight ; y++)
+                {
+                    var tilePositionX = x * (tileSize + 2 * tileSpace) + tileSpace;
+                    var tilePositionY = y * (tileSize + 2 * tileSpace) + tileSpace;
+                    c.fillStyle = tileEmptyColor;
+                    c.fillRect(tilePositionX,tilePositionY,tileSize,tileSize);
+                }
+            }
+    
+            function clickHandler(event)
+            {
+                var gridCanvas = document.getElementById("grid");
+                
+                var mouseX = event.clientX - gridCanvas.getBoundingClientRect().left;
+                var mouseY = event.clientY - gridCanvas.getBoundingClientRect().top;
+
+                var tileX = parseInt(mouseX/(tileSize + 2 * tileSpace));
+                var tileY = parseInt(mouseY/(tileSize + 2 * tileSpace));
+
+                if (tileX >= mapWidth ) return;
+                if (tileY >= mapHeight) return;
+
+                var tilePositionX = tileX * (tileSize + 2 * tileSpace) + tileSpace;
+                var tilePositionY = tileY * (tileSize + 2 * tileSpace) + tileSpace;
+                
+                var c = document.getElementById("grid").getContext("2d");
+                c.fillStyle = "rgba(15,15,15,0.5)";
+                c.fillRect(tilePositionX,tilePositionY,tileSize,tileSize);
+
+
+                debug.innerHTML = "click : " + mouseX + " " + mouseY;
+            }
+        </script>
+    </body>
+</html>
