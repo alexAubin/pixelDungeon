@@ -34,11 +34,11 @@
 //                         IO config (pin numbers)
 // *********************************************************************
 
-#define UP_KEY 4
-#define DOWN_KEY 3
-#define LEFT_KEY 5
-#define RIGHT_KEY 2
-#define A_KEY 6
+#define UP_KEY 3
+#define DOWN_KEY 6
+#define LEFT_KEY 4
+#define RIGHT_KEY 5
+#define A_KEY 7
 
 // *********************************************************************
 //                           Prototypes

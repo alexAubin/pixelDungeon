@@ -67,8 +67,8 @@ void gameManager::init()
     theObjectCollection[7] = new gameObject_Hppot  (4);
     theObjectCollection[8] = new gameObject_Monster(3,13,8);
     theObjectCollection[9] = new gameObject_Monster(4,14,8);
-    gameObject* linksFor10[3] = { theObjectCollection[8], theObjectCollection[9], theObjectCollection[6] };
-    theObjectCollection[10] = new gameObject_Switch(false,true,linksFor10,3);
+    gameObject* linksFor10[4] = { theObjectCollection[3], theObjectCollection[8], theObjectCollection[9], theObjectCollection[6] };
+    theObjectCollection[10] = new gameObject_Switch(false,true,linksFor10,4);
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {

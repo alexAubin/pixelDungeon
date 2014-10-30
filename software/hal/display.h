@@ -63,16 +63,16 @@
 //                         IO config (pin numbers)
 // *********************************************************************
 
-#define X0 A0
+#define X0 A2
 #define X1 A1
-#define X2 A2
-#define Y0 A3
+#define X2 A0
+#define Y0 A5
 #define Y1 A4
-#define Y2 A5
+#define Y2 A3
 
-#define REDLED   11
-#define GREENLED 12
-#define BLUELED  13
+#define REDLED   8
+#define GREENLED 9
+#define BLUELED  10
 
 // *********************************************************************
 //                           Current display
