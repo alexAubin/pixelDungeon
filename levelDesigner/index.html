@@ -3,28 +3,30 @@
         <title>Pixel Dungeon - Level designer</title>
         <link rel="stylesheet" href="./pure-release-0.5.0/pure-min.css">
         <link rel="stylesheet" href="./font-awesome-4.2.0/css/font-awesome.min.css">
-
-
     </head>
     <body onload="loadGrid()">
-        <br><br> 
+        <br><br>
         <center>
-        <table width="50%"><tr>
-        <td width="50%">
-                <center>
+        <div style="width: 50%;">
+        <div style="width: 25%; text-align: center; float: left;">
                 <div id="debug">(x,y) = (...,...)</div><br>
-                <button class="pure-button"><i class="fa fa-cube"></i>  Drawing : walls</button><br><br>
-                <button class="pure-button"><i class="fa fa-wrench"></i>  Edit object</button><br><br>
-                <button class="pure-button"><i class="fa fa-eraser"></i>  Erase</button><br><br>
-                <button class="pure-button"><i class="fa fa-save"></i>  Export</button>
-                </center>
-        </td><td>
-                <canvas id="grid" width="500px" height="500px" onclick="clickHandler(event)" onmousemove="moveHandler(event)">
-                </canvas>
-        </td>
-        </tr></table>
-        </center>    
-
+                <button class="pure-button" id="drawing" onclick="changeEditMode(event)"                ><i class="fa fa-cube"  ></i> Drawing : walls </button>
+                <div class="pure-menu pure-menu-open" style="margin-top: 2px; display: block-inline; width: 70%; margin-left: auto; margin-right: auto;"><ul>
+                    <li><a><i class="fa fa-cube"     ></i> Walls     </a></li>
+                    <li><a><i class="fa fa-toggle-on"></i> Switch    </a></li>
+                    <li><a><i class="fa fa-square"   ></i> Door      </a></li>
+                    <li><a><i class="fa fa-paw"      ></i> Monster   </a></li>
+                    <li><a><i class="fa fa-user"     ></i> Hero start</a></li>
+                </ul></div><br><br>
+                <button class="pure-button" id="edit"    onclick="changeEditMode(event)"                ><i class="fa fa-edit">  </i> Edit object     </button><br><br>
+                <button class="pure-button" id="erase"   onclick="changeEditMode(event)"                ><i class="fa fa-eraser"></i> Erase           </button><br><br>
+                <button class="pure-button pure-button-disabled" id="export"  onclick="exportMap(event)"><i class="fa fa-save"  ></i> Export          </button>
+        </div>
+        <div style="width: 75%; text-align: center; float: right;"> 
+                <canvas width=500 height=500 id="grid" onclick="clickHandler(event)" onmousemove="moveHandler(event)"></canvas>
+        </div>
+        </div>
+        </center>
 
         <script type="text/javascript">
             
@@ -34,8 +36,8 @@
             var mapWidth  = 16;
             var mapHeight = 16;
 
-            var tileSize       = 25;
-            var tileSpace      = 1;
+            var tileSize  = 25;
+            var tileSpace = 1;
                 
             // Get canvas
             var grid   = document.getElementById("grid");
@@ -43,7 +45,17 @@
 
             var previousTileX = -1;
             var previousTileY = -1;
+    
+            var currentMode          = "drawing";
+            var currentObjectDrawing = "wall";
+            document.getElementById(currentMode).className = "pure-button pure-button-active";
 
+            function changeEditMode(event)
+            {
+                document.getElementById(currentMode).className = "pure-button";
+                currentMode = event.target.id;
+                event.target.className = "pure-button pure-button-active";
+            }
 
             function loadGrid()
             {
@@ -78,8 +90,9 @@
             function clickHandler(event)
             {
                 [tileX, tileY] = getMousePosition(event);
-                map[tileX][tileY].type = "wall";
-                drawTile(tileX,tileY);
+
+                     if (currentMode == "drawing") { map[tileX][tileY].type = currentObjectDrawing;  drawTile(tileX,tileY); }
+                else if (currentMode == "erase"  ) { map[tileX][tileY].type = "empty";               drawTile(tileX,tileY); }
             }
 
             function moveHandler(event)
