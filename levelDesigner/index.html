@@ -1,144 +1,31 @@
 <html>
     <head>
         <title>Pixel Dungeon - Level designer</title>
-        <link rel="stylesheet" href="./pure-release-0.5.0/pure-min.css">
-        <link rel="stylesheet" href="./font-awesome-4.2.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="./stylesheet.css">
+        <link rel="stylesheet" href="./pureCSS/build/pure-min.css">
+        <link rel="stylesheet" href="./fontAwesome/css/font-awesome.min.css">
+        <script src="./levelDesigner.js"></script>
     </head>
-    <body onload="loadGrid()">
-        <br><br>
+    <body onload="init()">
         <center>
-        <div style="width: 50%;">
-        <div style="width: 25%; text-align: center; float: left;">
+        <div id="editor">
+        <div id="editorMenu">
                 <div id="debug">(x,y) = (...,...)</div><br>
-                <button class="pure-button" id="drawing" onclick="changeEditMode(event)"                ><i class="fa fa-cube"  ></i> Drawing : walls </button>
-                <div class="pure-menu pure-menu-open" style="margin-top: 2px; display: block-inline; width: 70%; margin-left: auto; margin-right: auto;"><ul>
-                    <li><a><i class="fa fa-cube"     ></i> Walls     </a></li>
-                    <li><a><i class="fa fa-toggle-on"></i> Switch    </a></li>
-                    <li><a><i class="fa fa-square"   ></i> Door      </a></li>
-                    <li><a><i class="fa fa-paw"      ></i> Monster   </a></li>
-                    <li><a><i class="fa fa-user"     ></i> Hero start</a></li>
-                </ul></div><br><br>
-                <button class="pure-button" id="edit"    onclick="changeEditMode(event)"                ><i class="fa fa-edit">  </i> Edit object     </button><br><br>
-                <button class="pure-button" id="erase"   onclick="changeEditMode(event)"                ><i class="fa fa-eraser"></i> Erase           </button><br><br>
-                <button class="pure-button pure-button-disabled" id="export"  onclick="exportMap(event)"><i class="fa fa-save"  ></i> Export          </button>
+                <button class="pure-button" id="drawing"     onclick="changeEditMode(event)"   >Drawing :</button>
+                <button class="pure-button" id="drawingMode" onclick="openDrawingModeMenu(event)"><i class="fa fa-cube"></i> Walls</button>
+                    <div id="editorDrawingModeMenu" class="pure-menu pure-menu-open"><ul>
+                        <li><a id="wall"    onclick="changeDrawingMode(event)"><i class="fa fa-cube"     ></i> Walls   </a></li>
+                        <li><a id="switch"  onclick="changeDrawingMode(event)"><i class="fa fa-toggle-on"></i> Switch  </a></li>
+                        <li><a id="door"    onclick="changeDrawingMode(event)"><i class="fa fa-square"   ></i> Door    </a></li>
+                        <li><a id="monster" onclick="changeDrawingMode(event)"><i class="fa fa-paw"      ></i> Monster </a></li>
+                        <li><a id="hero"    onclick="changeDrawingMode(event)"><i class="fa fa-user"     ></i> Spawn   </a></li>
+                    </ul></div><br><br>
+                <button class="pure-button pure-button-disabled" id="edit"    onclick="changeEditMode(event)" ><i class="fa fa-edit"  ></i> Edit object     </button><br><br>
+                <button class="pure-button"                      id="erase"   onclick="changeEditMode(event)" ><i class="fa fa-eraser"></i> Erase           </button><br><br>
+                <button class="pure-button pure-button-disabled" id="export"  onclick="exportMap(event)"      ><i class="fa fa-save"  ></i> Export          </button>
         </div>
-        <div style="width: 75%; text-align: center; float: right;"> 
-                <canvas width=500 height=500 id="grid" onclick="clickHandler(event)" onmousemove="moveHandler(event)"></canvas>
-        </div>
+        <div id="editorCanvasDiv"> <canvas width=500 height=500 id="editorCanvas" onclick="clickHandler(event)" onmousemove="moveHandler(event)"></canvas></div>
         </div>
         </center>
-
-        <script type="text/javascript">
-            
-            var map;
-
-            // Define map parameters
-            var mapWidth  = 16;
-            var mapHeight = 16;
-
-            var tileSize  = 25;
-            var tileSpace = 1;
-                
-            // Get canvas
-            var grid   = document.getElementById("grid");
-            var canvas = grid.getContext("2d");
-
-            var previousTileX = -1;
-            var previousTileY = -1;
-    
-            var currentMode          = "drawing";
-            var currentObjectDrawing = "wall";
-            document.getElementById(currentMode).className = "pure-button pure-button-active";
-
-            function changeEditMode(event)
-            {
-                document.getElementById(currentMode).className = "pure-button";
-                currentMode = event.target.id;
-                event.target.className = "pure-button pure-button-active";
-            }
-
-            function loadGrid()
-            {
-                // Create map
-                map = [];
-                for(var x=0 ; x < mapWidth ; x++) 
-                {
-                    map[x] = [];
-                    for(var y=0; y < mapHeight ; y++) 
-                    {
-                        map[x][y] = { x: x, y: y, type: "empty"};
-                        drawTile(x, y);
-                    }
-                }
-            }
-    
-            function getMousePosition(event)
-            {
-                var mouseX = event.clientX - grid.getBoundingClientRect().left;
-                var mouseY = event.clientY - grid.getBoundingClientRect().top;
-
-                var tileX = parseInt(mouseX/(tileSize + 2 * tileSpace));
-                var tileY = parseInt(mouseY/(tileSize + 2 * tileSpace));
-
-                if (tileX >= mapWidth ) tileX = -1;
-                if (tileY >= mapHeight) tileY = -1;
-                
-                return [tileX, tileY];
-                
-            }
-
-            function clickHandler(event)
-            {
-                [tileX, tileY] = getMousePosition(event);
-
-                     if (currentMode == "drawing") { map[tileX][tileY].type = currentObjectDrawing;  drawTile(tileX,tileY); }
-                else if (currentMode == "erase"  ) { map[tileX][tileY].type = "empty";               drawTile(tileX,tileY); }
-            }
-
-            function moveHandler(event)
-            {
-                [tileX, tileY] = getMousePosition(event);
-
-                if ((tileX == previousTileX) && (tileY == previousTileY)) return;
-
-                var tilePositionX = previousTileX * (tileSize + 2 * tileSpace) + tileSpace;
-                var tilePositionY = previousTileY * (tileSize + 2 * tileSpace) + tileSpace;
-
-                drawTile(previousTileX, previousTileY);
-                
-                previousTileX = tileX;
-                previousTileY = tileY;
-
-                var tilePositionX = tileX * (tileSize + 2 * tileSpace) + tileSpace;
-                var tilePositionY = tileY * (tileSize + 2 * tileSpace) + tileSpace;
-
-                canvas.beginPath();
-                canvas.lineWidth = "1";
-                canvas.strokeStyle="black";
-                canvas.rect(tilePositionX,tilePositionY,tileSize,tileSize);
-                canvas.stroke();
-                debug.innerHTML = "(x,y) = (" + tileX + "," + tileY + ")";
-            }
-
-            function drawTile(x, y)
-            {
-                if (x == -1) return;
-                if (y == -1) return;
-
-                var tilePositionX = x * (tileSize + 2 * tileSpace) + tileSpace;
-                var tilePositionY = y * (tileSize + 2 * tileSpace) + tileSpace;
-                // Erase old stuff
-                canvas.fillStyle = "white";
-                canvas.fillRect(tilePositionX-1,tilePositionY-1,tileSize+2,tileSize+2);
-                // Print required color
-                var type = map[x][y].type;
-
-                     if (type == "empty") canvas.fillStyle = "rgba(200,200,200,0.5)";
-                else if (type == "wall")  canvas.fillStyle = "rgba(15,15,15,0.5)";
-
-                canvas.fillRect(tilePositionX,tilePositionY,tileSize,tileSize);
-            }
-
-        </script>
     </body>
 </html>

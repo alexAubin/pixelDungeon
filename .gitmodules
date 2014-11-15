@@ -1,0 +1,6 @@
+[submodule "levelDesigner/fontAwesome"]
+	path = levelDesigner/fontAwesome
+	url = https://github.com/FortAwesome/Font-Awesome.git
+[submodule "levelDesigner/pureCSS"]
+	path = levelDesigner/pureCSS
+	url = https://github.com/yahoo/pure.git
