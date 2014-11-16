@@ -1,49 +1,49 @@
 
 
-// Define map parameters
+
+// ########################
+// #  Global definitions  #
+// ########################
+
+// Map parameters
 var mapWidth  = 32;
 var mapHeight = 32;
 
 var tileSize  = 16;
 var tileSpace = 1;
-    
-var map;
-var editorCanvas; 
-var canvas;
 
+// Map structure
+var map;
+
+// Canvas
+var editorCanvas; 
+var canvasContext;
+
+// Current edit mode (drawing, erasing, object editing...)
+var currentEditMode;
+
+// Current object drawing (walls, switch, door, ...)
+var currentObjectDrawing;
+
+// Previous tile where mouse was on the map/canvas
 var previousTileX = -1;
 var previousTileY = -1;
 
-var currentMode          = "drawing";
-var currentObjectDrawing = "wall";
-
-function changeEditMode(event)
-{
-    document.getElementById(currentMode).className = "pure-button";
-    currentMode = event.target.id;
-    event.target.className = "pure-button pure-button-active";
-    closeDrawingModeMenu();
-}
-
-function openDrawingModeMenu(event)
-{
-        document.getElementById("editorDrawingModeMenu").style.display = "block";
-}
-
-function closeDrawingModeMenu(event)
-{
-        document.getElementById("editorDrawingModeMenu").style.display = "none";
-}
+// ################
+// #  Init stuff  #
+// ################
 
 function init()
 {
-
+    // Get canvas from document
     editorCanvas = document.getElementById("editorCanvas");
-    canvas = editorCanvas.getContext("2d");
+    canvasContext = editorCanvas.getContext("2d");
 
+    // Set canvas width and height
     editorCanvas.width  = mapWidth * (tileSize + tileSpace*2);
     editorCanvas.height = mapHeight * (tileSize + tileSpace*2);
-    // Create map
+
+    // Init map
     map = [];
     for(var x=0 ; x < mapWidth ; x++) 
     {
@@ -55,8 +55,78 @@ function init()
         }
     }
 
-    document.getElementById(currentMode).className = "pure-button pure-button-active";
-    closeDrawingModeMenu();
+    // Init editor
+    currentEditMode      = "drawWalls";
+    currentObjectDrawing = "wall";
+
+    setButtonActive(currentEditMode);
+    closeAddObjectMenu();
+}
+
+// #################
+// #  Editor menu  #
+// #################
+
+function changeEditorMode(event)
+{
+    setButtonInactive(currentEditMode);
+    currentEditMode = event.target.id;
+    setButtonActive(event.target.id);
+
+    if (currentEditMode == "addObject") openAddObjectMenu();
+    else closeAddObjectMenu();
+}
+
+function openAddObjectMenu(event)
+{
+    document.getElementById("editorAddObjectMenu").style.display = "block";
+}
+
+function closeAddObjectMenu(event)
+{
+    document.getElementById("editorAddObjectMenu").style.display = "none";
+}
+
+function setButtonActive(id)
+{
+    document.getElementById(id).className = "pure-button pure-button-active";
+}
+
+function setButtonInactive(id)
+{
+    document.getElementById(id).className = "pure-button";
+}
+
+// #################################
+// #  Map interaction and drawing  #
+// #################################
+
+function clickHandler(event)
+{
+    [tileX, tileY] = getMousePosition(event);
+
+    if (currentEditMode == "drawWalls") 
+    { 
+              if (map[tileX][tileY].type == "empty") map[tileX][tileY].type = "wall";
+         else if (map[tileX][tileY].type == "wall" ) map[tileX][tileY].type = "empty";
+    }
+
+    drawTile(tileX,tileY);
+}
+
+function moveHandler(event)
+{
+    [currentTileX, currentTileY] = getMousePosition(event);
+
+    if ((currentTileX == previousTileX) && (currentTileY == previousTileY)) return;
+
+    drawTile(previousTileX, previousTileY);
+    [previousTileX, previousTileY] = [currentTileX, currentTileY];
+
+    [tilePositionX, tilePositionY] = getTilePosition(currentTileX, currentTileY);
+    drawStroke(tilePositionX, tilePositionY);
+
+    debug.innerHTML = "(x,y) = (" + currentTileX + "," + currentTileY + ")";
 }
 
 function getMousePosition(event)
@@ -69,59 +139,44 @@ function getMousePosition(event)
 
     if (tileX >= mapWidth ) tileX = -1;
     if (tileY >= mapHeight) tileY = -1;
-    
+
     return [tileX, tileY];
-    
+
 }
 
-function clickHandler(event)
+function getTilePosition(tileX, tileY)
 {
-    [tileX, tileY] = getMousePosition(event);
-
-         if (currentMode == "drawing") { map[tileX][tileY].type = currentObjectDrawing;  drawTile(tileX,tileY); }
-    else if (currentMode == "erase"  ) { map[tileX][tileY].type = "empty";               drawTile(tileX,tileY); }
-}
-
-function moveHandler(event)
-{
-    [tileX, tileY] = getMousePosition(event);
-
-    if ((tileX == previousTileX) && (tileY == previousTileY)) return;
-
-    var tilePositionX = previousTileX * (tileSize + 2 * tileSpace) + tileSpace;
-    var tilePositionY = previousTileY * (tileSize + 2 * tileSpace) + tileSpace;
-
-    drawTile(previousTileX, previousTileY);
-    
-    previousTileX = tileX;
-    previousTileY = tileY;
-
     var tilePositionX = tileX * (tileSize + 2 * tileSpace) + tileSpace;
     var tilePositionY = tileY * (tileSize + 2 * tileSpace) + tileSpace;
 
-    canvas.beginPath();
-    canvas.lineWidth = "1";
-    canvas.strokeStyle="black";
-    canvas.rect(tilePositionX,tilePositionY,tileSize,tileSize);
-    canvas.stroke();
-    debug.innerHTML = "(x,y) = (" + tileX + "," + tileY + ")";
+    return [tilePositionX, tilePositionY];
+}
+
+function drawStroke(x,y)
+{
+    canvasContext.beginPath();
+    canvasContext.lineWidth = "1";
+    canvasContext.strokeStyle="black";
+    canvasContext.rect(x,y,tileSize,tileSize);
+    canvasContext.stroke();
 }
 
 function drawTile(x, y)
 {
-    if (x == -1) return;
-    if (y == -1) return;
+    if ((x == -1) || (y == -1)) return;
 
-    var tilePositionX = x * (tileSize + 2 * tileSpace) + tileSpace;
-    var tilePositionY = y * (tileSize + 2 * tileSpace) + tileSpace;
+    // Get tile pixel position
+    [tilePositionX, tilePositionY] = getTilePosition(x,y);
+
     // Erase old stuff
-    canvas.fillStyle = "white";
-    canvas.fillRect(tilePositionX-1,tilePositionY-1,tileSize+2,tileSize+2);
+    canvasContext.fillStyle = "white";
+    canvasContext.fillRect(tilePositionX-1,tilePositionY-1,tileSize+2,tileSize+2);
+
     // Print required color
     var type = map[x][y].type;
 
-         if (type == "empty") canvas.fillStyle = "rgba(200,200,200,0.5)";
-    else if (type == "wall")  canvas.fillStyle = "rgba(15,15,15,0.5)";
+         if (type == "empty") canvasContext.fillStyle = "rgba(200,200,200,0.5)";
+    else if (type == "wall")  canvasContext.fillStyle = "rgba(15,15,15,0.5)";
 
-    canvas.fillRect(tilePositionX,tilePositionY,tileSize,tileSize);
+    canvasContext.fillRect(tilePositionX,tilePositionY,tileSize,tileSize);
 }

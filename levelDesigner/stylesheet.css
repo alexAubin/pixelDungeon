@@ -7,6 +7,7 @@
 
 #editorMenu
 {
+    margin-top: 10%; 
     width: 25%; 
     text-align: center; 
     float: left;
@@ -19,10 +20,12 @@
     float: right;
 }
 
-#editorDrawingModeMenu
+#editorAddObjectMenu
 {
-    margin-top: 3%; 
-    margin-left: 40%; 
+    margin-top: 1%; 
+    margin-left: auto; 
+    margin-right: auto; 
+    margin-bottom: -8%; 
     display: block-inline; 
     width: 55%; 
 }

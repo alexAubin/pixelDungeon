@@ -11,20 +11,43 @@
         <div id="editor">
         <div id="editorMenu">
                 <div id="debug">(x,y) = (...,...)</div><br>
-                <button class="pure-button" id="drawing"     onclick="changeEditMode(event)"   >Drawing :</button>
-                <button class="pure-button" id="drawingMode" onclick="openDrawingModeMenu(event)"><i class="fa fa-cube"></i> Walls</button>
-                    <div id="editorDrawingModeMenu" class="pure-menu pure-menu-open"><ul>
-                        <li><a id="wall"    onclick="changeDrawingMode(event)"><i class="fa fa-cube"     ></i> Walls   </a></li>
+
+                <button class="pure-button" id="drawWalls" onclick="changeEditorMode(event)"   >
+                        <i class="fa fa-cube"></i> Draw walls
+                </button>
+                <br><br>
+
+
+                <button class="pure-button" id="addObject" onclick="changeEditorMode(event)"  >
+                        <i class="fa fa-plus"  ></i> Add object  
+                </button>
+                    <div id="editorAddObjectMenu" class="pure-menu pure-menu-open"><ul>
                         <li><a id="switch"  onclick="changeDrawingMode(event)"><i class="fa fa-toggle-on"></i> Switch  </a></li>
                         <li><a id="door"    onclick="changeDrawingMode(event)"><i class="fa fa-square"   ></i> Door    </a></li>
                         <li><a id="monster" onclick="changeDrawingMode(event)"><i class="fa fa-paw"      ></i> Monster </a></li>
-                        <li><a id="hero"    onclick="changeDrawingMode(event)"><i class="fa fa-user"     ></i> Spawn   </a></li>
-                    </ul></div><br><br>
-                <button class="pure-button pure-button-disabled" id="edit"    onclick="changeEditMode(event)" ><i class="fa fa-edit"  ></i> Edit object     </button><br><br>
-                <button class="pure-button"                      id="erase"   onclick="changeEditMode(event)" ><i class="fa fa-eraser"></i> Erase           </button><br><br>
-                <button class="pure-button pure-button-disabled" id="export"  onclick="exportMap(event)"      ><i class="fa fa-save"  ></i> Export          </button>
+                        <li><a id="heal"    onclick="changeDrawingMode(event)"><i class="fa fa-medkit"   ></i> Heal    </a></li>
+                        <li><a id="hero"    onclick="changeDrawingMode(event)"><i class="fa fa-child"    ></i> Spawn   </a></li>
+                    </ul></div>
+                <br><br>
+
+
+                <button class="pure-button" id="editObject" onclick="changeEditorMode(event)" >
+                        <i class="fa fa-edit"  ></i> Edit object 
+                </button>
+                <br><br>
+
+
+                <button class="pure-button pure-button-disabled" id="export" onclick="savMap(event)"      >
+                        <i class="fa fa-save"  ></i> Save
+                </button>
+                <br><br>
+
+                <button class="pure-button pure-button-disabled" id="export" onclick="exportMap(event)"      >
+                        <i class="fa fa-sign-out"  ></i> Export      
+                </button>
+
         </div>
-        <div id="editorCanvasDiv"> <canvas width=500 height=500 id="editorCanvas" onclick="clickHandler(event)" onmousemove="moveHandler(event)"></canvas></div>
+        <div id="editorCanvasDiv"> <canvas id="editorCanvas" onclick="clickHandler(event)" onmousemove="moveHandler(event)"></canvas></div>
         </div>
         </center>
     </body>
