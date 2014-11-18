@@ -1,12 +1,11 @@
 
 
-
 // ########################
 // #  Global definitions  #
 // ########################
 
 // Map parameters
-var mapWidth  = 32;
+var mapWidth  = 42;
 var mapHeight = 32;
 
 var tileSize  = 16;
@@ -39,7 +38,7 @@ function init()
     editorCanvas = document.getElementById("editorCanvas");
     canvasContext = editorCanvas.getContext("2d");
 
-    // Set canvas width and height
+    // Set editor and canvas width and height
     editorCanvas.width  = mapWidth * (tileSize + tileSpace*2);
     editorCanvas.height = mapHeight * (tileSize + tileSpace*2);
 
@@ -50,7 +49,10 @@ function init()
         map[x] = [];
         for(var y=0; y < mapHeight ; y++) 
         {
-            map[x][y] = { x: x, y: y, type: "empty"};
+            if ((x != 0) && (x != mapWidth -1) && (y != 0) && (y != mapHeight-1)) 
+                    map[x][y] = { x: x, y: y, type: "empty"};
+            else
+                    map[x][y] = { x: x, y: y, type: "wall"};
             drawTile(x, y);
         }
     }
@@ -75,6 +77,11 @@ function changeEditorMode(event)
 
     if (currentEditMode == "addObject") openAddObjectMenu();
     else closeAddObjectMenu();
+}
+
+function chooseObjectToAdd(event)
+{
+    closeAddObjectMenu();
 }
 
 function openAddObjectMenu(event)

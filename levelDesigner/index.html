@@ -8,46 +8,82 @@
     </head>
     <body onload="init()">
         <center>
-        <div id="editor">
-        <div id="editorMenu">
-                <div id="debug">(x,y) = (...,...)</div><br>
+        <div id="editor" class="pure-g">
+        <div id="editorMenu" class="pure-u-3-24">
+                <div id="editorMenuMode">
+
+                <div class="header">Tools</div>
 
                 <button class="pure-button" id="drawWalls" onclick="changeEditorMode(event)"   >
                         <i class="fa fa-cube"></i> Draw walls
                 </button>
-                <br><br>
-
 
                 <button class="pure-button" id="addObject" onclick="changeEditorMode(event)"  >
                         <i class="fa fa-plus"  ></i> Add object  
                 </button>
-                    <div id="editorAddObjectMenu" class="pure-menu pure-menu-open"><ul>
-                        <li><a id="switch"  onclick="changeDrawingMode(event)"><i class="fa fa-toggle-on"></i> Switch  </a></li>
-                        <li><a id="door"    onclick="changeDrawingMode(event)"><i class="fa fa-square"   ></i> Door    </a></li>
-                        <li><a id="monster" onclick="changeDrawingMode(event)"><i class="fa fa-paw"      ></i> Monster </a></li>
-                        <li><a id="heal"    onclick="changeDrawingMode(event)"><i class="fa fa-medkit"   ></i> Heal    </a></li>
-                        <li><a id="hero"    onclick="changeDrawingMode(event)"><i class="fa fa-child"    ></i> Spawn   </a></li>
-                    </ul></div>
-                <br><br>
+                <div id="editorAddObjectMenu" class="pure-menu pure-menu-open"><ul>
+                    <li><a id="addSwitch"  onclick="chooseObjectToAdd(event)"><i class="fa fa-toggle-on"></i> Switch  </a></li>
+                    <li><a id="addDoor"    onclick="chooseObjectToAdd(event)"><i class="fa fa-square"   ></i> Door    </a></li>
+                    <li><a id="addHeal"    onclick="chooseObjectToAdd(event)"><i class="fa fa-medkit"   ></i> Heal    </a></li>
+                    <li><a id="addMonster" onclick="chooseObjectToAdd(event)"><i class="fa fa-paw"      ></i> Monster </a></li>
+                    <li><a id="addHero"    onclick="chooseObjectToAdd(event)"><i class="fa fa-child"    ></i> Spawn   </a></li>
+                </ul></div>
 
 
                 <button class="pure-button" id="editObject" onclick="changeEditorMode(event)" >
                         <i class="fa fa-edit"  ></i> Edit object 
                 </button>
-                <br><br>
 
-
-                <button class="pure-button pure-button-disabled" id="export" onclick="savMap(event)"      >
+                <button class="pure-button pure-button-disabled" id="save" onclick="savMap(event)"      >
                         <i class="fa fa-save"  ></i> Save
                 </button>
-                <br><br>
 
                 <button class="pure-button pure-button-disabled" id="export" onclick="exportMap(event)"      >
                         <i class="fa fa-sign-out"  ></i> Export      
                 </button>
+                </div>
+                
+                <div id="editorMenuObjectProperties" style="display:none;">
+
+                <hr>
+
+                    <div class="header">(4,16) : Door</div>
+
+                    <!--
+                        switch :    - mode (on/off or invisible & single use)
+                                    - (initial state)
+                                    - trigger list
+                        door :      - initial state
+                        heal :      - heal value
+                        monster :   - hp
+                                    - death triggers list 
+
+                    -->
+                    <label for="option1" class="pure-radio">
+                        <input id="option1" type="radio" name="optionsRadios" value="option1" checked>
+                        On/off
+                    </label>
+                    <br>
+                    
+                    <label for="option3" class="pure-radio">
+                        <input id="option3" type="radio" name="optionsRadios" value="option3">
+                        Single use
+                    </label>
+                    <br>
+
+                    <label for="visible" class="pure-checkbox">
+                        <input id="visible" type="checkbox"> Visible
+                    </label>
+                    <br>
+
+                    <label for="init" class="pure-checkbox">
+                        <input id="init" type="checkbox"> Init to off
+                    </label>
+                </div>
 
         </div>
-        <div id="editorCanvasDiv"> <canvas id="editorCanvas" onclick="clickHandler(event)" onmousemove="moveHandler(event)"></canvas></div>
+        <div id="editorCanvasDiv" class="pure-u-21-24"> <canvas id="editorCanvas" onclick="clickHandler(event)" onmousemove="moveHandler(event)"></canvas><br><div id="debug">(x,y) = (...,...)</div></div>
+                
         </div>
         </center>
     </body>

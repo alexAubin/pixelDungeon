@@ -1,31 +1,44 @@
-
 #editor
 {
-    width: 50%; 
-    padding-top: 5%;
+    width: 70%;
+    padding-top: 3%;
 }
 
 #editorMenu
 {
-    margin-top: 10%; 
-    width: 25%; 
     text-align: center; 
-    float: left;
 }
 
 #editorCanvasDiv
 {
-    width: 75%; 
     text-align: center; 
-    float: right;
 }
 
 #editorAddObjectMenu
 {
-    margin-top: 1%; 
+    margin-top: -0.4em; 
     margin-left: auto; 
     margin-right: auto; 
-    margin-bottom: -8%; 
+    margin-bottom: 0.5em; 
     display: block-inline; 
-    width: 55%; 
+    width: 75%; 
+}
+
+.pure-menu li:hover 
+{ 
+    cursor : pointer; 
+}
+
+.pure-button
+{
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.header
+{
+    font-weight: 300;
+    font-size: 1.2em;
+    margin-top: 0.7em;
+    margin-bottom: 0.5em;
 }
