@@ -13,14 +13,13 @@
                 <div id="editorMenuMode">
 
                 <div class="header">Tools</div>
+                
+                <button class="pure-button" id="open"      onclick="openMap(event)"           ><i class="fa fa-folder-open" ></i> Open       </button>
+                <input type="file" id="openMapFile" style="display:none;" accept=".csv" onchange="openMapNewFile(event)">
 
-                <button class="pure-button" id="drawWalls" onclick="changeEditorMode(event)"   >
-                        <i class="fa fa-cube"></i> Draw walls
-                </button>
+                <button class="pure-button" id="drawWalls" onclick="changeEditorMode(event)"  ><i class="fa fa-cube"        ></i> Draw walls </button>
+                <button class="pure-button" id="addObject" onclick="changeEditorMode(event)"  ><i class="fa fa-plus"        ></i> Add object </button>
 
-                <button class="pure-button" id="addObject" onclick="changeEditorMode(event)"  >
-                        <i class="fa fa-plus"  ></i> Add object  
-                </button>
                 <div id="editorAddObjectMenu" class="pure-menu pure-menu-open"><ul>
                     <li><a id="addSwitch"  onclick="chooseObjectToAdd(event)"><i class="fa fa-toggle-on"></i> Switch  </a></li>
                     <li><a id="addDoor"    onclick="chooseObjectToAdd(event)"><i class="fa fa-square"   ></i> Door    </a></li>
@@ -30,17 +29,13 @@
                 </ul></div>
 
 
-                <button class="pure-button" id="editObject" onclick="changeEditorMode(event)" >
+                <button class="pure-button pure-button-disabled" id="editObject" onclick="changeEditorMode(event)" >
                         <i class="fa fa-edit"  ></i> Edit object 
                 </button>
 
-                <button class="pure-button pure-button-disabled" id="save" onclick="savMap(event)"      >
-                        <i class="fa fa-save"  ></i> Save
-                </button>
+                <button class="pure-button"                      id="save"   onclick="saveMap(event)"   ><i class="fa fa-save"        ></i> Save   </button>
+                <button class="pure-button pure-button-disabled" id="export" onclick="exportMap(event)" ><i class="fa fa-sign-out"    ></i> Export </button>
 
-                <button class="pure-button pure-button-disabled" id="export" onclick="exportMap(event)"      >
-                        <i class="fa fa-sign-out"  ></i> Export      
-                </button>
                 </div>
                 
                 <div id="editorMenuObjectProperties" style="display:none;">

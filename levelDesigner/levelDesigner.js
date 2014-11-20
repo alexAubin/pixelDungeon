@@ -28,6 +28,9 @@ var currentObjectDrawing;
 var previousTileX = -1;
 var previousTileY = -1;
 
+var TILE_EMPTY = 0;
+var TILE_WALL  = 1;
+
 // ################
 // #  Init stuff  #
 // ################
@@ -50,9 +53,9 @@ function init()
         for(var y=0; y < mapHeight ; y++) 
         {
             if ((x != 0) && (x != mapWidth -1) && (y != 0) && (y != mapHeight-1)) 
-                    map[x][y] = { x: x, y: y, type: "empty"};
+                    map[x][y] = { x: x, y: y, type: TILE_EMPTY};
             else
-                    map[x][y] = { x: x, y: y, type: "wall"};
+                    map[x][y] = { x: x, y: y, type: TILE_WALL};
             drawTile(x, y);
         }
     }
@@ -114,8 +117,8 @@ function clickHandler(event)
 
     if (currentEditMode == "drawWalls") 
     { 
-              if (map[tileX][tileY].type == "empty") map[tileX][tileY].type = "wall";
-         else if (map[tileX][tileY].type == "wall" ) map[tileX][tileY].type = "empty";
+              if (map[tileX][tileY].type == TILE_EMPTY) map[tileX][tileY].type = TILE_WALL ;
+         else if (map[tileX][tileY].type == TILE_WALL ) map[tileX][tileY].type = TILE_EMPTY;
     }
 
     drawTile(tileX,tileY);
@@ -182,8 +185,60 @@ function drawTile(x, y)
     // Print required color
     var type = map[x][y].type;
 
-         if (type == "empty") canvasContext.fillStyle = "rgba(200,200,200,0.5)";
-    else if (type == "wall")  canvasContext.fillStyle = "rgba(15,15,15,0.5)";
+         if (type == TILE_EMPTY) canvasContext.fillStyle = "rgba(200,200,200,0.5)";
+    else if (type == TILE_WALL ) canvasContext.fillStyle = "rgba(15,15,15,0.5)";
 
     canvasContext.fillRect(tilePositionX,tilePositionY,tileSize,tileSize);
 }
+
+// #####################
+// #   Map open/save   #
+// #####################
+
+function openMap(event)
+{
+    var openFile = document.getElementById("openMapFile");
+    openFile.click();
+}
+
+function openMapNewFile(event)
+{
+    var openFile = document.getElementById("openMapFile");
+    var reader = new FileReader();
+    reader.readAsText(openFile.files[0]);
+    reader.onload = openMapSuccess;
+}
+
+function openMapSuccess(event)
+{
+    debug.innerHTML = "Loadin shit duzn wurk yet bro <br> But here's your damn file : <br>\n";
+    debug.innerHTML += event.target.result;
+}
+
+function saveMap(event)
+{
+    var csvContent = "data:text/csv;charset=utf-8,";
+
+    csvContent += "mapSettings\n";
+    csvContent += mapWidth + ";" + mapHeight + "\n";
+    csvContent += "mapTiles\n";
+
+    for(var x=0 ; x < mapWidth ; x++)
+    {
+        for(var y=0; y < mapHeight ; y++) 
+        {
+            if (y != 0) csvContent += ";";
+            csvContent += map[x][y].type;
+        }
+        csvContent += "\n";
+    }
+
+    var encodedUri = encodeURI(csvContent);
+    
+    var download = document.createElement("a");
+    document.body.appendChild(download);
+    download.setAttribute("href", encodedUri);
+    download.setAttribute("download", "map.csv");
+    download.click();
+}
+
