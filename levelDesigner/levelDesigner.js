@@ -211,24 +211,42 @@ function openMapNewFile(event)
 
 function openMapSuccess(event)
 {
-    debug.innerHTML = "Loadin shit duzn wurk yet bro <br> But here's your damn file : <br>\n";
-    debug.innerHTML += event.target.result;
+    csvResult = event.target.result.split("\n");
+    mapWidth  = parseInt(csvResult[0].split(";")[0]);
+    mapHeight = parseInt(csvResult[0].split(";")[1]);
+
+    // Set editor and canvas width and height
+    editorCanvas.width  = mapWidth  * (tileSize + tileSpace*2);
+    editorCanvas.height = mapHeight * (tileSize + tileSpace*2);
+
+    map = [];
+    for (var col = 1 ; col <= mapWidth ; col++)
+    {
+        var i = col - 1;
+        map[i] = [];
+        tileRow = csvResult[col].split(";");
+        for (var j = 0 ; j < mapHeight ; j++)
+        {
+                 if (tileRow[j] == "0") map[i][j] = { x: i, y: j, type: TILE_EMPTY };
+            else if (tileRow[j] == "1") map[i][j] = { x: i, y: j, type: TILE_WALL  };
+            drawTile(i, j);
+        }
+    }
+
 }
 
 function saveMap(event)
 {
     var csvContent = "data:text/csv;charset=utf-8,";
 
-    csvContent += "mapSettings\n";
     csvContent += mapWidth + ";" + mapHeight + "\n";
-    csvContent += "mapTiles\n";
 
-    for(var x=0 ; x < mapWidth ; x++)
+    for(var c=0; c < mapWidth ; c++) 
     {
-        for(var y=0; y < mapHeight ; y++) 
+        for(var l=0 ; l < mapHeight ; l++)
         {
-            if (y != 0) csvContent += ";";
-            csvContent += map[x][y].type;
+            if (l != 0) csvContent += ";";
+            csvContent += map[c][l].type;
         }
         csvContent += "\n";
     }
