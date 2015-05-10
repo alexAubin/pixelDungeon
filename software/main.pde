@@ -88,7 +88,13 @@ void setup()
 
 void loop()
 {
-	displayRefreshNextPixel();
+    // Display the screen
+	display();
+
+    // Catch pending interruptions
+    interrupts();
+    delayMicroseconds(10);
+    noInterrupts();
 }
 
 // *********************************************************************

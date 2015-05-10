@@ -28,178 +28,124 @@
 
 // *********************************************************************
 
-int currentDisplay[DISPLAY_NPIX] =
+#define NUMBER_OF_COLOR_LEVELS 4
+
+short int currentDisplay[DISPLAY_NPIX] =
 {
-   7, 7, 0, 2, 2, 0, 8, 8,
-   7, 7, 0, 2, 2, 0, 8, 8,
-   0, 0, 0, 0, 0, 0, 0, 0,
-  10,10, 0, 6, 6, 0, 5, 5,
-  10,10, 0, 6, 6, 0, 5, 5,
-   0, 0, 0, 0, 0, 0, 0, 0,
-   4, 4, 0, 9, 9, 0, 3, 3,
-   4, 4, 0, 9, 9, 0, 3, 3
+   0b000000, 0b000100, 0b001000, 0b001100, 0b010000, 0b010100, 0b011000, 0b011100,
+   0b000001, 0b000101, 0b001001, 0b001101, 0b010001, 0b010101, 0b011001, 0b011101,
+   0b000010, 0b000110, 0b001010, 0b001110, 0b010010, 0b010110, 0b011010, 0b011110,
+   0b000011, 0b000111, 0b001011, 0b001111, 0b010011, 0b010111, 0b011011, 0b011111,
+   0b100000, 0b100100, 0b101000, 0b101100, 0b110000, 0b110100, 0b111000, 0b111100,
+   0b100001, 0b100101, 0b101001, 0b101101, 0b110001, 0b110101, 0b111001, 0b111101,
+   0b100010, 0b100110, 0b101010, 0b101110, 0b110010, 0b110110, 0b111010, 0b111110,
+   0b100011, 0b100111, 0b101011, 0b101111, 0b110011, 0b110111, 0b111011, 0b111111,
+
+/*
+   0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000,
+   0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b001100, 0b001100, 0b000000,
+   0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b001100, 0b001100, 0b000000,
+   0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000,
+   0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000,
+   0b000000, 0b110000, 0b110000, 0b000000, 0b000000, 0b000011, 0b000011, 0b000000,
+   0b000000, 0b110000, 0b110000, 0b000000, 0b000000, 0b000011, 0b000011, 0b000000,
+   0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000,
+*/
+
 };
 
-// *********************************************************************
+short int displayCopy[DISPLAY_NPIX];
 
-int currentPixel = 1;
+// *********************************************************************
+inline void shiftCurrentColumn()  { digitalWrite(HAL_ANODE_SHIFT_PIN,  HIGH); digitalWrite(HAL_ANODE_SHIFT_PIN,  LOW); }
+inline void shiftCurrentColor()   { digitalWrite(HAL_COLOR_SHIFT_PIN,  HIGH); digitalWrite(HAL_COLOR_SHIFT_PIN,  LOW); }
+inline void updateCurrentColumn() { digitalWrite(HAL_ANODE_UPDATE_PIN, HIGH); digitalWrite(HAL_ANODE_UPDATE_PIN, LOW); }
+inline void updateCurrentColor()  { digitalWrite(HAL_COLOR_UPDATE_PIN, HIGH); digitalWrite(HAL_COLOR_UPDATE_PIN, LOW); }
 
 void initDisplay()
 {
-  // initialize the digital pin as an output.
+  // set pins as outputs, and set them to be inactive (LOW for anode, HIGH for colors).
 
-  pinMode(X0, OUTPUT);
-  pinMode(X1, OUTPUT);
-  pinMode(X2, OUTPUT);
-  pinMode(Y0, OUTPUT);
-  pinMode(Y1, OUTPUT);
-  pinMode(Y2, OUTPUT);
+  pinMode(HAL_ANODE_INPUT_PIN,  OUTPUT);  digitalWrite(HAL_ANODE_INPUT_PIN,  LOW);
+  pinMode(HAL_RED_INPUT_PIN,    OUTPUT);  digitalWrite(HAL_RED_INPUT_PIN,    HIGH);
+  pinMode(HAL_GREEN_INPUT_PIN,  OUTPUT);  digitalWrite(HAL_GREEN_INPUT_PIN,  HIGH);
+  pinMode(HAL_BLUE_INPUT_PIN,   OUTPUT);  digitalWrite(HAL_BLUE_INPUT_PIN,   HIGH);
 
-  pinMode(REDLED, OUTPUT);
-  pinMode(GREENLED, OUTPUT);
-  pinMode(BLUELED, OUTPUT);
+  pinMode(HAL_ANODE_SHIFT_PIN,  OUTPUT);  digitalWrite(HAL_ANODE_SHIFT_PIN,  LOW );
+  pinMode(HAL_COLOR_SHIFT_PIN,  OUTPUT);  digitalWrite(HAL_COLOR_SHIFT_PIN,  LOW );
+  pinMode(HAL_ANODE_UPDATE_PIN, OUTPUT);  digitalWrite(HAL_ANODE_UPDATE_PIN, LOW );
+  pinMode(HAL_COLOR_UPDATE_PIN, OUTPUT);  digitalWrite(HAL_COLOR_UPDATE_PIN, LOW );
 
-  // set led display off
-
-  digitalWrite(REDLED, LOW);
-  digitalWrite(GREENLED, LOW);
-  digitalWrite(BLUELED, LOW);
-}
-
-void displayRefreshNextPixel()
-{
-
-  currentPixel++;
-  if (currentPixel == DISPLAY_NPIX) currentPixel = 0;
-
-  int color = currentDisplay[currentPixel];
-  //if (color == DISPLAYCOLOR_EMPTY) return;
-  if (color == DISPLAYCOLOR_EMPTY) { interrupts(); delayMicroseconds(10);  noInterrupts(); return; }
-
-  digitalWrite(X0, bitRead(currentPixel,0));
-  digitalWrite(X1, bitRead(currentPixel,1));
-  digitalWrite(X2, bitRead(currentPixel,2));
-  digitalWrite(Y0, bitRead(currentPixel,3));
-  digitalWrite(Y1, bitRead(currentPixel,4));
-  digitalWrite(Y2, bitRead(currentPixel,5));
-
-  displayColor(color);
+  // Shift and update the whole register with init values
+  for (int i = 0 ; i < DISPLAY_WIDTH ; i++)
+  {
+        shiftCurrentColumn();
+        shiftCurrentColor();
+  }
+  updateCurrentColumn();
+  updateCurrentColor();
 
 }
 
-void displayColor(int color)
+void display()
 {
-    if (color == DISPLAYCOLOR_WHITE)
+
+    // Make a copy of current display
+    for (int p = 0 ; p < DISPLAY_NPIX ; p++)
     {
-      digitalWrite(GREENLED, HIGH);
-      digitalWrite(REDLED, HIGH);
-      digitalWrite(BLUELED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(REDLED, LOW);
-      digitalWrite(BLUELED, LOW);
-      digitalWrite(GREENLED, LOW);
+        displayCopy[p] = currentDisplay[p];
     }
-    else if (color == DISPLAYCOLOR_RED)
+
+    // Loop on columns
+    for (int c = 0 ; c < DISPLAY_WIDTH ; c++)
     {
-      digitalWrite(REDLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(REDLED, LOW);
+        if (c == 0)
+        {
+            digitalWrite(HAL_ANODE_INPUT_PIN,  HIGH);
+            shiftCurrentColumn();
+            digitalWrite(HAL_ANODE_INPUT_PIN,  LOW);
+        }
+        else
+            shiftCurrentColumn();
+
+        // Loop on color levels : same color is updated multiple time,
+        // to vary the color composition and obtain things like 1 red + 0.25 blue + 0.5 green
+        for (int l = 0 ; l < NUMBER_OF_COLOR_LEVELS ; l++)
+        {
+            // Loop on row, or pixels, inside the column
+            for (int r = 0 ; r < DISPLAY_WIDTH ; r++)
+            {
+                // Decompose color in red, green and blue
+                short int pixelColor = displayCopy[c * DISPLAY_WIDTH + r];
+                bool red   = (bitRead(pixelColor,4) + bitRead(pixelColor,5) > 0);
+                bool blue  = (bitRead(pixelColor,0) + bitRead(pixelColor,1) > 0);
+
+                // For green, we gotta do it in reverse order because of hardware mapping
+                short int pixelColor2 = displayCopy[(c+1) * DISPLAY_WIDTH - r - 1];
+                bool green = (bitRead(pixelColor2,2) + bitRead(pixelColor2,3) > 0);
+
+                // Put this on the pin
+                digitalWrite(HAL_RED_INPUT_PIN,   red   ? LOW : HIGH);
+                digitalWrite(HAL_GREEN_INPUT_PIN, green ? LOW : HIGH);
+                digitalWrite(HAL_BLUE_INPUT_PIN,  blue  ? LOW : HIGH);
+
+                // Shift the color in register
+                shiftCurrentColor();
+
+                // Remove one unit of each color used
+                displayCopy[ c    * DISPLAY_WIDTH + r    ] -= (blue * 1) + (red * 16);
+                displayCopy[(c+1) * DISPLAY_WIDTH - r - 1] -= (green * 4);
+            }
+
+            //delay(1000);
+            // Update the display of the column
+            updateCurrentColumn();
+            updateCurrentColor();
+        }
     }
-    else if (color == DISPLAYCOLOR_RED_HIGH)
-    {
-      digitalWrite(REDLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(REDLED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_RED_MEDIUM)
-    {
-      digitalWrite(REDLED, HIGH);
-      delayMicroseconds(75);
-      digitalWrite(REDLED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_RED_LOW)
-    {
-      digitalWrite(REDLED, HIGH);
-      delayMicroseconds(37);
-      digitalWrite(REDLED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_GREEN)
-    {
-      digitalWrite(GREENLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(GREENLED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_LIGHTGREEN)
-    {
-      digitalWrite(REDLED, HIGH);
-      digitalWrite(GREENLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(REDLED, LOW);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(GREENLED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_BLUE)
-    {
-      digitalWrite(BLUELED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(BLUELED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_YELLOW)
-    {
-      digitalWrite(REDLED, HIGH);
-      digitalWrite(GREENLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(REDLED, LOW);
-      digitalWrite(GREENLED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_MAGENTA)
-    {
-      digitalWrite(BLUELED, HIGH);
-      digitalWrite(REDLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(BLUELED, LOW);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(REDLED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_CYAN)
-    {
-      digitalWrite(GREENLED, HIGH);
-      digitalWrite(BLUELED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(GREENLED, LOW);
-      digitalWrite(BLUELED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_ORANGE)
-    {
-      digitalWrite(REDLED, HIGH);
-      digitalWrite(GREENLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(GREENLED, LOW);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(REDLED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_VIOLET)
-    {
-      digitalWrite(BLUELED, HIGH);
-      digitalWrite(REDLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(REDLED, LOW);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(BLUELED, LOW);
-    }
-    else if (color == DISPLAYCOLOR_KINGBLUE)
-    {
-      digitalWrite(BLUELED, HIGH);
-      digitalWrite(GREENLED, HIGH);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(GREENLED, LOW);
-      DISPLAYCOLOR_WAITUNIT;
-      digitalWrite(BLUELED, LOW);
-    }
+
+    shiftCurrentColumn();
+    updateCurrentColumn();
+    return;
+
 }

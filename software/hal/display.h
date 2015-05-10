@@ -41,51 +41,46 @@
 //                         Colors
 // *********************************************************************
 
-#define DISPLAYCOLOR_EMPTY      0
-#define DISPLAYCOLOR_WHITE      1
-#define DISPLAYCOLOR_RED        2
-#define DISPLAYCOLOR_GREEN      3
-#define DISPLAYCOLOR_BLUE       4
-#define DISPLAYCOLOR_YELLOW     5
-#define DISPLAYCOLOR_MAGENTA    6
-#define DISPLAYCOLOR_CYAN       7
-#define DISPLAYCOLOR_ORANGE     8
-#define DISPLAYCOLOR_VIOLET     9
-#define DISPLAYCOLOR_KINGBLUE   10
-#define DISPLAYCOLOR_LIGHTGREEN 11
-#define DISPLAYCOLOR_RED_HIGH   12
-#define DISPLAYCOLOR_RED_MEDIUM 13
-#define DISPLAYCOLOR_RED_LOW    14
-
-#define DISPLAYCOLOR_WAITUNIT delayMicroseconds(150)
+#define DISPLAYCOLOR_EMPTY      0b000000
+#define DISPLAYCOLOR_WHITE      0b101110
+#define DISPLAYCOLOR_RED        0b110000
+#define DISPLAYCOLOR_GREEN      0b001100
+#define DISPLAYCOLOR_BLUE       0b000011
+#define DISPLAYCOLOR_YELLOW     0b111100
+#define DISPLAYCOLOR_MAGENTA    0b110011
+#define DISPLAYCOLOR_CYAN       0b001110
+#define DISPLAYCOLOR_ORANGE     0b110100
+#define DISPLAYCOLOR_VIOLET     0b110010
+#define DISPLAYCOLOR_KINGBLUE   0b001111
+#define DISPLAYCOLOR_LIGHTGREEN 0b011100
+#define DISPLAYCOLOR_RED_HIGH   0b100000
+#define DISPLAYCOLOR_RED_MEDIUM 0b010000
+#define DISPLAYCOLOR_RED_LOW    0b010100
 
 // *********************************************************************
 //                         IO config (pin numbers)
 // *********************************************************************
 
-#define X0 A2
-#define X1 A1
-#define X2 A0
-#define Y0 A5
-#define Y1 A4
-#define Y2 A3
+#define HAL_ANODE_INPUT_PIN  A0
+#define HAL_ANODE_SHIFT_PIN  A1
+#define HAL_ANODE_UPDATE_PIN A2
+#define HAL_COLOR_SHIFT_PIN  A3
+#define HAL_COLOR_UPDATE_PIN A4
 
-#define REDLED   8
-#define GREENLED 9
-#define BLUELED  10
+#define HAL_RED_INPUT_PIN    13
+#define HAL_GREEN_INPUT_PIN  12
+#define HAL_BLUE_INPUT_PIN   11
 
 // *********************************************************************
 //                           Current display
 // *********************************************************************
 
-extern int currentPixel;
-extern int currentDisplay[DISPLAY_NPIX];
+extern short int currentDisplay[DISPLAY_NPIX];
 
 // *********************************************************************
 //                           Prototypes
 // *********************************************************************
 
-void displayRefreshNextPixel();
-void displayColor(int color);
+extern void display();
 
 #endif

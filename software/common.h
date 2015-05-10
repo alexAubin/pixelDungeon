@@ -43,7 +43,7 @@ void initTimer();
 void gameTimerHandler();
 
 
-void displayRefreshNextPixel();
+void display();
 void updateCornerCurrentDisplay();
 
 // *********************************************************************
