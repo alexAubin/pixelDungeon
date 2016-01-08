@@ -19,7 +19,7 @@ This work is released under the GNU General Public License v3. See COPYING for m
 Illustrations / the actual stuff
 --------------------------------
 
-![Demo](./doc/demo.jpg)
+![Demo](./doc/demo.JPG)
 
 ![FirstPCB](./doc/pixelDungeonBuilding.jpg)
 
