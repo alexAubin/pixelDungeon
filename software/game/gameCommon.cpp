@@ -28,18 +28,18 @@
 #include "gameManager.h"
 #include "gameMonsterAI.h"
 
-void initGame() 
-{ 
+void initGame()
+{
     gameManager::init();
 };
 
-void gameTimerHandler() 
+void gameTimerHandler()
 {
     short int gameOverStatus = gameManager::getGameOverStatus();
 
     if (gameOverStatus == -1)
         gameMonsterAI::doMonstersAction();
-    else if (gameOverStatus >= 5) 
+    else if (gameOverStatus >= 5)
         gameManager::triggerReboot();
 };
 

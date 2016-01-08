@@ -21,7 +21,7 @@
 
 /**
  *	@author Alexandre Aubin
- *  @brief Methods for Monster AI 
+ *  @brief Methods for Monster AI
 */
 
 #include "gameMonsterAI.h"
@@ -30,17 +30,17 @@ short int           gameMonsterAI::miniMap[GAME_AI_MINIMAP_SIZE];
 gameMap*            gameMonsterAI::theMap;
 gameObject_Monster* gameMonsterAI::activeMonsters[GAME_AI_MAX_ACTIVE_MONSTERS];
 
-void gameMonsterAI::activate(gameObject_Monster* theMonster) 
+void gameMonsterAI::activate(gameObject_Monster* theMonster)
 {
     for (int i = 0 ; i < GAME_AI_MAX_ACTIVE_MONSTERS ; i++)
-        if (activeMonsters[i] == 0) 
+        if (activeMonsters[i] == 0)
         {
             activeMonsters[i] = theMonster;
             return;
         }
 }
 
-void gameMonsterAI::deactivate(gameObject_Monster* theMonster) 
+void gameMonsterAI::deactivate(gameObject_Monster* theMonster)
 {
     bool found = false;
 
@@ -51,12 +51,12 @@ void gameMonsterAI::deactivate(gameObject_Monster* theMonster)
             activeMonsters[i-1] = activeMonsters[i];
             activeMonsters[i] = 0;
         }
-        else if (activeMonsters[i] == theMonster) 
+        else if (activeMonsters[i] == theMonster)
         {
             activeMonsters[i] = 0;
             found = true;
         }
-    }   
+    }
 }
 
 
@@ -97,10 +97,10 @@ void gameMonsterAI::doMonstersAction()
             }
         }
     }
-        
+
     // Re-enable interrupts
     interrupts();
-   
+
 
 }
 
@@ -108,26 +108,26 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
 {
     int offset_x = begin_x - GAME_AI_PATH_DEPTH;
     int offset_y = begin_y - GAME_AI_PATH_DEPTH;
-    
+
     // Fill minimap with walkable/nonwalkable flags
     for (short int i = 0 ; i < GAME_AI_MINIMAP_WIDTH ; i++) { short int x = offset_x + i;
     for (short int j = 0 ; j < GAME_AI_MINIMAP_WIDTH ; j++) { short int y = offset_y + j;
 
         // If outside the map or non walkable : put -2
         if (    (x < 0) || (x >= GAME_MAP_HEIGHT)
-             || (y < 0) || (y >= GAME_MAP_WIDTH ) 
+             || (y < 0) || (y >= GAME_MAP_WIDTH )
              || (!theMap->isWalkable(GAME_TILE(x,y)))
            )
             miniMap[MINIMAP_TILE(i,j)] = -2;
-        
+
         // If walkable : put - 1
-        else  
+        else
             miniMap[MINIMAP_TILE(i,j)] = -1;
     } }
 
     // Init center of map with 0 (= begin point)
     miniMap[MINIMAP_TILE(GAME_AI_PATH_DEPTH,GAME_AI_PATH_DEPTH)] = 0;
-    
+
     // Actually run the "best-way" algorithm
     short int best_i = -1;
     short int best_j = -1;
@@ -139,25 +139,25 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
         for (short int j = GAME_AI_PATH_DEPTH - d ; (j <= GAME_AI_PATH_DEPTH + d) && (best_i == -1) ; j++)
         {
             if (miniMap[MINIMAP_TILE(i,j)] != d) continue;
-           
+
             // Expand the tile
             if (miniMap[MINIMAP_TILE(i,j+1)] == -1) { miniMap[MINIMAP_TILE(i,j+1)] = d+1; max_d = d+1; }
             if (miniMap[MINIMAP_TILE(i,j-1)] == -1) { miniMap[MINIMAP_TILE(i,j-1)] = d+1; max_d = d+1; }
             if (miniMap[MINIMAP_TILE(i+1,j)] == -1) { miniMap[MINIMAP_TILE(i+1,j)] = d+1; max_d = d+1; }
             if (miniMap[MINIMAP_TILE(i-1,j)] == -1) { miniMap[MINIMAP_TILE(i-1,j)] = d+1; max_d = d+1; }
- 
-            // If tile is in front of hero, 
+
+            // If tile is in front of hero,
             if (distance(offset_x + i, offset_y + j, end_x, end_y) == 1)
             {
                 best_i = i;
                 best_j = j;
                 max_d = d+1;
-            }           
+            }
         }
 
         if (best_i != -1) break;
     }
-        
+
     if (max_d == 0) return NOMOVE;
 
     // Now find which node is closer to objective if we haven't find a tile meanwhile with dist = 1
@@ -169,7 +169,7 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
         if (miniMap[MINIMAP_TILE(i,j)] != max_d) continue;
 
         int tmp_dist = distance(offset_x + i, offset_y + j, end_x, end_y);
-        
+
         if (tmp_dist < best_dist)
         {
             best_i = i;
@@ -182,7 +182,7 @@ Direction gameMonsterAI::findBestWay(int begin_x, int begin_y, int end_x, int en
     for (int d = max_d ; d != 1 ; d--)
     {
         if (miniMap[MINIMAP_TILE(best_i,best_j+1)] == d-1) best_j++;
-        if (miniMap[MINIMAP_TILE(best_i,best_j-1)] == d-1) best_j--; 
+        if (miniMap[MINIMAP_TILE(best_i,best_j-1)] == d-1) best_j--;
         if (miniMap[MINIMAP_TILE(best_i+1,best_j)] == d-1) best_i++;
         if (miniMap[MINIMAP_TILE(best_i-1,best_j)] == d-1) best_i--;
     }

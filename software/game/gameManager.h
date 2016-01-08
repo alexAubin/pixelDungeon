@@ -33,11 +33,11 @@
 
 class gameManager
 {
-    
+
     public:
 
         // Constructor (not used)
-        gameManager() 
+        gameManager()
         {
         };
 
@@ -59,7 +59,7 @@ class gameManager
 
         static void triggerGameOver();
         static short int getGameOverStatus() { if (gameOver != -1) gameOver++; return gameOver; }
-       
+
         static void triggerReboot() { wdt_enable(WDTO_15MS); while (1) { } }
 
     private:
@@ -68,7 +68,7 @@ class gameManager
 
         static gameMap          theMap;
         static gameObject*      theObjectCollection[THEGAME_TOTALNUMBEROFOBJECTS];
-        
+
         static short int gameOver;
 
         // Methods
@@ -76,7 +76,7 @@ class gameManager
         static void heroMove(Direction dir);
         static void heroAttack(Direction dir);
 
-        static bool attackMode; 
+        static bool attackMode;
 
 };
 
