@@ -51,6 +51,7 @@ void updateCornerCurrentDisplay();
 extern int __bss_end;
 extern int* __brkval;
 
+/*
 int get_free_memory()
 {
     int free_memory;
@@ -62,7 +63,7 @@ int get_free_memory()
 
     return free_memory;
 }
-
+*/
 
 
 #endif

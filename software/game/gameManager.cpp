@@ -34,9 +34,9 @@ PROGMEM const short int initMap[GAME_MAP_WIDTH*GAME_MAP_HEIGHT] =
 /*0 */  0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
 /*1 */	0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,
 /*2 */	0,0,1,1,0,1,0,1,0,1,1,1,1,1,1,1,
-/*3 */	0,1,1,0,0,1,0,1,0,0,1,0,0,8,6,1,
-/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,9,1,
-/*5 */	1,1,0,1,1,0,0,0,1,0,3,10,0,0,0,1,
+/*3 */	0,1,1,0,0,1,0,1,0,0,1,0,0,0,6,1,
+/*4 */	0,1,0,0,1,1,0,1,1,0,1,0,0,0,0,1,
+/*5 */	1,1,0,1,1,0,0,0,1,0,3,8,0,0,0,1,
 /*6 */	1,0,0,0,1,0,2,0,1,1,1,0,0,0,0,1,
 /*7 */	1,0,0,0,1,4,0,0,1,0,1,5,1,1,1,1,
 /*8 */	1,0,0,0,1,1,1,1,1,0,1,0,1,0,0,0,
@@ -55,8 +55,8 @@ void gameManager::init()
     // Dirty temporary system for map initialization
     // TODO : more generic/developper friendly way to implement map
 
-    theObjectCollection[0] = new gameObject_Empty  ();         
-    theObjectCollection[1] = new gameObject_Wall   ();          
+    theObjectCollection[0] = new gameObject_Empty  ();
+    theObjectCollection[1] = new gameObject_Wall   ();
     theObjectCollection[2] = new gameObject_Hero   (6,6);
     theObjectCollection[3] = new gameObject_Door   (false);
     gameObject* linksFor4[1] = { theObjectCollection[3] };
@@ -65,10 +65,11 @@ void gameManager::init()
     gameObject* linksFor6[2] = { theObjectCollection[3], theObjectCollection[5] };
     theObjectCollection[6] = new gameObject_Monster(3,14,8,linksFor6,2);
     theObjectCollection[7] = new gameObject_Hppot  (4);
-    theObjectCollection[8] = new gameObject_Monster(3,13,8);
-    theObjectCollection[9] = new gameObject_Monster(4,14,8);
-    gameObject* linksFor10[4] = { theObjectCollection[3], theObjectCollection[8], theObjectCollection[9], theObjectCollection[6] };
-    theObjectCollection[10] = new gameObject_Switch(false,true,linksFor10,4);
+    //theObjectCollection[8] = new gameObject_Monster(3,13,8);
+    //theObjectCollection[9] = new gameObject_Monster(4,14,8);
+    //gameObject* linksFor10[4] = { theObjectCollection[3], theObjectCollection[8], theObjectCollection[9], theObjectCollection[6] };
+    gameObject* linksForActivator[2] = { theObjectCollection[3], theObjectCollection[6] };
+    theObjectCollection[8] = new gameObject_Switch(false,true,linksForActivator,2);
 
     for (int i = 0 ; i < GAME_MAP_WIDTH*GAME_MAP_HEIGHT ; i++)
     {
@@ -76,7 +77,7 @@ void gameManager::init()
     }
 
     theMap.setCurrentDisplay(gameObject::theHero);
-    
+
     gameMonsterAI::init();
     return;
 }
@@ -84,7 +85,7 @@ void gameManager::init()
 void gameManager::heroMove(Direction dir)
 {
     if (gameManager::getGameOverStatus() != -1) return;
-    
+
     // Disable interrupts
     noInterrupts();
 
@@ -96,7 +97,7 @@ void gameManager::heroMove(Direction dir)
 
     // Re-enable interrupts
     interrupts();
-    
+
 }
 
 void gameManager::heroAttack(Direction dir)
@@ -104,7 +105,7 @@ void gameManager::heroAttack(Direction dir)
     if (gameManager::getGameOverStatus() != -1) return;
 
     noInterrupts();
-    
+
     if (theMap.heroAttack(gameObject::theHero,dir))
     {
         // Update display
@@ -118,7 +119,7 @@ void gameManager::heroAttack(Direction dir)
 void gameManager::triggerGameOver()
 {
     gameOver = 0;
-    
+
 	for (short int k = 0 ; k < DISPLAY_WIDTH ; k++)
 	for (short int l = 0 ; l < DISPLAY_WIDTH ; l++)
 	{
